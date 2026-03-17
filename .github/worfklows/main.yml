@@ -20,16 +20,16 @@ jobs:
           node-version: 20
 
       - name: Installation des dépendances
-        run: pnpm install
+        run: npm install
 
       - name: Vérification du Lint (ESLint)
-        run: pnpm lint
+        run: npm lint
 
       - name: Vérification des types (TypeScript)
-        run: pnpm typecheck
+        run: npm typecheck
 
       - name: Exécution des tests (Vitest)
-        run: pnpm vitest run # Le mot 'run' est crucial ici
+        run: npm vitest run 
 
       - name: Tentative de Build
-        run: pnpm build
+        run: npm build
