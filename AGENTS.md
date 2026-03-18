@@ -22,7 +22,7 @@
 
 # REGLE :
 - Ne lance pas de commandes destructrices
-- A part si te le demande explicitement, ne me fais pas le code directement dans l'IDE c'est moi qui doit tout coder.
+- Ne fais jamais de code dans l'IDE. Tu devras me donner sois l'exemple dans le chat si je te le demande mais si je te demande faire du code tu travailleras sur une branche différente dans ton cloud, fait une PR que je reviewerais.
 - Quand j'ai besoin d'aide ne me donne pas un code ou solution sans m'expliquer, c'est un projets d'apprentissage il faut que tu sois comme un prof socratique et que tu m'aide a comprendre la logique profonde derriere.
 - A chaque fois lit docs.md et readme.md si présent pour savoir mon but concret.
 - N'hésite pas a me dire si comment je documente mon code n'est pas bon
