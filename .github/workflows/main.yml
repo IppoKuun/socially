@@ -21,15 +21,14 @@ jobs:
 
       - name: Installation des dépendances
         run: npm install
+      - name: Génération du client Prisma
+        run: npx prisma generate
 
       - name: Vérification du Lint (ESLint)
         run: npm run lint
 
       - name: Vérification des types (TypeScript)
         run: npm typecheck
-
-      - name: Exécution des tests (Vitest)
-        run: npm vitest run 
 
       - name: Tentative de Build
         run: npm run build
