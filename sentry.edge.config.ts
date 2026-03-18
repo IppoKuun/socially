@@ -10,9 +10,12 @@ Sentry.init({
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
   tracesSampleRate: 1,
+    enabled: process.env.NODE_ENV === "production",
+
 
   // Enable logs to be sent to Sentry
   enableLogs: true,
+  
 
   // Enable sending user PII (Personally Identifiable Information)
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
