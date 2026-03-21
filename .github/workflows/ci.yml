@@ -26,7 +26,7 @@ jobs:
         run: npm run lint
 
       - name: Vérification des types (TypeScript)
-        run: npm typecheck
+        run: npx tsc --noEmit
 
       - name: Exécution des tests (Vitest)
         run: npm vitest run 
