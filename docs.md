@@ -40,8 +40,7 @@ Cette V1 a un objectif d’entraînement à travailler de renforcer mes compéte
 - Report utilisateur
 - Temps réel pour la messagerie
 - Typing indicator
-- Paiement réel / Stripe
-- Sélection d’offres payantes
+- Paiement réel, stripe en mode test.
 - Règles détaillées UI des commentaires imbriqués (prototype à finaliser séparément)
 
 ---
@@ -112,6 +111,28 @@ Méthodes disponibles :
 - Google
 - Apple
 
+### Tracking first-party minimal
+Champs conservés en V1 :
+- `last_login_at`
+- `last_seen_at`
+- `utm_source`
+- `utm_medium`
+- `utm_campaign`
+- `utm_content`
+- `landing_page`
+- `referrer_domain`
+
+Règles :
+- tracking first-party uniquement
+- les champs d'acquisition (`utm_*`, `landing_page`, `referrer_domain`) sont stockés en `first touch only`
+- collecte au moment du signup ou du premier login réussi
+- `referrer_domain` est stocké sous forme normalisée, pas l'URL complète
+
+Hors scope V1 :
+- calcul du temps de session moyen
+- analytics avancée multi-session
+- tracking comportemental complexe
+
 ### Onboarding au premier passage
 Champs demandés :
 - `username`
@@ -157,10 +178,10 @@ Règles :
 
 ### 5.2 Discover `/discover`
 Sections :
-- Post du moment
-- Catégories
-- Comptes à suivre
-- Bloc `Pourrait vous intéresser` avec état `COMING SOON`
+- Post du moment, Post le plus likée des 7 derniers jours.
+- Catégories, catégories fixe définies dès le début.
+- Comptes à suivre, compte populaire pour v1
+- Bloc `Pourrait vous intéresser` avec état avec les 3 autres post les plus likées des 7 derniers jour
 
 Objectif :
 - offrir une surface de découverte éditoriale légère sans topics ni recommandation avancée en V1
@@ -193,6 +214,14 @@ Affichage :
 - groupé par contenu
 - ordre antéchronologique
 - distinction lu / non lu
+- Notifs nv abonnée indépendantes des notif par poste, toujours placée en haut et juste une icone avec le nombre de nouveau abonnée. Au clics tout les nouveaux abonnée par liste de 30 par 30 (appuyez sur charger plus pour les 30 nouveaux abonnée supplémentaires).
+
+- Si post reçois commentaires/Likes. Post apparait dans onglets notifications avec sa notifications (J'aime, Réponses etc).
+- Si nouvelle Notifications dans le post, elle apparait dans le post. Et le post repasse aux plus récents avec une carte spécial non Lu.
+- Pour que les Notifications d'un Post apparait comme Lu, User dois cliquer dessus.
+- Aux clics sur le Posts, Le post apparait en plus grands, avec les J'aimes et en Les commentaires si présent.
+- Aux clics sur les personnes qui ont aimé, modale sur les personnes qui ont aimé votre poste avec profile en petit de personnes qui ont aimé
+- Auc clics sur les commentaires redirect vers la page commentaires.
 
 ### 5.6 Recherche `/search`
 Entités recherchées :
@@ -201,9 +230,10 @@ Entités recherchées :
 - `posts.content`
 
 Interface :
-- page avec onglets `Tout`, `Utilisateurs`, `Posts`
+- page avec onglets `Tout`, `Utilisateurs`, `Posts`.
+- Page tout = En haut 5 Utilisateur les plus connues, span voir plus, redirect vers onglets search/utilisateurs. Et en bas Posts.
 - autocomplete sur utilisateurs uniquement dans la barre
-- historique des recherches récentes activé
+- historique des recherches récentes activé, stocké dans base de données.
 
 ### 5.7 Profil `/profile/[username]`
 Éléments :
@@ -233,16 +263,16 @@ Note :
 ### 5.9 Billing `/billing` et `/settings/billing`
 - page visible en V1
 - offres visibles
-- aucune offre sélectionnable
-- état global `COMING SOON`
-- pas d’intégration paiement réel
+- 1 Offre avec : Badge profile, Plus de visibilité
+- 2 autre offre en : Comming Soon
+- pas d’intégration paiement réel, Stripe en mode test.
+- La page settings/billings, simple rappelle de tout ce que lui confère le status pro.
 
 ### 5.10 Settings
 #### `/settings/compte`
 - informations de compte
-- désactivation
-- suppression de compte
-- block list
+- suppression de compte après confirmation.
+- block list, simple page de personne bloqué avec options débloquer
 
 #### `/settings/data-confidentialite`
 - export des données CSV
@@ -254,9 +284,7 @@ Note :
 
 #### `/settings/notifications`
 - préférences de notifications disponibles en V1
-
-#### `/settings/billing`
-- état `COMING SOON`
+ 
 
 ### 5.11 Legal `/legal`
 - mentions et documents légaux
@@ -307,8 +335,9 @@ Note :
 
 ### Règles déjà validées
 - profondeur de réponses gérée en data
-- si un commentaire parent est supprimé, il reste affiché en état `supprimé` et les enfants restent visibles
+- si un commentaire parent est supprimé, il reste affiché en état `supprimé` et les enfants restent visibles pour tout le monde
 - tri principal des réponses : `top`
+- Admin peut supprimer un commentaires
 
 ### Règles différées
 Les choix suivants seront finalisés via prototype séparé avant découpage détaillé :
@@ -317,7 +346,6 @@ Les choix suivants seront finalisés via prototype séparé avant découpage dé
 - permalink commentaire `/post/[slug]/c/[commentId]`
 - navigation de contexte dans un fil long
 
----
 
 ## 8. Recherche et découverte
 
@@ -329,7 +357,6 @@ Les choix suivants seront finalisés via prototype séparé avant découpage dé
 ### Discover
 - surface éditoriale légère
 - pas de moteur complexe de recommandation en V1
-- partie “Pourrait vous intéresser” explicitement marquée `COMING SOON`
 
 ### Trending
 - classement simple par likes sur 7 jours
@@ -407,18 +434,29 @@ Hors scope V1 :
 - report commentaire : oui
 
 ### Modération IA V1
+
+3 Possibilité :
+UNSAFE :
 Blocage dur avant publication si détection de :
 - haine explicite
 - menace
 - harcèlement explicite
 - violence
 - doxxing
-
 Comportement :
 - le message ne peut pas être publié
 - affichage d’une alerte simple
 - pas de suggestion de reformulation en V1
 - journalisation côté admin
+
+UNCERTAIN :
+- Si IA hésite, Post Publiée avec une carte spécial pour avertir que l'IA a possiblement détécté que le contenu était potentiellemeent malsain.
+- Log coté backoffice si ça arrive.
+- La carte spécial est visible uniquement sur home Feed et page post détailler.
+
+SAFE:
+- Aucune ou toute petite hésitation de l'IA mais ne vaut clairement pas le coup donc autorisé le post sans intervention
+
 
 ### Portée technique visée
 - modération texte
@@ -435,16 +473,21 @@ Comportement :
 
 ### `/admin/dashboard`
 - vue d’ensemble admin
-- métriques basiques si implémentées
+- Métrique en petites cartes en haut, nv utilisateur, utilisateur aujourd'hui, poste créer, nombre de revenues ce mois, Modération en attentes.
+- Métriques graphique : Augmentation de nouveau utilisateur avec filtre dates (1 Semaines/Mois/Année).
+- Carte 3 Meuilleur poste de la journée avec les postes qui ont eu le plus de j'aime
+- Et une moderation queue pour les modérations en attentes.
+
 
 ### `/admin/moderations`
-- liste des contenus signalés
+- liste des contenus signalésn peut voir, masqué supprimé, classé sans suite.
 - actions de modération
 - consultation des refus automatiques si journalisés
 
 ### `/admin/users`
-- consultation des utilisateurs
-- consultation d’informations admin utiles
+- consultation de tout les utilisateurs avec tout les champs nécessaire dans un tableau
+- Peut pour chaque user. Ban, suspendre, Envoyé un message d'avertissement en Mail avec un message personnalisé.
+
 
 ### `/admin/invite`
 - inviter un admin via email
@@ -459,6 +502,7 @@ Comportement :
 
 ### `/admin/logs`
 - journal des actions admin et techniques utiles
+- Logge action, user, date et metadata.
 
 ### `/admin/settings`
 - réglages back-office disponibles en V1
@@ -472,8 +516,26 @@ Comportement :
 
 ### Données / droits utilisateur
 - export des données en CSV
-- suppression de compte
+- suppression de compte 
 - désactivation de compte
+
+### Données first-party collectées en V1
+- données d'authentification et de compte nécessaires au produit
+- données d'acquisition first-party minimales :
+  - `utm_source`
+  - `utm_medium`
+  - `utm_campaign`
+  - `utm_content`
+  - `landing_page`
+  - `referrer_domain`
+- données d'activité minimales :
+  - `last_login_at`
+  - `last_seen_at`
+
+Règles :
+- stockage minimal orienté produit et acquisition
+- pas de stockage du referrer complet si le domaine suffit
+- pas de calcul du temps de session moyen en V1
 
 ### Pages obligatoires V1
 - legal
@@ -508,7 +570,7 @@ Pour chaque page / composant critique, prévoir au minimum :
 2. il renseigne un `title`
 3. il ajoute éventuellement un `content`
 4. il ajoute éventuellement des images
-5. la modération IA vérifie le contenu
+5. la modération IA vérifie le contenu et attribue au post une ou plusieurs catégories
 6. si le contenu passe, le post est publié
 7. le post apparaît dans le feed et sur son profil
 
@@ -551,15 +613,13 @@ Pour chaque page / composant critique, prévoir au minimum :
 ### Feed
 - `Pour vous` = posts récents
 - `Abonnements` = posts des comptes suivis
+- Les user Pro ont un plus de chance d'apparaitre dans le feed. 
 - tri principal par récence en V1
 - pas de topics en V1
 
 ### Profil
 - public uniquement
 
-### Billing
-- visible mais non activable
-- `COMING SOON`
 
 ### Block
 - coupe visibilité et interaction réciproque selon les règles définies plus haut
@@ -593,4 +653,3 @@ Pour chaque page / composant critique, prévoir au minimum :
 - Search & discover
 - Settings & légal
 - Back-office admin
-
