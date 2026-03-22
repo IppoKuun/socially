@@ -11,7 +11,7 @@ enum Theme {
     DARK
     LIGHT
 }
-enum ModeationStatus {
+enum ModerationStatus {
  SAFE
  UNCERTAIN
  UNSAFE
@@ -47,7 +47,9 @@ model UserProfile {
     referrer_domain?
     hasOnboarded Boolean @default(false)
     isPro Boolean @default(false)
-
+    
+    
+    likes? PostLike[]
     post? Post[]
     notification?
     follow?
@@ -61,17 +63,32 @@ model Post {
     id String @id @default(cuid())
     title String
     content? String
-    images String[]
+    images? String[]
     createdAt DateTime @default(now())
     deletedAt? DateTime 
     Category Category
-    ModeationStatus ModeationStatus
-
-
-
+    moderationStatus ModerationStatus
+    
+    comment Comment[]
     likes? PostLike[]
     userId String
-    byUser UserProfile @relation("byUser", fields: [userId], references: [id])
+    author UserProfile @relation( fields: [userId], references: [id])
+}
+
+model Comment {
+    id String @id @default(cuid())
+    content String
+    images? String[]
+    createdAt DateTime @default(now())
+    deletedAt? DateTime
+    moderationStatus ModerationStatus
+
+    comment? Comment[]
+
+    userId String
+    author UserProfile @relation(fields: [userId], references: [id])
+    postId String
+    post Post @relation(fields: [postId], references: [id])
 }
 
 
@@ -85,9 +102,20 @@ model PostLike {
     user UserProfile @relation("user", fields: [user_id], references: [id])
 
     createdAt DateTime @default(now())
+    @@unique([user_id, post_id])
+}
 
-    like Post @relation("like", fields: [post_id], references: [id])
+model CommentLike {
+    id String @id @default(cuid())
 
+    comment_id String
+    comment Post @relation("comment", fields: [comment_id], references: [id])
+
+    user_id String
+    user UserProfile @relation("user", fields: [user_id], references: [id])
+
+    createdAt DateTime @default(now())
+    @@unique([user_id, comment])
 }
 
 

@@ -39,6 +39,7 @@
 - Avec ce mode Guide nos conversation ne devront jamais etre du code (a part si c'est un éléments technique), tu devra m'expliquer le code en language normal, son but, sa logique et sa syntaxe, meme si tu détaille fonction par fonction tu peux le faire.
 - Le but est qu'avec ton explication je puisse moi meme reformuler avec mon propre code.
 - Quand je te demanderais de valider, si c'est pas bon tu dois me dire exactement ou elle est en language normal et ce qui vas pas dans ma logique.
+- Si ce que je produit contient des erreurs, et que ces erreurs vont etre bloqué par le premier script/compilation etc. Ne me dis pas l'erreur, je vais la rencontre tout seul et sy je reste bloqué ont passe en mode debug. Dans ce mode tu me parle que des erreurs qui seront présent uniquement qui peuvent passer inaperçu. ( mais previens moi quand meme que dans mon code rique d'échouer et qu'on verra la cause si besoin en mode debug)
 
 
 ### MODE DEBUG:
