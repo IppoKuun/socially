@@ -51,11 +51,12 @@ model UserProfile {
     
     likes? PostLike[]
     post? Post[]
-    notification?
+    notification? Notifications
     followed? Follow[] @relation("Followed")
     followers? Follow[] @relation("Follower")
     blocked? Bloc[]
     conversation? Conversation[]
+    SearchHistory SearchHistory[]?
 }
 
 
@@ -173,4 +174,27 @@ model Message {
 }
 
 
-// A FAIRE => BLOCK/conversation/Message/notif/historique/Recherche
+model Notifications {
+    id String @id @default(cuid())
+
+    postId String
+    post Post @relation(fields: [postId], references: [id])
+
+    type NotificationsTypes
+    isRead Boolean?
+
+    userId String
+    userNotif UserProfile(fields: [userId], references: [id])
+}
+
+model SearchHistory {
+    id String @id @default(cuid())
+
+    postId String
+    post Post[] @relation(fields:[postId], references: [id])
+}
+
+enum NotificationsTypes {
+    LIKE, COMMENT, FOLLOW
+}
+// A FAIRE => BLOCK/conversation/Message/notif/RechercheHistorique
