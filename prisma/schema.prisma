@@ -1,0 +1,50 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Theme {
+    DARK, LIGHT
+}
+
+model UserProfile {
+    id Int @id @unique @default(autoincrement)
+    email String @unique
+    name String
+    displayName String
+    avatarUrl? String
+    bannerUrl? String
+    bio? String
+    language String
+    theme Theme@default(DARK)
+    createdAt DateTime @default(now())
+    deletedAt? DateTime 
+    pinnedPost? 
+    last_login_at? DateTime 
+    last_seen_at? DateTime
+    utm_source?
+    utm_medium?
+    utm_campaign?
+    utm_content?
+    referrer_domain?
+    hasOnboarded Boolean @default(false)
+    isPro Boolean @default(false)
+
+    post? 
+    notification?
+    follow?
+    followers?
+    blocked?  
+    likes?
+    conversation?
+}
+
+
+model Post {
+}
+
+
