@@ -52,8 +52,8 @@ model UserProfile {
     likes? PostLike[]
     post? Post[]
     notification?
-    follow?
-    followers?
+    followed? Follow[] @relation("Followed")
+    followers? Follow[] @relation("Follower")
     blocked?  
     conversation?
 }
@@ -109,14 +109,25 @@ model CommentLike {
     id String @id @default(cuid())
 
     comment_id String
-    comment Post @relation("comment", fields: [comment_id], references: [id])
+    comment Post @relation(fields: [comment_id], references: [id])
 
     user_id String
-    user UserProfile @relation("user", fields: [user_id], references: [id])
+    user UserProfile @relation(fields: [user_id], references: [id])
 
     createdAt DateTime @default(now())
-    @@unique([user_id, comment])
+    @@unique([user_id, comment_id])
 }
 
+
+model Follow {
+    id String @id @default(cuid())
+    createdAt DateTime default(now())
+
+    followedId String
+    followed UserProfile @relation("Followed", fields: [userId], references: [followedId])
+
+    followerId String
+    follower UserProfile @relation("Follower", fields : [userId], references: [followerId])
+}
 
 
