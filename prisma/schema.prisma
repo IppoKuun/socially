@@ -8,11 +8,25 @@ generator client {
 }
 
 enum Theme {
-    DARK, LIGHT
+    DARK
+    LIGHT
+}
+enum ModeationStatus {
+ SAFE
+ UNCERTAIN
+ UNSAFE
+}
+
+// A FAIRE //
+enum Category {
+    TECH
+    SOCIETY
+    CULTURE & ARTS
+    
 }
 
 model UserProfile {
-    id Int @id @unique @default(autoincrement)
+    id String @id @unique @default(cuid())
     email String @unique
     name String
     displayName String
@@ -34,17 +48,47 @@ model UserProfile {
     hasOnboarded Boolean @default(false)
     isPro Boolean @default(false)
 
-    post? 
+    post? Post[]
     notification?
     follow?
     followers?
     blocked?  
-    likes?
     conversation?
 }
 
 
 model Post {
+    id String @id @default(cuid())
+    title String
+    content? String
+    images String[]
+    createdAt DateTime @default(now())
+    deletedAt? DateTime 
+    Category Category
+    ModeationStatus ModeationStatus
+
+
+
+    likes? PostLike[]
+    userId String
+    byUser UserProfile @relation("byUser", fields: [userId], references: [id])
 }
+
+
+model PostLike {
+    id String @id @default(cuid())
+
+    post_id String
+    post Post @relation("post", fields: [post_id], references: [id])
+
+    user_id String
+    user UserProfile @relation("user", fields: [user_id], references: [id])
+
+    createdAt DateTime @default(now())
+
+    like Post @relation("like", fields: [post_id], references: [id])
+
+}
+
 
 

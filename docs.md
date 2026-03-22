@@ -258,8 +258,6 @@ Règles :
 - affiche les commentaires
 - sert de point d’entrée aux interactions de détail
 
-Note :
-- la spécification détaillée du permalink commentaire est différée au prototype dédié
 
 ### 5.9 Billing `/billing` et `/settings/billing`
 - page visible en V1
