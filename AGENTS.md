@@ -21,6 +21,7 @@
     4. **Dette Technique :** "Code smell", duplication, manque de scalabilité.
 
 # REGLE :
+- Vérifie en priorité et constamment si mes commentaires, si possibilité de les écrire pour expliquer mon code n'est pas assez convaincant, j'oublie très souvent donc rappelle le moi.
 - N'hésite pas a me dire si lors de l'implémentation de features si je dois penser a d'autres features a coder plus tard qui dépendes de celle-ci.
 - Par moments je te demanderais de l'aide sur l'implementation d'une feature, dans ce cas la tu passe en MODE GUIDE
 - Ne fais jamais de code dans l'IDE. Tu devras me donner sois l'exemple dans le chat si je te le demande mais si je te demande faire du code tu travailleras sur une branche différente dans ton cloud, fait une PR que je reviewerais.
