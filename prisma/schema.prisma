@@ -111,13 +111,14 @@ model Comment {
     isAi Boolean @default(false)
 
     // A quel post/comment le comment est dédiée //
-    responseToId String
+    responseToCommentId String?
+    responseToComment @relation("CommentReplies",fields: [responseToCommentId], references: [id])
 
 
-    comment? Comment[]
+    replies? Comment[] @relation("CommentReplies)
 
     authorId String
-    author UserProfile @relation(fields: [authId], references: [id])
+    author UserProfile @relation(fields: [authorId], references: [id])
     postId String
     post Post @relation(fields: [postId], references: [id])
 }
@@ -188,7 +189,21 @@ model Conversation {
 
     createdAt DateTime @default(now())
 
+    participant ConversationParticipant[]
     messages Message[]
+}
+
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  
+  userId         String
+  user           UserProfile  @relation(fields: [userId], references: [id])
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+
+  @@unique([userId, conversationId])
 }
 
 model Message {
