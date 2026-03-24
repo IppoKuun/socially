@@ -11,13 +11,16 @@ enum Theme {
     DARK
     LIGHT
 }
+
+    // ModerationStatus est le status que renvoie l'IA apres avoir placé analysé le post //
+
 enum ModerationStatus {
  SAFE
  UNCERTAIN
  UNSAFE
 }
 
-// A FAIRE //
+// TICKER A FAIRE CODEX //
 enum Category {
     TECH
     SOCIETY
@@ -25,19 +28,34 @@ enum Category {
     
 }
 
+enum NotificationsTypes {
+    LIKE, COMMENT, FOLLOW
+}
+
+enum language{
+
+}
+
+// isAi est un champs boolean qui vaut true quand le compte ou le post est générée par IA //
+
+
 model UserProfile {
     id String @id @unique @default(cuid())
     email String @unique
     name String
     displayName String
+
+    // URL Car Sauvegarder dans Cloudinary//
     avatarUrl? String
     bannerUrl? String
     bio? String
     language String
-    theme Theme@default(DARK)
+    theme Theme @default(DARK)
     createdAt DateTime @default(now())
     deletedAt? DateTime 
     pinnedPost? 
+
+    // Champs pour le tracking //
     last_login_at? DateTime 
     last_seen_at? DateTime
     utm_source?
@@ -45,8 +63,12 @@ model UserProfile {
     utm_campaign?
     utm_content?
     referrer_domain?
+
     hasOnboarded Boolean @default(false)
+
+    // Socially Pro //
     isPro Boolean @default(false)
+
     isAi Boolean @default(false)
     
     
@@ -69,6 +91,7 @@ model Post {
     createdAt DateTime @default(now())
     deletedAt? DateTime 
     Category Category
+
     moderationStatus ModerationStatus
     isAi Boolean @default(false)
     
@@ -90,13 +113,14 @@ model Comment {
 
     comment? Comment[]
 
-    userId String
-    author UserProfile @relation(fields: [userId], references: [id])
+    authorId String
+    author UserProfile @relation(fields: [authId], references: [id])
     postId String
     post Post @relation(fields: [postId], references: [id])
 }
 
 
+    // Table Pivot, nécessaire d'en créer une manuellement car besoin de faire des requete dessus //
 model PostLike {
     id String @id @default(cuid())
 
@@ -109,6 +133,9 @@ model PostLike {
     createdAt DateTime @default(now())
     @@unique([user_id, post_id])
 }
+
+
+// Table Pivot, nécessaire d'en créer une manuellement car besoin de faire des requete dessus //
 
 model CommentLike {
     id String @id @default(cuid())
@@ -127,6 +154,8 @@ model CommentLike {
 model Follow {
     id String @id @default(cuid())
     createdAt DateTime default(now())
+
+    // Followed et Follower pour bien faire la difference entre les 2//
 
     followedId String
     followed UserProfile @relation("Followed", fields: [userId], references: [followedId])
@@ -173,6 +202,7 @@ model Message {
     sharedPost     Post?        @relation(fields: [sharedPostId], references: [id], onDelete: SetNull)
 
     isRead? DateTime
+
     conversationId String
     conversation Conversation @relation(fields: [conversationId], references: [id])
 }
@@ -198,6 +228,4 @@ model SearchHistory {
     post Post[] @relation(fields:[postId], references: [id])
 }
 
-enum NotificationsTypes {
-    LIKE, COMMENT, FOLLOW
-}
+
