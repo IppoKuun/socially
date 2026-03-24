@@ -47,6 +47,7 @@ model UserProfile {
     referrer_domain?
     hasOnboarded Boolean @default(false)
     isPro Boolean @default(false)
+    isAi Boolean @default(false)
     
     
     likes? PostLike[]
@@ -69,6 +70,7 @@ model Post {
     deletedAt? DateTime 
     Category Category
     moderationStatus ModerationStatus
+    isAi Boolean @default(false)
     
     comment Comment[]
     likes? PostLike[]
@@ -83,6 +85,8 @@ model Comment {
     createdAt DateTime @default(now())
     deletedAt? DateTime
     moderationStatus ModerationStatus
+    isAi Boolean @default(false)
+
 
     comment? Comment[]
 
@@ -197,4 +201,3 @@ model SearchHistory {
 enum NotificationsTypes {
     LIKE, COMMENT, FOLLOW
 }
-// A FAIRE => BLOCK/conversation/Message/notif/RechercheHistorique
