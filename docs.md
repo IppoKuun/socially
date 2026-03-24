@@ -28,6 +28,7 @@ Cette V1 a un objectif d’entraînement à travailler de renforcer mes compéte
 - Back-office admin complet
 - Modération IA sur texte et images
 - Cookies banner, legal/help, export CSV, suppression/désactivation compte
+- Suppression de compte en deux temps : soft delete immédiat puis purge à J+30
 
 ### Hors scope V1
 - Topics automatiques
@@ -271,7 +272,11 @@ Note :
 ### 5.10 Settings
 #### `/settings/compte`
 - informations de compte
-- suppression de compte après confirmation.
+- suppression de compte après confirmation
+- la suppression fonctionne en deux temps : compte marqué en suppression pendant 30 jours, puis purge définitive à échéance
+- le profil public disparaît immédiatement après la demande
+- l'utilisateur peut encore se reconnecter pendant la fenêtre de 30 jours
+- la suppression n'est annulée que par une action explicite de l'utilisateur
 - block list, simple page de personne bloqué avec options débloquer
 
 #### `/settings/data-confidentialite`
@@ -487,6 +492,8 @@ SAFE:
 ### `/admin/users`
 - consultation de tout les utilisateurs avec tout les champs nécessaire dans un tableau
 - Peut pour chaque user. Ban, suspendre, Envoyé un message d'avertissement en Mail avec un message personnalisé.
+- un compte supprimé doit pouvoir rester retrouvable via une trace admin minimale
+- l'admin doit voir un état du type `compte supprimé depuis X`
 
 
 ### `/admin/invite`
@@ -516,8 +523,17 @@ SAFE:
 
 ### Données / droits utilisateur
 - export des données en CSV
-- suppression de compte 
+- suppression de compte
 - désactivation de compte
+
+### Suppression de compte
+- la suppression de compte est un cycle en deux temps
+- étape 1 : soft delete immédiat côté produit
+- dès la demande, le profil public disparaît et le compte ne doit plus être exposé dans les surfaces publiques
+- une fenêtre de rétractation de 30 jours existe avant effacement définitif
+- pendant cette fenêtre, l'utilisateur peut se reconnecter puis annuler explicitement la suppression
+- sans annulation, les données applicatives sont purgées à échéance
+- une trace minimale peut être conservée côté admin/modération pour indiquer qu'un compte a été supprimé et depuis quand
 
 ### Données first-party collectées en V1
 - données d'authentification et de compte nécessaires au produit
