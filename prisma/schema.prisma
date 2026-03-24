@@ -46,23 +46,26 @@ model UserProfile {
     displayName String
 
     // URL Car Sauvegarder dans Cloudinary//
-    avatarUrl? String
-    bannerUrl? String
+    avatarUrl String?
+    bannerUrl String?
     bio? String
     language String
     theme Theme @default(DARK)
     createdAt DateTime @default(now())
-    deletedAt? DateTime 
+
+    // SOFT_DELETE //
+    deletedAt DateTime?
+    defineltyDeleted DateTime?
+
     pinnedPost? 
 
     // Champs pour le tracking //
-    last_login_at? DateTime 
-    last_seen_at? DateTime
-    utm_source?
-    utm_medium?
-    utm_campaign?
-    utm_content?
-    referrer_domain?
+    last_login_at? DateTime? 
+    last_seen_at? DateTime?
+    utm_source String?
+    utm_medium String?
+    utm_campaign String?
+    referrer_domain String?
 
     hasOnboarded Boolean @default(false)
 
@@ -219,7 +222,7 @@ model Message {
     sharedPostId   String?     
     sharedPost     Post?        @relation(fields: [sharedPostId], references: [id], onDelete: SetNull)
 
-    isRead? DateTime
+    isRead Boolean?
 
     conversationId String
     conversation Conversation @relation(fields: [conversationId], references: [id])
@@ -244,12 +247,8 @@ model Notifications {
 
 model SearchHistory {
     id String @id @default(cuid())
-
-    
     createdAt DateTime default(now())
-
-    postId String
-    post Post[] @relation(fields:[postId], references: [id])
+    query String
 
     userId
     user UserProfile @relation(fields: [userId], references: [id])
