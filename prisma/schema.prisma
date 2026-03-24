@@ -74,8 +74,8 @@ model UserProfile {
     
     likes? PostLike[]
     post? Post[]
-    notification? Notifications
-    followed? Follow[] @relation("Followed")
+    notification? Notifications[]
+    Following? Follow[] @relation("Following")
     followers? Follow[] @relation("Follower")
     blocked? Bloc[]
     conversation? Conversation[]
@@ -110,6 +110,9 @@ model Comment {
     moderationStatus ModerationStatus
     isAi Boolean @default(false)
 
+    // A quel post/comment le comment est dédiée //
+    responseToId String
+
 
     comment? Comment[]
 
@@ -141,7 +144,7 @@ model CommentLike {
     id String @id @default(cuid())
 
     comment_id String
-    comment Post @relation(fields: [comment_id], references: [id])
+    comment Comment @relation(fields: [comment_id], references: [id])
 
     user_id String
     user UserProfile @relation(fields: [user_id], references: [id])
@@ -155,15 +158,15 @@ model Follow {
     id String @id @default(cuid())
     createdAt DateTime default(now())
 
-    // Followed et Follower pour bien faire la difference entre les 2//
+    // Following et Follower pour bien faire la difference entre les 2//
 
-    followedId String
-    followed UserProfile @relation("Followed", fields: [userId], references: [followedId])
+    FollowingId String
+    Following UserProfile @relation("Following", fields: [userId], references: [FollowingId])
 
     followerId String
     follower UserProfile @relation("Follower", fields : [userId], references: [followerId])
 
-    @@unique([followedId, followerId])
+    @@unique([FollowingId, followerId])
 }
 
 model Block {
@@ -211,21 +214,30 @@ model Message {
 model Notifications {
     id String @id @default(cuid())
 
-    postId String
+    postId String?
     post Post @relation(fields: [postId], references: [id])
+
+    actorId   String
+    actor     UserProfile      @relation("TriggeredNotifications", fields: [actorId], references: [id], onDelete: Cascade)
 
     type NotificationsTypes
     isRead Boolean?
 
     userId String
-    userNotif UserProfile(fields: [userId], references: [id])
+    userNotif UserProfile("ReceiverNotifications"fields: [userId], references: [id])
 }
 
 model SearchHistory {
     id String @id @default(cuid())
 
+    
+    createdAt DateTime default(now())
+
     postId String
     post Post[] @relation(fields:[postId], references: [id])
+
+    userId
+    user UserProfile @relation(fields: [userId], references: [id])
 }
 
 
