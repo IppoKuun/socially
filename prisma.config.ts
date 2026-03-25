@@ -9,7 +9,7 @@ export default defineConfig({
     migrations : {
         path:  "prisma/migrations"
     },
-    datasource: { url : env("DIRECT_URL") ?? env("DATABASE_URL")},
+    datasource: { url : env("DIRECT_URL")},
 
     // TABLES EXTERNE DE BETTER AUTH, PRISMA A BESOIN DE SAVOIR //
     experimental: {externalTables: true},
