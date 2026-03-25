@@ -1,0 +1,291 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Theme {
+    DARK
+    LIGHT
+}
+
+    // ModerationStatus est le status que renvoie l'IA apres avoir placé analysé le post //
+
+enum ModerationStatus {
+ SAFE
+ UNCERTAIN
+ UNSAFE
+}
+
+// TICKER A FAIRE CODEX //
+enum Category {
+    TECH
+    SOCIETY
+    CULTURE_ARTS 
+}
+
+enum NotificationsTypes {
+    LIKE
+    COMMENT
+    FOLLOW
+}
+
+enum language{
+    FRENCH
+}
+
+// isAi est un champs boolean qui vaut true quand le compte ou le post est générée par IA //
+
+
+model UserProfile {
+    id String @id @unique @default(cuid())
+    email String @unique
+    name String
+    displayName String
+
+    // URL Car Sauvegarder dans Cloudinary//
+    avatarUrl String?
+    bannerUrl String?
+    bio String?
+    language String
+    theme Theme @default(DARK)
+    createdAt DateTime @default(now())
+
+    // SOFT_DELETE //
+    deletedAt DateTime?
+    defineltyDeleted DateTime?
+
+    pinnedPostId String? 
+
+    // Champs pour le tracking //
+    last_login_at DateTime? 
+    last_seen_at DateTime?
+    utm_source String?
+    utm_medium String?
+    utm_campaign String?
+    referrer_domain String?
+
+    hasOnboarded Boolean @default(false)
+
+    // Socially Pro //
+    isPro Boolean @default(false)
+
+    isAi Boolean @default(false)
+    
+    
+    likes PostLike[]
+    post Post[]
+
+    userCommentLike CommentLike[]
+
+    TriggeredNotifications Notifications[] @relation("TriggeredNotifications")
+    ReceiverNotifications Notifications[] @relation("ReceiverNotifications")
+
+    Following Follow[] @relation("Following")
+    followers Follow[] @relation("Follower")
+
+    blocked Block[] @relation("blocked")
+    blocker Block[] @relation("Blocker")
+
+    userMessage Message[] @relation("Sender")
+    userReceivedMessage Message[] @relation("Receiver")
+
+    userComment Comment[]
+
+    createdConversations Conversation[] @relation("ConversationCreator")
+    conversationsAsParticipantOne Conversation[] @relation("ConversationParticipantOne")
+    conversationsAsParticipantTwo Conversation[] @relation("ConversationParticipantTwo")
+
+
+    userParticipationConv ConversationParticipant[]
+    SearchHistory SearchHistory[]
+}
+
+
+model Post {
+    id String @id @default(cuid())
+    title String
+    content String?
+    images String[]
+    createdAt DateTime @default(now())
+    deletedAt DateTime?
+    Category Category
+
+    moderationStatus ModerationStatus
+    isAi Boolean @default(false)
+    
+    comment Comment[]
+    likes PostLike[]
+    notif Notifications[]
+    postShared Message[]
+    userId String
+    author UserProfile @relation( fields: [userId], references: [id])
+}
+
+model Comment {
+    id String @id @default(cuid())
+    content String
+    images String[]
+    createdAt DateTime @default(now())
+    deletedAt DateTime?
+    moderationStatus ModerationStatus
+    isAi Boolean @default(false)
+
+    // A quel post/comment le comment est dédiée //
+    responseToCommentId String?
+    responseToComment Comment? @relation("CommentReplies" , fields: [responseToCommentId], references: [id])
+
+
+    replies Comment[] @relation("CommentReplies")
+
+    Likes CommentLike[]
+    authorId String
+    author UserProfile @relation(fields: [authorId], references: [id])
+    postId String
+    post Post @relation(fields: [postId], references: [id])
+}
+
+
+    // Table Pivot, nécessaire d'en créer une manuellement car besoin de faire des requete dessus //
+model PostLike {
+    id String @id @default(cuid())
+
+    post_id String
+    post Post @relation( fields: [post_id], references: [id])
+
+    user_id String
+    user UserProfile @relation(fields: [user_id], references: [id])
+
+    createdAt DateTime @default(now())
+    @@unique([user_id, post_id])
+}
+
+
+// Table Pivot, nécessaire d'en créer une manuellement car besoin de faire des requete dessus //
+
+model CommentLike {
+    id String @id @default(cuid())
+
+    comment_id String
+    comment Comment @relation(fields: [comment_id], references: [id])
+
+    user_id String
+    user UserProfile @relation(fields: [user_id], references: [id])
+
+    createdAt DateTime @default(now())
+    @@unique([user_id, comment_id])
+}
+
+
+model Follow {
+    id String @id @default(cuid())
+    createdAt DateTime @default(now())
+
+    // Following et Follower pour bien faire la difference entre les 2//
+
+    FollowingId String
+    Following UserProfile @relation("Following", fields: [FollowingId], references: [id])
+
+    followerId String
+    follower UserProfile @relation("Follower", fields : [followerId], references: [id])
+
+    @@unique([FollowingId, followerId])
+}
+
+model Block {
+    id String @id @default(cuid())
+    blockedById String
+    blocked UserProfile @relation("blocked", fields: [blockedById], references:[id])
+
+    blockerId String
+    blocker UserProfile @relation("Blocker", fields: [blockerId], references: [id])
+
+    createdAt DateTime @default(now())
+    @@unique([blockerId, blockedById])
+
+}
+
+
+model Conversation {
+    id String @id @default(cuid())
+
+    createdAt DateTime @default(now())
+
+    creatorId String
+    creator UserProfile @relation("ConversationCreator", fields: [creatorId], references:[id])
+
+    participantOneId String
+    participantOne UserProfile @relation("ConversationParticipantOne", fields: [participantOneId], references:[id])
+
+    participantTwoId String
+    participantTwo UserProfile @relation("ConversationParticipantTwo", fields: [participantTwoId], references:[id])
+
+    participant ConversationParticipant[]
+    messages Message[]
+
+    @@unique([participantOneId, participantTwoId])
+}
+
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  
+  userId         String
+  user           UserProfile  @relation(fields: [userId], references: [id])
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+
+  @@unique([userId, conversationId])
+}
+
+model Message {
+    id String @id @default(cuid())
+    content String
+    createdAt DateTime @default(now())
+
+    senderId String
+    sender UserProfile @relation("Sender", fields: [senderId], references: [id])
+
+    receiverId String
+    receiver UserProfile @relation("Receiver",fields : [receiverId], references:[id])
+
+    imagesUrl String?
+
+    sharedPostId   String?     
+    sharedPost     Post?        @relation(fields: [sharedPostId], references: [id], onDelete: SetNull)
+
+    isRead Boolean?
+
+    conversationId String
+    conversation Conversation @relation(fields: [conversationId], references: [id])
+}
+
+
+model Notifications {
+    id String @id @default(cuid())
+    createdAt DateTime @default(now())
+
+    postId String?
+    post Post? @relation(fields: [postId], references: [id])
+
+    actorId   String
+    actor     UserProfile  @relation("TriggeredNotifications", fields: [actorId], references: [id], onDelete: Cascade)
+
+    type NotificationsTypes
+    isRead Boolean?
+
+    userId String
+    userNotif UserProfile @relation("ReceiverNotifications", fields: [userId], references: [id])
+}
+
+model SearchHistory {
+    id String @id @default(cuid())
+    createdAt DateTime @default(now())
+    query String
+
+    userId String
+    user UserProfile @relation(fields: [userId], references: [id])
+}

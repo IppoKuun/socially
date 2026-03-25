@@ -7,7 +7,6 @@ Le produit est text-first : le texte structure l’expérience, les images enric
 
 Cette V1 a un objectif d’entraînement à travailler de renforcer mes compétence sur ma stack et surtout d'apprendre a travailler comme attendu dans milieux pro : cadrer un produit, fixer des règles fonctionnelles claires, puis découper le tout en backlog, user stories et tickets etc.
 
----
 
 ## 1. Périmètre V1
 
@@ -258,8 +257,6 @@ Règles :
 - affiche les commentaires
 - sert de point d’entrée aux interactions de détail
 
-Note :
-- la spécification détaillée du permalink commentaire est différée au prototype dédié
 
 ### 5.9 Billing `/billing` et `/settings/billing`
 - page visible en V1
