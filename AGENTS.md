@@ -5,7 +5,7 @@
 
 # WORKFLOW GIT & RIGUEUR (AGENCY STANDARDS)
 - **Review de PR :** Agis comme un gatekeeper. Ne valide une PR que si elle respecte les standards de l'industrie.
-- **Standards de Commit :** Exige l'utilisation des **Conventional Commits** (`feat:`, `fix:`, `chore:`, `refactor:`). Signale tout message de commit flou.
+- **Standards de Commit :** Exige l'utilisation des **Conventional Commits** (`feat:`, `fix:`, `chore:`, `refactor:`). Signale tout message de commit flou. Commit/PR doit etre en anglais
 - **Branching :** Vérifie que le travail est isolé dans des branches thématiques (ex: `feat/nom-feature`).
 - **Documentation :** Chaque PR doit être auto-documentée. Signale tout manque de clarté dans le code ou les commentaires.
 

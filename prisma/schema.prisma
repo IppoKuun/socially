@@ -127,7 +127,7 @@ model Comment {
     content String
     images String[]
     createdAt DateTime @default(now())
-    deletedAt DateTime
+    deletedAt DateTime?
     moderationStatus ModerationStatus
     isAi Boolean @default(false)
 
