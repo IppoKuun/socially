@@ -94,7 +94,9 @@ model UserProfile {
 
     userComment Comment[]
 
-    conversation Conversation[]
+    createdConversations Conversation[] @relation("ConversationCreator")
+    conversationsAsParticipantOne Conversation[] @relation("ConversationParticipantOne")
+    conversationsAsParticipantTwo Conversation[] @relation("ConversationParticipantTwo")
 
 
     userParticipationConv ConversationParticipant[]
@@ -211,11 +213,19 @@ model Conversation {
 
     createdAt DateTime @default(now())
 
-    userId String
-    userConversations UserProfile @relation (fields: [userId], references:[id])
+    creatorId String
+    creator UserProfile @relation("ConversationCreator", fields: [creatorId], references:[id])
+
+    participantOneId String
+    participantOne UserProfile @relation("ConversationParticipantOne", fields: [participantOneId], references:[id])
+
+    participantTwoId String
+    participantTwo UserProfile @relation("ConversationParticipantTwo", fields: [participantTwoId], references:[id])
 
     participant ConversationParticipant[]
     messages Message[]
+
+    @@unique([participantOneId, participantTwoId])
 }
 
 
@@ -256,6 +266,7 @@ model Message {
 
 model Notifications {
     id String @id @default(cuid())
+    createdAt DateTime @default(now())
 
     postId String?
     post Post? @relation(fields: [postId], references: [id])
@@ -278,4 +289,3 @@ model SearchHistory {
     userId String
     user UserProfile @relation(fields: [userId], references: [id])
 }
-
