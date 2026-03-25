@@ -233,6 +233,8 @@ model ConversationParticipant {
 
 model Message {
     id String @id @default(cuid())
+    content String
+    createdAt DateTime @default(now())
 
     senderId String
     sender UserProfile @relation("Sender", fields: [senderId], references: [id])
@@ -276,5 +278,4 @@ model SearchHistory {
     userId String
     user UserProfile @relation(fields: [userId], references: [id])
 }
-
 
