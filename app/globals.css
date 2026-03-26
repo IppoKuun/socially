@@ -1,26 +1,187 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Palette globale */
+  --bg-main: #090b10; /* Fond Principal */
+  --bg-surface: #12151c;
+  --bg-surface-light: #1c212b;
+  --primary: #2f7cff;
+  --primary-glow: #61a3ff;
+  --primary-alpha: rgba(47, 124, 255, 0.14);
+  --text-main: #f4f7fb;
+  --text-muted: #a8b0be;
+  --text-dim: #7a8291;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(47, 124, 255, 0.35);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --background: var(--bg-main);
+  --foreground: var(--text-main);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg-main);
+  --color-foreground: var(--text-main);
+  --color-surface: var(--bg-surface);
+  --color-surface-light: var(--bg-surface-light);
+  --color-primary: var(--primary);
+  --color-primary-glow: var(--primary-glow);
+  --color-text-muted: var(--text-muted);
+  --color-text-dim: var(--text-dim);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-accent: var(--border-accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  border-color: var(--border-subtle);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.5;
+  color: var(--text-main);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  background-color: var(--bg-main);
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(47, 124, 255, 0.16),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at top center,
+      rgba(255, 255, 255, 0.04),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(47, 124, 255, 0.1),
+      transparent 24%
+    ),
+    linear-gradient(180deg, #0b0f16 0%, var(--bg-main) 38%, #080a0f 100%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--primary-alpha);
+  color: var(--text-main);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #fff 0%, var(--text-muted) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.card-premium {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-premium);
+  transition: var(--transition);
+}
+
+.card-premium:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.input-field {
+  padding: 12px 16px;
+  color: var(--text-main);
+  outline: none;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+}
+
+.input-field:focus {
+  background: rgba(47, 124, 255, 0.05);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-alpha);
+}
+
+.btn-primary {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 20px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  background: var(--primary);
+  border: none;
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+}
+
+.btn-primary:hover {
+  background: var(--primary-glow);
+  box-shadow: 0 0 20px rgba(97, 163, 255, 0.35);
+}
+
+.glass {
+  background: rgba(18, 21, 28, 0.72);
+  border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-surface-light);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
+
+@keyframes pulse-indigo {
+  0% {
+    box-shadow: 0 0 0 0 rgba(47, 124, 255, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(47, 124, 255, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(47, 124, 255, 0);
+  }
+}
+
+.active-indicator {
+  animation: pulse-indigo 2s infinite;
 }
