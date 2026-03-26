@@ -45,7 +45,7 @@ export async function middleware(req: NextRequest) {
       await myPrisma.anonymousVisitor.create({
         data: {
           visitorId: newId,
-          language: anonymousLanguage ?? "unknow",
+          language: anonymousLanguage ?? "unknown",
           utm_source: utm_source,
           utm_campaign: utm_campaign,
           utm_medium: utm_medium,
