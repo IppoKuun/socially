@@ -128,8 +128,6 @@ model AnonymousVisitor {
   language  String
   createdAt DateTime @default(now())
 
-  last_login_at   DateTime?
-  last_seen_at    DateTime?
   utm_source      String?
   utm_medium      String?
   utm_campaign    String?
