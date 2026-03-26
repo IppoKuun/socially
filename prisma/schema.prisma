@@ -11,6 +11,8 @@ generator client {
 enum Theme {
   DARK
   LIGHT
+
+  @@schema("app")
 }
 
 // ModerationStatus est le status que renvoie l'IA apres avoir placé analysé le post //
@@ -19,6 +21,8 @@ enum ModerationStatus {
   SAFE
   UNCERTAIN
   UNSAFE
+
+  @@schema("app")
 }
 
 // TICKER A FAIRE CODEX //
@@ -27,16 +31,22 @@ enum Category {
   TECH
   SOCIETY
   CULTURE_ARTS
+
+  @@schema("app")
 }
 
 enum NotificationsTypes {
   LIKE
   COMMENT
   FOLLOW
+
+  @@schema("app")
 }
 
 enum language {
   FRENCH
+
+  @@schema("app")
 }
 
 // isAi est un champs boolean qui vaut true quand le compte ou le post est générée par IA //
