@@ -1,5 +1,6 @@
 datasource db {
   provider = "postgresql"
+  schemas  = ["app", "auth"]
 }
 
 generator client {
@@ -101,6 +102,8 @@ model UserProfile {
 
     userParticipationConv ConversationParticipant[]
     SearchHistory SearchHistory[]
+
+    @@schema("app")
 }
 
 
@@ -122,6 +125,8 @@ model Post {
     postShared Message[]
     userId String
     author UserProfile @relation( fields: [userId], references: [id])
+
+    @@schema("app")
 }
 
 model Comment {
@@ -145,6 +150,8 @@ model Comment {
     author UserProfile @relation(fields: [authorId], references: [id])
     postId String
     post Post @relation(fields: [postId], references: [id])
+
+    @@schema("app")
 }
 
 
@@ -160,10 +167,11 @@ model PostLike {
 
     createdAt DateTime @default(now())
     @@unique([user_id, post_id])
+    @@schema("app")
 }
 
 
-// Table Pivot, nécessaire d'en créer une manuellement car besoin de faire des requete dessus //
+// Table Pivot, nécessaire d'en créer une manuellement car besoin de faire des requete dessus + a ses propres regles métier//
 
 model CommentLike {
     id String @id @default(cuid())
@@ -176,6 +184,7 @@ model CommentLike {
 
     createdAt DateTime @default(now())
     @@unique([user_id, comment_id])
+    @@schema("app")
 }
 
 
@@ -192,6 +201,7 @@ model Follow {
     follower UserProfile @relation("Follower", fields : [followerId], references: [id])
 
     @@unique([FollowingId, followerId])
+    @@schema("app")
 }
 
 model Block {
@@ -204,6 +214,7 @@ model Block {
 
     createdAt DateTime @default(now())
     @@unique([blockerId, blockedById])
+    @@schema("app")
 
 }
 
@@ -226,6 +237,7 @@ model Conversation {
     messages Message[]
 
     @@unique([participantOneId, participantTwoId])
+    @@schema("app")
 }
 
 
@@ -239,6 +251,7 @@ model ConversationParticipant {
   conversation   Conversation @relation(fields: [conversationId], references: [id])
 
   @@unique([userId, conversationId])
+  @@schema("app")
 }
 
 model Message {
@@ -261,6 +274,8 @@ model Message {
 
     conversationId String
     conversation Conversation @relation(fields: [conversationId], references: [id])
+
+    @@schema("app")
 }
 
 
@@ -279,6 +294,8 @@ model Notifications {
 
     userId String
     userNotif UserProfile @relation("ReceiverNotifications", fields: [userId], references: [id])
+
+    @@schema("app")
 }
 
 model SearchHistory {
@@ -288,4 +305,6 @@ model SearchHistory {
 
     userId String
     user UserProfile @relation(fields: [userId], references: [id])
+
+    @@schema("app")
 }
