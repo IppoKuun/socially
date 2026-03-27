@@ -30,8 +30,11 @@ jobs:
       - name: Vérification du Lint (ESLint)
         run: npm run lint
 
+      - name: Génération des types Next.js
+        run: npx next typegen
+
       - name: Vérification des types (TypeScript)
-        run:  npx tsc --noEmit
+        run: npm run typecheck
 
       - name: Tentative de Build
         run: npm run build
