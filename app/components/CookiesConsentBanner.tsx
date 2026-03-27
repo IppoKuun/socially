@@ -2,21 +2,20 @@
 
 import { cookiesResponseAction } from "../actions";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 
 type Props = {
-  utm_medium?: string;
-  utm_campaign?: string;
-  utm_source?: string;
   refere?: string | null;
   language?: string | null;
 };
-export default function CookiesConsentBanner({
-  utm_medium,
-  utm_campaign,
-  utm_source,
-  refere,
-  language,
-}: Props) {
+export default function CookiesConsentBanner({ refere, language }: Props) {
+  const t = useTranslations("cookies");
+  const sp = useSearchParams();
+
+  const utm_source = sp.get("utm_source") as string | undefined;
+  const utm_medium = sp.get("utm_medium") as string | undefined;
+  const utm_campaign = sp.get("utm_campaign") as string | undefined;
+
   const payload = {
     utm_source,
     utm_medium,
@@ -25,7 +24,6 @@ export default function CookiesConsentBanner({
     language,
   };
 
-  const t = useTranslations("cookies");
   return (
     <div className="">
       <section className="">
