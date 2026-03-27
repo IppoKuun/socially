@@ -52,6 +52,7 @@ export async function cookiesResponseAction(
         utm_source: payload?.utm_source,
         utm_campaign: payload?.utm_campaign,
         utm_medium: payload?.utm_medium,
+        referrer_domain: payload?.refere,
       },
     });
   }
