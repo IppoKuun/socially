@@ -50,9 +50,17 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
       const sessionActive = c.get("session_active");
       if (sessionActive?.value !== "true") {
         if (visitorId) {
-          await myPrisma.anonymousVisitor.update({
+          // UPDATE MANY POUR EVITEZ UN CRASH //
+          await myPrisma.anonymousVisitor.updateMany({
             where: { visitorId },
             data: { visitCount: { increment: 1 } },
+          });
+          c.set("session_active", "true", {
+            path: "/",
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            // PAS DE MAX AGE : Le cookies se supprime lors de la déconnexion //
           });
         }
       }

@@ -32,6 +32,8 @@ export async function cookiesResponseAction(
     c.set("session_active", "true", {
       path: "/",
       httpOnly: true,
+      secure: true,
+      sameSite: "lax",
       // PAS DE MAX AGE : Le cookies se supprime lors de la déconnexion //
     });
 
@@ -40,6 +42,7 @@ export async function cookiesResponseAction(
       path: "/",
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 365,
+      secure: true,
     });
     await myPrisma.anonymousVisitor.create({
       data: {
