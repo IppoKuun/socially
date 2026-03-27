@@ -18,6 +18,7 @@ export async function cookiesResponseAction(
 ) {
   // User a Consent ont lui redemande plus pendant 1 ans //
   const c = await cookies();
+  console.log("serv action cookie", consent);
   c.set("cookie_consent", `${consent}`, {
     path: "/",
     httpOnly: false,
@@ -35,6 +36,11 @@ export async function cookiesResponseAction(
     });
 
     const visitorId = createId();
+    c.set("visitorId", visitorId, {
+      path: "/",
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 365,
+    });
     await myPrisma.anonymousVisitor.create({
       data: {
         visitorId,
@@ -44,6 +50,15 @@ export async function cookiesResponseAction(
         utm_campaign: payload?.utm_campaign,
         utm_medium: payload?.utm_medium,
       },
+    });
+  }
+  if (!consent) {
+    c.set("cookie_consent", "false", {
+      path: "/",
+      httpOnly: false,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 365,
     });
   }
 }

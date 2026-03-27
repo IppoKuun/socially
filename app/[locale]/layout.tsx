@@ -37,31 +37,24 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
     const language = h.get("accept-language");
     const refere = h.get("referer");
 
-    const utm_source = undefined;
-    const utm_campaign = undefined;
-    const utm_medium = undefined;
-
     if (!hasConsent) {
+      console.log("redirect COOKIE banner");
       cookiesBanner = (
-        <CookiesConsentBanner
-          utm_medium={utm_medium}
-          utm_campaign={utm_campaign}
-          utm_source={utm_source}
-          refere={refere}
-          language={language}
-        />
+        <CookiesConsentBanner refere={refere} language={language} />
       );
     }
 
     // Si user a accepté les cookies, on regarde si il a deja une session, si non ont lui increment sont visitCount //
     if (hasConsent?.value === "true") {
-      const visitorId = String(c.get("visitorId"));
+      const visitorId = c.get("visitorId")?.value;
       const sessionActive = c.get("session_active");
-      if (sessionActive?.value === "true") {
-        await myPrisma.anonymousVisitor.update({
-          where: { visitorId },
-          data: { visitCount: { increment: 1 } },
-        });
+      if (sessionActive?.value !== "true") {
+        if (visitorId) {
+          await myPrisma.anonymousVisitor.update({
+            where: { visitorId },
+            data: { visitCount: { increment: 1 } },
+          });
+        }
       }
     }
   }
