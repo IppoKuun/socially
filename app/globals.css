@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
+/* Variables globales du design system.
+   Toutes les couleurs, rayons et ombres importantes vivent ici pour eviter
+   de disperser des valeurs en dur partout dans les composants. */
 :root {
-  /* Palette globale */
   --bg-main: #090b10; /* Fond Principal */
   --bg-surface: #12151c;
   --bg-surface-light: #1c212b;
@@ -37,19 +39,29 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* Reset */
+/* Reset global :
+   - box-sizing harmonise la facon dont largeur/padding/bordure sont calcules
+   - utile pour eviter des comportements differents entre composants */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+/* On supprime les marges et paddings par defaut du navigateur.
+   On unifie aussi la couleur de bordure par defaut pour les elements stylables. */
 * {
   margin: 0;
   padding: 0;
   border-color: var(--border-subtle);
 }
 
+/* Base visuelle du document :
+   - fond principal de l'application
+   - typo globale
+   - line-height confortable
+   - anti-aliasing pour un rendu plus propre
+   - overflow-x hidden pour eviter un scroll horizontal parasite */
 body {
   min-height: 100vh;
   overflow-x: hidden;
@@ -78,11 +90,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Couleur de selection de texte.
+   Petit detail, mais utile pour rester coherent avec la palette de l'app. */
 ::selection {
   background: var(--primary-alpha);
   color: var(--text-main);
 }
 
+/* Reglage minimal des titres.
+   Le tracking legerement negatif aide les gros titres a paraitre plus compacts
+   et plus premium. */
 h1,
 h2,
 h3 {
@@ -90,12 +107,17 @@ h3 {
   letter-spacing: -0.02em;
 }
 
+/* Helper pour texte en degrade.
+   A utiliser plutot sur des titres, labels ou accroches, pas sur du long texte. */
 .text-gradient {
   background: linear-gradient(135deg, #fff 0%, var(--text-muted) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
+/* Carte principale du design system.
+   Cette classe donne une surface sombre, un radius, une bordure et une ombre.
+   Bonne base pour panneaux, cards, widgets, previews, etc. */
 .card-premium {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
@@ -104,11 +126,14 @@ h3 {
   transition: var(--transition);
 }
 
+/* Au survol, la carte gagne un peu de relief sans animation excessive. */
 .card-premium:hover {
   border-color: rgba(255, 255, 255, 0.12);
   transform: translateY(-2px);
 }
 
+/* Champ de formulaire principal.
+   Peut servir pour input, textarea, search bar ou faux champ interactif. */
 .input-field {
   padding: 12px 16px;
   color: var(--text-main);
@@ -119,12 +144,16 @@ h3 {
   transition: var(--transition);
 }
 
+/* Etat focus du champ :
+   bordure accentuee + halo de focus pour bien signaler l'interaction. */
 .input-field:focus {
   background: rgba(47, 124, 255, 0.05);
   border-color: var(--primary);
   box-shadow: 0 0 0 4px var(--primary-alpha);
 }
 
+/* Bouton d'action principal.
+   A reserver aux CTA importants : submit, follow, save, create, etc. */
 .btn-primary {
   display: inline-flex;
   gap: 8px;
@@ -139,11 +168,15 @@ h3 {
   transition: var(--transition);
 }
 
+/* Hover du bouton principal :
+   on augmente la luminosite et on ajoute un glow pour renforcer l'appel a l'action. */
 .btn-primary:hover {
   background: var(--primary-glow);
   box-shadow: 0 0 20px rgba(97, 163, 255, 0.35);
 }
 
+/* Surface "glass" / panneau translucide.
+   Utile pour topbar sticky, header flottant, overlay ou bloc secondaire premium. */
 .glass {
   background: rgba(18, 21, 28, 0.72);
   border-bottom: 1px solid var(--border-subtle);
@@ -151,23 +184,29 @@ h3 {
   -webkit-backdrop-filter: blur(12px);
 }
 
+/* Scrollbar custom pour garder une coherence dark mode jusque dans les details. */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
+/* Rail de la scrollbar. */
 ::-webkit-scrollbar-track {
   background: var(--bg-main);
 }
 
+/* Poignee de la scrollbar. */
 ::-webkit-scrollbar-thumb {
   background: var(--bg-surface-light);
   border-radius: 10px;
 }
 
+/* Etat hover de la poignee. */
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-dim);
 }
 
+/* Animation de pulse bleue.
+   Pratique pour indiquer un statut actif, une notif recente ou une pastille d'etat. */
 @keyframes pulse-indigo {
   0% {
     box-shadow: 0 0 0 0 rgba(47, 124, 255, 0.4);
@@ -182,6 +221,8 @@ h3 {
   }
 }
 
+/* Helper qui applique l'animation.
+   A utiliser sur des petits elements, pas sur de gros blocs entiers. */
 .active-indicator {
   animation: pulse-indigo 2s infinite;
 }

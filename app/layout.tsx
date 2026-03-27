@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-
 import { geistMono, geistSans } from "./fonts";
 import "./globals.css";
 
