@@ -1,4 +1,7 @@
+"use client";
+
 import { cookiesResponseAction } from "../actions";
+import { useTranslations } from "next-intl";
 
 type Props = {
   utm_medium?: string;
@@ -21,20 +24,22 @@ export default function CookiesConsentBanner({
     refere,
     language,
   };
+
+  const t = useTranslations("cookies");
   return (
     <div className="">
       <section className="">
-        <h1 className="">Cookies banner</h1>
-        <p className="">...</p>
+        <h1 className="">{t("title")}</h1>
+        <p className="">{t("description")}</p>
         <input type="submit"></input>
         <button
           onClick={() => cookiesResponseAction(true, payload)}
           className=""
         >
-          Accepter les cookies
+          {t("accept")}
         </button>
         <button onClick={() => cookiesResponseAction(false)} className="">
-          Refuser
+          {t("decline")}
         </button>
       </section>
     </div>

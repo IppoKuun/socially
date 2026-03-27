@@ -1,6 +1,7 @@
 # README
 
 ## Stack utilisé
+
 - Next.js 16
 - React 19
 - TypeScript
@@ -16,3 +17,7 @@
 - Zod
 - Framer Motion
 - Lucide-react
+
+### FAIT PAR IA:
+
+- i18n

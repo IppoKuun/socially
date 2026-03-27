@@ -1,0 +1,22 @@
+{
+  "cookies": {
+    "title": "Préférences de cookies",
+    "description": "Nous utilisons des cookies pour améliorer votre expérience, mémoriser vos préférences et comprendre les sources de trafic.",
+    "accept": "Accepter les cookies",
+    "decline": "Refuser",
+    "settings": "Gérer les préférences"
+  },
+  "login": {
+    "title": "Bon retour",
+    "description": "Connectez-vous pour continuer sur Socially.",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "forgotPassword": "Mot de passe oublié ?",
+    "divider": "ou continuer avec",
+    "google": "Continuer avec Google",
+    "microsoft": "Continuer avec Microsoft",
+    "signupPrompt": "Vous n'avez pas encore de compte ?",
+    "signupLink": "Créer un compte"
+  }
+}
