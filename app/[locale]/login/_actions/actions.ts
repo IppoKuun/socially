@@ -3,7 +3,10 @@ import { myPrisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
-export default async function createProfile(FormData: FormData) {
+export default async function createProfile(
+  prevState: any,
+  FormData: FormData,
+) {
   const c = await cookies();
   const visitorId = c.get("visitorId")?.value;
   try {
