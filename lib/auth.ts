@@ -28,12 +28,12 @@ const createAuth = () =>
         accountType: {
           type: ["public", "backoffice"],
           required: true,
-          input: false,
+          input: true,
         },
         trackingData: {
           type: "json",
           required: false,
-          input: false,
+          input: true,
         },
       },
     },

@@ -11,7 +11,6 @@ generator client {
 enum Theme {
   DARK
   LIGHT
-
   @@schema("app")
 }
 
@@ -39,7 +38,6 @@ enum NotificationsTypes {
   LIKE
   COMMENT
   FOLLOW
-
   @@schema("app")
 }
 
@@ -52,36 +50,37 @@ enum language {
 // isAi est un champs boolean qui vaut true quand le compte ou le post est générée par IA //
 
 model UserProfile {
-  id          String @id @unique @default(cuid())
+  id String @id @unique @default(cuid())
 
   // RELATION AVEC TABLES BETTER AUTH //
-  userId      String @unique
-  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  displayName String
-
+  displayName String 
   // URL Car Sauvegarder dans Cloudinary//
-  avatarUrl String?
-  bannerUrl String?
-  bio       String?
-  language  String
-  theme     Theme    @default(DARK)
-  createdAt DateTime @default(now())
-
+  avatarUrl   String?
+  bannerUrl   String?
+  bio         String?
+  language    String
+  theme       Theme    @default(DARK)
+  createdAt   DateTime @default(now())
   // SOFT_DELETE //
   deletedAt        DateTime?
   defineltyDeleted DateTime?
 
-  pinnedPostId    String? 
-
+  pinnedPostId       String? 
+  
   // Champs pour le tracking //
-  hasAcceptedCookies Boolean @default(false)
-  last_login_at   DateTime?
-  last_seen_at    DateTime?
-  utm_source      String?
-  utm_medium      String?
-  utm_campaign    String?
-  referrer_domain String?
+  hasAcceptedCookies Boolean   @default(false)
+  last_login_at      DateTime?
+  last_seen_at       DateTime?
+  utm_source         String?
+  utm_medium         String?
+  utm_campaign       String?
+  referrer_domain    String?
+  visitCountBeforeLogin Int?
+  anonymeCreatedAt DateTime?
+
 
   hasOnboarded Boolean @default(false)
 
@@ -118,15 +117,14 @@ model UserProfile {
   @@schema("app")
 }
 
-
 model AnonymousVisitor {
-  id          String @id @unique @default(cuid())
+  id String @id @unique @default(cuid())
 
-  visitorId String @unique @default(cuid())
-  hasAcceptedCookies Boolean @default(false)
-  visitCount Int @default(1)
-  language  String
-  createdAt DateTime @default(now())
+  visitorId          String   @unique @default(cuid())
+  hasAcceptedCookies Boolean  @default(false)
+  visitCount         Int      @default(1)
+  language           String
+  createdAt          DateTime @default(now())
 
   utm_source      String?
   utm_medium      String?
@@ -332,18 +330,35 @@ model SearchHistory {
   @@schema("app")
 }
 
+
+model StaffProfile {
+  id String @id @default(cuid())
+  displayName String 
+  // URL Car Sauvegarder dans Cloudinary//
+  avatarUrl   String?
+  deletedAt        DateTime?
+  defineltyDeleted DateTime?
+
+ @@schema("auth")
+}
+
 // CHAMPS DE BETTER AUTH //
+
 model User {
-  id            String    @id
+  id            String   @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean  @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  profile       UserProfile?
-  sessions      Session[]
-  accounts      Account[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  profile  UserProfile?
+  sessions Session[]
+  accounts Account[]
+
+  AccountType  String
+  trackingData String
 
   @@unique([email])
   @@map("user")
