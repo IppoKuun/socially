@@ -2,7 +2,8 @@ import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { myPrisma } from "./prisma";
-
+import { i18n } from "@better-auth/i18n";
+import { authTranslations } from "./auth-i18n";
 // Fonction pour récupéré de l'Instance better auth //
 const createAuth = () =>
   betterAuth({
@@ -11,6 +12,7 @@ const createAuth = () =>
     database: prismaAdapter(myPrisma, { provider: "postgresql" }),
     // AVEC RESEND AJOUTEZ EMAIL VERIFICATIONS //
     emailAndPassword: { enabled: true },
+
     socialProviders: {
       google: {
         clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -43,7 +45,8 @@ const createAuth = () =>
     databaseHooks: {
       user: {
         create: {
-          before: async (user) => {
+          // The app profile must be created after the auth user exists so we can reuse its id.
+          after: async (user) => {
             // TS N'arrive pas a reconnaitres les extra fields dans ce Hooks, ont doit donc l'aidez//
 
             // Ont type les datas Tracké //
@@ -71,6 +74,7 @@ const createAuth = () =>
             if (typedUser.accountType === "public") {
               await myPrisma.userProfile.create({
                 data: {
+                  userId: user.id,
                   displayName: user.name,
                   avatarUrl: user.image,
                   hasAcceptedCookies:
@@ -85,21 +89,24 @@ const createAuth = () =>
                 },
               });
             }
+            // Il faut mettre une jointure avec la table User de better auth //
             if (typedUser.accountType === "backoffice") {
               await myPrisma.staffProfile.create({
                 data: { displayName: user.name },
               });
             }
-
-            return {
-              data: { ...user, accountType: typedUser },
-            };
           },
         },
       },
     },
-
-    plugins: [nextCookies()],
+    plugins: [
+      i18n({
+        translations: authTranslations,
+        defaultLocale: "fr",
+        detection: ["header", "cookie"],
+      }),
+      nextCookies(),
+    ],
   });
 
 type AuthInstance = ReturnType<typeof createAuth>;
