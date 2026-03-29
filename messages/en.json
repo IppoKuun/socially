@@ -17,7 +17,10 @@
     },
     "email": "Email",
     "password": "Password",
-    "submit": "Sign in",
+    "submit": {
+      "signin": "Sign in",
+      "signup": "Create account"
+    },
     "forgotPassword": "Forgot password?",
     "divider": "or continue with",
     "google": "Continue with Google",

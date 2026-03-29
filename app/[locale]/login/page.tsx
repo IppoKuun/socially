@@ -114,13 +114,15 @@ export default function LoginPage() {
           ></input>
           <span className="">{t("forgotPassword")}</span>
 
+          {/*FAIRE CLASSE ERROR AVEC IA */}
           {error ?? <p className="">{error}</p>}
+          {state.userMsg ?? <p className=""></p>}
           <button disabled={loading || isPending} type="submit">
             {t("submit.signin")}
           </button>
 
           <span className="">{t("divider")}</span>
-          <div className="">{/*METTRE PROVIDERS */}</div>
+          <div className="">{/*METTRE google provider */}</div>
           <div className="">
             <p className="">{t("signupPrompt")}</p>
             <button onClick={() => setSignMode("signup")} className="">

@@ -2,15 +2,22 @@ import { auth } from "@/lib/auth";
 import { myPrisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { APIError } from "better-auth";
+import { myError } from "@/lib/myError";
+
+export type FormState = {
+  userMsg: string | null;
+  ok: boolean;
+};
 
 export default async function createProfile(
-  prevState: any,
+  _prevState: FormState,
   FormData: FormData,
 ) {
   const c = await cookies();
   const visitorId = c.get("visitorId")?.value;
   try {
-    // variable null comme ça si prisma le trouve pas, il reste null et renvoie pas  une erreur pour ça. //
+    // variable null comme ça si prisma le trouve pas, il reste null et renvoie pas ne renvoie pas err 500 pour ça. //
     let visitor = null;
 
     visitor = await myPrisma.anonymousVisitor
@@ -19,7 +26,7 @@ export default async function createProfile(
       })
       .catch(() => null);
 
-    const user = await auth.api.signUpEmail({
+    await auth.api.signUpEmail({
       body: {
         email: FormData.get("email") as string,
         password: FormData.get("password") as string,
@@ -34,10 +41,17 @@ export default async function createProfile(
         },
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error.message);
-    return { ok: false, userMsg: error.message };
+    if (error instanceof APIError) {
+      return { ok: false, userMsg: error.message };
+    }
+    if (error instanceof myError) {
+      return { ok: false, userMsg: error.message };
+    } else {
+      // METTRE i18n TRADUCTIONS //
+      return { ok: false, userMsg: "" };
+    }
   }
-
   redirect("/onboarding");
 }
