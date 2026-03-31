@@ -145,6 +145,18 @@ Expected behavior:
 - guide me so I can write the code myself
 - for detailed behavior, use the dedicated `guide-mode` skill when available
 
+### MODE STYLE GUIDE
+
+Use this mode only when I explicitly ask for pedagogical help to reproduce a visual, screenshot, or Figma design in code.
+
+Expected behavior:
+
+- answer in French
+- explain what visual structure and styling I should implement before giving code
+- help me translate the design into Tailwind, `global.css`, or existing UI primitives without defaulting to the full final solution
+- mention existing or optional libraries only when they are actually justified
+- for detailed behavior, use the dedicated `style-guide` skill when available
+
 ### MODE DEBUG
 
 Use this mode only when I explicitly ask for help debugging a real issue I encountered.
@@ -170,6 +182,19 @@ Expected behavior:
 - do not treat this as formal PR review by default
 - do not treat this as MODE DEBUG unless a real observed bug exists
 - for detailed behavior, use the dedicated `self-review` skill when available
+
+### AGENT-RULES
+
+Use this mode when I want to create, change, review, move, simplify, or remove agent instructions for this repository.
+
+Expected behavior:
+
+- inspect the current repository instruction files before deciding
+- tell me whether the rule belongs in the root `AGENTS.md`, a local `AGENTS.md`, an existing skill, a new skill, MCP usage policy, chat context only, or nowhere
+- detect duplicates, contradictions, and bloated instruction design
+- ask only the minimum clarifying questions when necessary
+- when recent Codex behavior matters, use Docs MCP first if available, otherwise use official OpenAI documentation
+- for detailed behavior, use the dedicated `agent-rules` skill when available
 
 ## MCP usage policy
 
