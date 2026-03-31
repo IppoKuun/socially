@@ -1,3 +1,5 @@
+"use server";
+
 import { auth } from "@/lib/auth";
 import { myPrisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
@@ -42,7 +44,12 @@ export default async function createProfile(
       },
     });
   } catch (error) {
-    console.error(error.message);
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error(error);
+    }
+
     if (error instanceof APIError) {
       return { ok: false, userMsg: error.message };
     }

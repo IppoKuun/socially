@@ -37,6 +37,14 @@
   --color-border-accent: var(--border-accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-geist: var(--font-geist-sans);
+  --font-inter: var(--font-inter);
+  --font-manrope: var(--font-manrope);
+  --font-plus-jakarta: var(--font-plus-jakarta-sans);
+  --font-sora: var(--font-sora);
+  --font-space-grotesk: var(--font-space-grotesk);
+  --font-jetbrains: var(--font-jetbrains-mono);
+  --font-ibm-plex: var(--font-ibm-plex-mono);
 }
 
 /* Reset global :

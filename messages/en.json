@@ -7,6 +7,7 @@
     "settings": "Manage preferences"
   },
   "login": {
+    "hero": "Where conversations connect.",
     "title": {
       "signin": "Welcome back",
       "signup": "Create your account"
@@ -23,6 +24,10 @@
     },
     "forgotPassword": "Forgot password?",
     "divider": "or continue with",
+    "error": {
+      "email": "Unable to sign you in right now.",
+      "social": "Unable to continue with Google right now."
+    },
     "google": "Continue with Google",
     "microsoft": "Continue with Microsoft",
     "signupPrompt": "Don't have an account yet?",

@@ -1,0 +1,38 @@
+{
+  "cookies": {
+    "title": "Preferencias de cookies",
+    "description": "Usamos cookies para mejorar tu experiencia, recordar tus preferencias y comprender las fuentes de tráfico.",
+    "accept": "Aceptar cookies",
+    "decline": "Rechazar",
+    "settings": "Gestionar preferencias"
+  },
+  "login": {
+    "hero": "Donde las conversaciones conectan.",
+    "title": {
+      "signin": "Bienvenido de nuevo",
+      "signup": "Crea tu cuenta"
+    },
+    "description": {
+      "signin": "Inicia sesión para continuar en Socially.",
+      "signup": "Únete a Socially para empezar a publicar y conectar."
+    },
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": {
+      "signin": "Iniciar sesión",
+      "signup": "Crear una cuenta"
+    },
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "divider": "o continuar con",
+    "error": {
+      "email": "No es posible iniciar sesión en este momento.",
+      "social": "No es posible continuar con Google en este momento."
+    },
+    "google": "Continuar con Google",
+    "microsoft": "Continuar con Microsoft",
+    "signupPrompt": "¿Aún no tienes una cuenta?",
+    "signupLink": "Crear una cuenta",
+    "loginPrompt": "¿Ya tienes una cuenta?",
+    "loginLink": "Iniciar sesión"
+  }
+}
