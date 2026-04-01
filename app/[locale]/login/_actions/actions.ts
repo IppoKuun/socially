@@ -6,12 +6,14 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { APIError } from "better-auth";
 import { myError } from "@/lib/myError";
+import { getTranslations } from "next-intl/server";
 
 export type FormState = {
   userMsg: string | null;
   ok: boolean;
 };
 
+const t = await getTranslations();
 export default async function createProfile(
   _prevState: FormState,
   FormData: FormData,
@@ -57,7 +59,7 @@ export default async function createProfile(
       return { ok: false, userMsg: error.message };
     } else {
       // METTRE i18n TRADUCTIONS //
-      return { ok: false, userMsg: "" };
+      return { ok: false, userMsg: t("login.error.userMsg") };
     }
   }
   redirect("/onboarding");

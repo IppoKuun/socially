@@ -5,16 +5,16 @@
    de disperser des valeurs en dur partout dans les composants. */
 :root {
   --bg-main: #090b10; /* Fond Principal */
-  --bg-surface: #12151c;
-  --bg-surface-light: #1c212b;
+  --bg-surface: #12151c; /* Fond des cartes, panneaux et sidebars */
+  --bg-surface-light: #1c212b; /* Hoover */
   --primary: #2f7cff;
-  --primary-glow: #61a3ff;
-  --primary-alpha: rgba(47, 124, 255, 0.14);
+  --primary-glow: #61a3ff; /* hoover */
+  --primary-alpha: rgba(47, 124, 255, 0.14); /* halo/focus blue*/
   --text-main: #f4f7fb;
-  --text-muted: #a8b0be;
-  --text-dim: #7a8291;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-accent: rgba(47, 124, 255, 0.35);
+  --text-muted: #a8b0be; /* txt secondaire */
+  --text-dim: #7a8291; /* texte discret*/
+  --border-subtle: rgba(255, 255, 255, 0.08); /* Bordure douce*/
+  --border-accent: rgba(47, 124, 255, 0.35); /* Bordure avec accents blue */
   --radius-lg: 16px;
   --radius-md: 12px;
   --radius-sm: 8px;
@@ -35,84 +35,81 @@
   --color-text-dim: var(--text-dim);
   --color-border-subtle: var(--border-subtle);
   --color-border-accent: var(--border-accent);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-geist: var(--font-geist-sans);
-  --font-inter: var(--font-inter);
-  --font-manrope: var(--font-manrope);
-  --font-plus-jakarta: var(--font-plus-jakarta-sans);
-  --font-sora: var(--font-sora);
-  --font-space-grotesk: var(--font-space-grotesk);
-  --font-jetbrains: var(--font-jetbrains-mono);
-  --font-ibm-plex: var(--font-ibm-plex-mono);
+  --font-sans: var(--font-geist-sans); /*Font par défault */
+  --font-mono: var(--font-geist-mono); /*  bonne pour code, valeurs techniques*/
+  --font-manrope: var(--font-manrope); /* PREMIUM, MARKETING*/
+  --font-sora: var(--font-sora); /* Titre expressif avec personnalité*/
 }
 
-/* Reset global :
-   - box-sizing harmonise la facon dont largeur/padding/bordure sont calcules
-   - utile pour eviter des comportements differents entre composants */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+@layer base {
+  /* Reset global :
+     - box-sizing harmonise la facon dont largeur/padding/bordure sont calcules
+     - utile pour eviter des comportements differents entre composants
+     - le reset reste dans la layer base pour ne pas ecraser les utilitaires Tailwind */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-/* On supprime les marges et paddings par defaut du navigateur.
-   On unifie aussi la couleur de bordure par defaut pour les elements stylables. */
-* {
-  margin: 0;
-  padding: 0;
-  border-color: var(--border-subtle);
-}
+  /* On supprime les marges et paddings par defaut du navigateur.
+     On unifie aussi la couleur de bordure par defaut pour les elements stylables. */
+  * {
+    margin: 0;
+    padding: 0;
+    border-color: var(--border-subtle);
+  }
 
-/* Base visuelle du document :
-   - fond principal de l'application
-   - typo globale
-   - line-height confortable
-   - anti-aliasing pour un rendu plus propre
-   - overflow-x hidden pour eviter un scroll horizontal parasite */
-body {
-  min-height: 100vh;
-  overflow-x: hidden;
-  line-height: 1.5;
-  color: var(--text-main);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  background-color: var(--bg-main);
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(47, 124, 255, 0.16),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at top center,
-      rgba(255, 255, 255, 0.04),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at bottom right,
-      rgba(47, 124, 255, 0.1),
-      transparent 24%
-    ),
-    linear-gradient(180deg, #0b0f16 0%, var(--bg-main) 38%, #080a0f 100%);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  /* Base visuelle du document :
+     - fond principal de l'application
+     - typo globale
+     - line-height confortable
+     - anti-aliasing pour un rendu plus propre
+     - overflow-x hidden pour eviter un scroll horizontal parasite */
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+    color: var(--text-main);
+    font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+    background-color: var(--bg-main);
+    background:
+      radial-gradient(
+        circle at top left,
+        rgba(47, 124, 255, 0.16),
+        transparent 28%
+      ),
+      radial-gradient(
+        circle at top center,
+        rgba(255, 255, 255, 0.04),
+        transparent 30%
+      ),
+      radial-gradient(
+        circle at bottom right,
+        rgba(47, 124, 255, 0.1),
+        transparent 24%
+      ),
+      linear-gradient(180deg, #0b0f16 0%, var(--bg-main) 38%, #080a0f 100%);
+    -webkit-font-smoothing: antialiased; /* Antialiasing  */
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-/* Couleur de selection de texte.
-   Petit detail, mais utile pour rester coherent avec la palette de l'app. */
-::selection {
-  background: var(--primary-alpha);
-  color: var(--text-main);
-}
+  /* Couleur de selection de texte.
+     Petit detail, mais utile pour rester coherent avec la palette de l'app. */
+  ::selection {
+    background: var(--primary-alpha);
+    color: var(--text-main);
+  }
 
-/* Reglage minimal des titres.
-   Le tracking legerement negatif aide les gros titres a paraitre plus compacts
-   et plus premium. */
-h1,
-h2,
-h3 {
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  /* Reglage minimal des titres.
+     Le tracking legerement negatif aide les gros titres a paraitre plus compacts
+     et plus premium. */
+  h1,
+  h2,
+  h3 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
 }
 
 /* Helper pour texte en degrade.
@@ -143,7 +140,7 @@ h3 {
 /* Champ de formulaire principal.
    Peut servir pour input, textarea, search bar ou faux champ interactif. */
 .input-field {
-  padding: 12px 16px;
+  padding: 4px 12px;
   color: var(--text-main);
   outline: none;
   background: rgba(255, 255, 255, 0.03);

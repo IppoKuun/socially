@@ -26,7 +26,8 @@
     "divider": "ou continuer avec",
     "error": {
       "email": "Impossible de vous connecter pour le moment.",
-      "social": "Impossible de continuer avec Google pour le moment."
+      "social": "Impossible de continuer avec Google pour le moment.",
+      "userMsg": "Une erreur inattendue est survenue. Veuillez réessayer."
     },
     "google": "Continuer avec Google",
     "microsoft": "Continuer avec Microsoft",

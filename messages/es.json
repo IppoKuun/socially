@@ -26,7 +26,8 @@
     "divider": "o continuar con",
     "error": {
       "email": "No es posible iniciar sesión en este momento.",
-      "social": "No es posible continuar con Google en este momento."
+      "social": "No es posible continuar con Google en este momento.",
+      "userMsg": "Se produjo un error inesperado. Inténtalo de nuevo."
     },
     "google": "Continuar con Google",
     "microsoft": "Continuar con Microsoft",

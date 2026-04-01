@@ -26,7 +26,8 @@
     "divider": "or continue with",
     "error": {
       "email": "Unable to sign you in right now.",
-      "social": "Unable to continue with Google right now."
+      "social": "Unable to continue with Google right now.",
+      "userMsg": "An unexpected error occurred. Please try again."
     },
     "google": "Continue with Google",
     "microsoft": "Continue with Microsoft",
