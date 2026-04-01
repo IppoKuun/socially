@@ -1,4 +1,15 @@
+/* Imports Tailwind et couche utilitaire shadcn.
+   - `tw-animate-css` fournit les animations utilitaires utilisees par les composants generes
+   - `shadcn/tailwind.css` ajoute la couche Tailwind attendue par les primitives shadcn
+   - on garde ces imports, mais on recable ensuite les tokens shadcn vers notre design system */
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Variante dark conservee pour la compatibilite des composants shadcn.
+   Le projet est deja visuellement dark par defaut, donc on n'utilise pas
+   une seconde palette light/dark complete ici. */
+@custom-variant dark (&:is(.dark *));
 
 /* Variables globales du design system.
    Toutes les couleurs, rayons et ombres importantes vivent ici pour eviter
@@ -7,7 +18,7 @@
   --bg-main: #090b10; /* Fond Principal */
   --bg-surface: #12151c; /* Fond des cartes, panneaux et sidebars */
   --bg-surface-light: #1c212b; /* Hoover */
-  --primary: #2f7cff;
+  --primary: #2f7cff; /* Action principale */
   --primary-glow: #61a3ff; /* hoover */
   --primary-alpha: rgba(47, 124, 255, 0.14); /* halo/focus blue*/
   --text-main: #f4f7fb;
@@ -20,13 +31,35 @@
   --radius-sm: 8px;
   --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Alias shadcn vers notre design system.
+     Le but est d'utiliser les primitives shadcn sans maintenir une deuxieme
+     palette parallele qui contredirait nos couleurs maison. */
   --background: var(--bg-main);
   --foreground: var(--text-main);
+  --card: var(--bg-surface);
+  --card-foreground: var(--text-main);
+  --popover: var(--bg-surface);
+  --popover-foreground: var(--text-main);
+  --primary-foreground: #ffffff;
+  --secondary: var(--bg-surface-light);
+  --secondary-foreground: var(--text-main);
+  --muted: rgba(255, 255, 255, 0.05);
+  --muted-foreground: var(--text-muted);
+  --accent: rgba(47, 124, 255, 0.1);
+  --accent-foreground: var(--text-main);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: var(--border-subtle);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: var(--border-accent);
+  --radius: var(--radius-md);
 }
 
 @theme inline {
-  --color-background: var(--bg-main);
-  --color-foreground: var(--text-main);
+  /* Couleurs du design system maison exposees a Tailwind.
+     Elles servent aux pages locales qui utilisent deja nos utilitaires custom. */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
   --color-surface: var(--bg-surface);
   --color-surface-light: var(--bg-surface-light);
   --color-primary: var(--primary);
@@ -35,10 +68,40 @@
   --color-text-dim: var(--text-dim);
   --color-border-subtle: var(--border-subtle);
   --color-border-accent: var(--border-accent);
-  --font-sans: var(--font-geist-sans); /*Font par défault */
+
+  /* Polices exposees a Tailwind.
+     `font-sans` reste la base de l'app et `font-heading` sert aux primitives
+     shadcn quand on veut un titre plus editorial sans changer chaque composant. */
+  --font-sans: var(--font-geist-sans); /* Font par defaut */
   --font-mono: var(--font-geist-mono); /*  bonne pour code, valeurs techniques*/
   --font-manrope: var(--font-manrope); /* PREMIUM, MARKETING*/
   --font-sora: var(--font-sora); /* Titre expressif avec personnalité*/
+  --font-heading: var(--font-manrope);
+
+  /* Tokens shadcn conserves car utilises par `components/ui/*`
+     et deja utiles pour des composants generiques comme bouton ou dialog. */
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 @layer base {
