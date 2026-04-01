@@ -58,7 +58,6 @@ export default async function createProfile(
     if (error instanceof myError) {
       return { ok: false, userMsg: error.message };
     } else {
-      // METTRE i18n TRADUCTIONS //
       return { ok: false, userMsg: t("login.error.userMsg") };
     }
   }

@@ -141,6 +141,7 @@ Expected behavior:
 
 - prefer explanation before solution
 - help me understand the logic in normal language
+- explain the syntax I need concretely, including what to put in methods, parameters, callbacks, and why
 - avoid jumping directly to full code unless explicitly requested
 - guide me so I can write the code myself
 - for detailed behavior, use the dedicated `guide-mode` skill when available
