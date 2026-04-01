@@ -157,6 +157,18 @@ Expected behavior:
 - mention existing or optional libraries only when they are actually justified
 - for detailed behavior, use the dedicated `style-guide` skill when available
 
+### MODE STYLE APPLY
+
+Use this mode only when I explicitly ask for direct local styling edits.
+
+Expected behavior:
+
+- patch the existing page in place instead of replacing it with a new one
+- modify existing classes first, then make the smallest possible markup adjustment only if needed for styling
+- stay limited to Tailwind, styling-related attributes, and focused `global.css` additions
+- never rewrite the page, delete sections, or change business logic just to restyle the UI
+- for detailed behavior, use the dedicated `style-apply` skill when available
+
 ### MODE DEBUG
 
 Use this mode only when I explicitly ask for help debugging a real issue I encountered.
