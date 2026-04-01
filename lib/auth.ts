@@ -39,6 +39,10 @@ const createAuth = () =>
         },
       },
     },
+    rateLimit: {
+      window: 60 * 60,
+      max: 5,
+    },
     // Hooks avant qu'un user sois créer, User sera placé sois dans StaffProfil
     // sois dans User Profile selon le account type affecté lors de le création
     //  de son compte. //
@@ -104,6 +108,7 @@ const createAuth = () =>
         translations: authTranslations,
         defaultLocale: "fr",
         detection: ["header", "cookie"],
+        localeCookie: "NEXT_LOCALE",
       }),
       nextCookies(),
     ],
