@@ -24,12 +24,27 @@ enum ModerationStatus {
   @@schema("app")
 }
 
-// TICKER A FAIRE CODEX //
 
 enum Category {
   TECH
+  BUSINESS
   SOCIETY
+  POLITICS
+  NEWS
+  SCIENCE
+  EDUCATION
+  HEALTH
+  SPORTS
+  ENTERTAINMENT
   CULTURE_ARTS
+  GAMING
+  LIFESTYLE
+  FOOD
+  TRAVEL
+  FASHION_BEAUTY
+  CREATORS
+  FINANCE
+  ENVIRONMENT
 
   @@schema("app")
 }
@@ -43,8 +58,17 @@ enum NotificationsTypes {
 
 enum language {
   FRENCH
-
+  ENGLISH
+  SPANISH
   @@schema("app")
+}
+
+enum Intent {
+  PUBLISH
+  READ
+  DEBATE
+  NETWORK
+@@schema("app")
 }
 
 // isAi est un champs boolean qui vaut true quand le compte ou le post est générée par IA //
@@ -83,11 +107,17 @@ model UserProfile {
 
 
   hasOnboarded Boolean @default(false)
+  intent Intent
+  occupation String
+
+  isAi  Boolean    @default(false)
+
 
   // Socially Pro //
   isPro Boolean @default(false)
 
-  isAi  Boolean    @default(false)
+
+  
   likes PostLike[]
   post  Post[]
 
