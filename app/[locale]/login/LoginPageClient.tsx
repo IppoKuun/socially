@@ -4,7 +4,7 @@ import React, { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import createProfile from "./_actions/actions";
+import createProfile, { getTrackingDataForAuth } from "./_actions/actions";
 import { signIn } from "@/lib/authClient";
 import sociallyWhiteLogo from "@/public/socially_white.png";
 
@@ -67,7 +67,6 @@ export default function LoginPageClient() {
         email,
         password,
         rememberMe: true,
-        callbackURL: "/feed",
       },
       {
         onSuccess: () => {
@@ -86,13 +85,28 @@ export default function LoginPageClient() {
   }
 
   async function handleSocialLogin() {
-    const { error } = await signIn.social({
-      provider: "google",
-      callbackURL: "/feed",
-    });
+    setLoading(true);
+    setError(null);
 
-    if (error) {
-      setError(error.message || t("error.social"));
+    try {
+      // Ont recupere les data tracké grace la fonction ensuite ont l'envoie dans additionnal fields//
+      const trackingData = await getTrackingDataForAuth();
+      const { error } = await signIn.social({
+        provider: "google",
+
+        // ONBOARDING MAIS SI USER A DEJA ONBOARDING, VERS FEED //
+        callbackURL: "/feed",
+        newUserCallbackURL: "/onboarding",
+        additionalData: {
+          trackingData,
+        },
+      });
+
+      if (error) {
+        setError(error.message || t("error.social"));
+      }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -104,7 +118,7 @@ export default function LoginPageClient() {
             src={sociallyWhiteLogo}
             alt="Socially logo"
             priority
-            className="h-auto w-[165px] self-center xl:w-[390px]"
+            className="h-auto w-41.25 self-center xl:w-97.5"
           ></Image>
           <h1 className="text-gradient mt-8 max-w-[14ch] font-manrope text-[clamp(2.1rem,5.8vw,4.5rem)] leading-[0.88] tracking-[-0.08em]">
             {t("hero")}

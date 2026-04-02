@@ -358,7 +358,7 @@ model User {
   accounts Account[]
 
   AccountType  String
-  trackingData String
+  trackingData Json?
 
   @@unique([email])
   @@map("user")

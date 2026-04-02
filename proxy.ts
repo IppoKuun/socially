@@ -39,7 +39,7 @@ export async function proxy(request: NextRequest) {
       {
         userMsg: `Requête rejetée : Impossible d'identifier la source.`,
       },
-      { status: 500 },
+      { status: 400 },
     );
   }
 

@@ -1,9 +1,22 @@
 import { betterAuth } from "better-auth";
+import { getOAuthState } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { myPrisma } from "./prisma";
 import { i18n } from "@better-auth/i18n";
 import { authTranslations } from "./auth-i18n";
+
+type TrackingData = {
+  utm_source?: string | null;
+  utm_medium?: string | null;
+  utm_campaign?: string | null;
+  referrer_domain?: string | null;
+  language?: string | null;
+  hasAcceptedCookies?: boolean;
+  visitCount?: number | null;
+  createdAt?: string | Date | null;
+};
+
 // Fonction pour récupéré de l'Instance better auth //
 const createAuth = () =>
   betterAuth({
@@ -17,6 +30,17 @@ const createAuth = () =>
       google: {
         clientId: process.env.GOOGLE_CLIENT_ID!,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+
+        // Cette fonction permet de prendre les trackingDatas qu'on a passé lors du signin.social pour créer l'utilisateur avec les bon champs//
+        mapProfileToUser: async () => {
+          const oauthState = await getOAuthState();
+
+          return {
+            accountType: "public",
+
+            trackingData: oauthState?.trackingData as TrackingData | undefined,
+          };
+        },
       },
       microsoft: {
         clientId: process.env.MICROSOFT_CLIENT_ID!,
@@ -31,6 +55,7 @@ const createAuth = () =>
           type: ["public", "backoffice"],
           required: true,
           input: true,
+          fieldName: "AccountType",
         },
         trackingData: {
           type: "json",
@@ -49,21 +74,8 @@ const createAuth = () =>
     databaseHooks: {
       user: {
         create: {
-          // The app profile must be created after the auth user exists so we can reuse its id.
           after: async (user) => {
             // TS N'arrive pas a reconnaitres les extra fields dans ce Hooks, ont doit donc l'aidez//
-
-            // Ont type les datas Tracké //
-            type TrackingData = {
-              utm_source?: string | null;
-              utm_medium?: string | null;
-              utm_campaign?: string | null;
-              referrer_domain?: string | null;
-              language?: string | undefined;
-              hasAcceptedCookies?: boolean;
-              visitCount?: number | null;
-              createdAt?: string | null;
-            };
 
             // ICI Ont type les fields supplémentaires //
             type userExtraFieldsTyped = {
@@ -74,6 +86,9 @@ const createAuth = () =>
             // ET la ont fusionne le type de User avec les types des fields supplémentaires //
             const typedUser = user as typeof user & userExtraFieldsTyped;
             // typedUser est donc User mais avec tout les champs bien typé car TS ne pouvais pas le faire //
+            const anonymousCreatedAt = typedUser.trackingData?.createdAt
+              ? new Date(typedUser.trackingData.createdAt)
+              : undefined;
 
             if (typedUser.accountType === "public") {
               await myPrisma.userProfile.create({
@@ -84,12 +99,13 @@ const createAuth = () =>
                   hasAcceptedCookies:
                     typedUser?.trackingData?.hasAcceptedCookies,
                   visitCountBeforeLogin: typedUser?.trackingData?.visitCount,
-                  language: typedUser?.trackingData?.language ?? "unknonw",
+
+                  language: typedUser?.trackingData?.language ?? "unknown",
                   utm_source: typedUser?.trackingData?.utm_source,
-                  utm_campaign: typedUser?.trackingData?.utm_medium,
-                  utm_medium: typedUser?.trackingData?.utm_campaign,
+                  utm_campaign: typedUser?.trackingData?.utm_campaign,
+                  utm_medium: typedUser?.trackingData?.utm_medium,
                   referrer_domain: typedUser?.trackingData?.referrer_domain,
-                  anonymeCreatedAt: typedUser?.trackingData?.createdAt,
+                  anonymeCreatedAt: anonymousCreatedAt,
                 },
               });
             }
@@ -108,7 +124,7 @@ const createAuth = () =>
         translations: authTranslations,
         defaultLocale: "fr",
         detection: ["header", "cookie"],
-        localeCookie: "NEXT_LOCALE",
+        localeCookie: "NEXT_LOCALE", // next_locale est un cookies de next-intl pour la langue"
       }),
       nextCookies(),
     ],
