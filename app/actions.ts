@@ -18,7 +18,6 @@ export async function cookiesResponseAction(
 ) {
   // User a Consent ont lui redemande plus pendant 1 ans //
   const c = await cookies();
-  console.log("serv action cookie", consent);
   c.set("cookie_consent", `${consent}`, {
     path: "/",
     httpOnly: false,

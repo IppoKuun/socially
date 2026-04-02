@@ -2,21 +2,58 @@
   "cookies": {
     "title": "Préférences de cookies",
     "description": "Nous utilisons des cookies pour améliorer votre expérience, mémoriser vos préférences et comprendre les sources de trafic.",
+    "sections": {
+      "whatChanges": {
+        "title": "Ce que cela change pour toi",
+        "item1": "Mémoriser certaines préférences utiles pendant ta navigation.",
+        "item2": "Mieux comprendre comment les visiteurs découvrent Socially.",
+        "item3": "Améliorer progressivement l'expérience sans alourdir l'interface."
+      },
+      "ifYouDecline": {
+        "title": "Si tu refuses",
+        "item1": "Socially reste accessible normalement.",
+        "item2": "Aucun suivi non essentiel n'est activé.",
+        "item3": "Certaines informations de visite ne seront pas conservées."
+      },
+      "commitment": {
+        "title": "Notre engagement",
+        "item1": "Aucun cookie non essentiel n'est déposé avant ton accord.",
+        "item2": "Pas de formulation ambiguë ni de choix caché.",
+        "item3": "Tu pourras revenir sur cette décision plus tard."
+      }
+    },
     "accept": "Accepter les cookies",
     "decline": "Refuser",
     "settings": "Gérer les préférences"
   },
   "login": {
-    "title": "Bon retour",
-    "description": "Connectez-vous pour continuer sur Socially.",
+    "hero": "Là où les conversations créent du lien.",
+    "title": {
+      "signin": "Bon retour",
+      "signup": "Créez votre compte"
+    },
+    "description": {
+      "signin": "Connectez-vous pour continuer sur Socially.",
+      "signup": "Rejoignez Socially pour commencer à publier et échanger."
+    },
     "email": "E-mail",
     "password": "Mot de passe",
-    "submit": "Se connecter",
+    "submit": {
+      "signin": "Se connecter",
+      "signup": "Créer un compte"
+    },
     "forgotPassword": "Mot de passe oublié ?",
     "divider": "ou continuer avec",
+    "error": {
+      "email": "Impossible de vous connecter pour le moment.",
+      "social": "Impossible de continuer avec Google pour le moment.",
+      "userMsg": "Une erreur inattendue est survenue. Veuillez réessayer."
+    },
     "google": "Continuer avec Google",
     "microsoft": "Continuer avec Microsoft",
     "signupPrompt": "Vous n'avez pas encore de compte ?",
-    "signupLink": "Créer un compte"
+    "signupLink": "Créer un compte",
+    "loginPrompt": "Vous avez déjà un compte ?",
+    "loginLink": "Se connecter"
   }
 }

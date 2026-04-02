@@ -1,0 +1,59 @@
+{
+  "cookies": {
+    "title": "Preferencias de cookies",
+    "description": "Usamos cookies para mejorar tu experiencia, recordar tus preferencias y comprender las fuentes de tráfico.",
+    "sections": {
+      "whatChanges": {
+        "title": "Qué cambia para ti",
+        "item1": "Recordar algunas preferencias útiles durante tu visita.",
+        "item2": "Entender mejor cómo los visitantes descubren Socially.",
+        "item3": "Mejorar la experiencia con el tiempo sin añadir fricción a la interfaz."
+      },
+      "ifYouDecline": {
+        "title": "Si rechazas",
+        "item1": "Socially sigue siendo accesible con normalidad.",
+        "item2": "No se activa ningún seguimiento no esencial.",
+        "item3": "No se conservará cierta información de la visita."
+      },
+      "commitment": {
+        "title": "Nuestro compromiso",
+        "item1": "No se deposita ninguna cookie no esencial antes de tu consentimiento.",
+        "item2": "Sin mensajes ambiguos ni decisiones ocultas.",
+        "item3": "Podrás cambiar esta decisión más adelante."
+      }
+    },
+    "accept": "Aceptar cookies",
+    "decline": "Rechazar",
+    "settings": "Gestionar preferencias"
+  },
+  "login": {
+    "hero": "Donde las conversaciones conectan.",
+    "title": {
+      "signin": "Bienvenido de nuevo",
+      "signup": "Crea tu cuenta"
+    },
+    "description": {
+      "signin": "Inicia sesión para continuar en Socially.",
+      "signup": "Únete a Socially para empezar a publicar y conectar."
+    },
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": {
+      "signin": "Iniciar sesión",
+      "signup": "Crear una cuenta"
+    },
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "divider": "o continuar con",
+    "error": {
+      "email": "No es posible iniciar sesión en este momento.",
+      "social": "No es posible continuar con Google en este momento.",
+      "userMsg": "Se produjo un error inesperado. Inténtalo de nuevo."
+    },
+    "google": "Continuar con Google",
+    "microsoft": "Continuar con Microsoft",
+    "signupPrompt": "¿Aún no tienes una cuenta?",
+    "signupLink": "Crear una cuenta",
+    "loginPrompt": "¿Ya tienes una cuenta?",
+    "loginLink": "Iniciar sesión"
+  }
+}

@@ -2,21 +2,58 @@
   "cookies": {
     "title": "Cookies preferences",
     "description": "We use cookies to improve your experience, remember your preferences and understand traffic sources.",
+    "sections": {
+      "whatChanges": {
+        "title": "What this changes for you",
+        "item1": "Remember a few useful preferences during your visit.",
+        "item2": "Better understand how visitors discover Socially.",
+        "item3": "Improve the experience over time without adding UI friction."
+      },
+      "ifYouDecline": {
+        "title": "If you decline",
+        "item1": "Socially remains available as usual.",
+        "item2": "No non-essential tracking is enabled.",
+        "item3": "Some visit information will not be kept."
+      },
+      "commitment": {
+        "title": "Our commitment",
+        "item1": "No non-essential cookies are set before your consent.",
+        "item2": "No ambiguous wording and no hidden choices.",
+        "item3": "You will be able to change this decision later."
+      }
+    },
     "accept": "Accept cookies",
     "decline": "Decline",
     "settings": "Manage preferences"
   },
   "login": {
-    "title": "Welcome back",
-    "description": "Sign in to continue to Socially.",
+    "hero": "Where conversations connect.",
+    "title": {
+      "signin": "Welcome back",
+      "signup": "Create your account"
+    },
+    "description": {
+      "signin": "Sign in to continue to Socially.",
+      "signup": "Join Socially to start sharing and connecting."
+    },
     "email": "Email",
     "password": "Password",
-    "submit": "Sign in",
+    "submit": {
+      "signin": "Sign in",
+      "signup": "Create account"
+    },
     "forgotPassword": "Forgot password?",
     "divider": "or continue with",
+    "error": {
+      "email": "Unable to sign you in right now.",
+      "social": "Unable to continue with Google right now.",
+      "userMsg": "An unexpected error occurred. Please try again."
+    },
     "google": "Continue with Google",
     "microsoft": "Continue with Microsoft",
     "signupPrompt": "Don't have an account yet?",
-    "signupLink": "Create one"
+    "signupLink": "Create one",
+    "loginPrompt": "Already have an account?",
+    "loginLink": "Sign in"
   }
 }

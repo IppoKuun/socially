@@ -141,9 +141,34 @@ Expected behavior:
 
 - prefer explanation before solution
 - help me understand the logic in normal language
+- explain the syntax I need concretely, including what to put in methods, parameters, callbacks, and why
 - avoid jumping directly to full code unless explicitly requested
 - guide me so I can write the code myself
 - for detailed behavior, use the dedicated `guide-mode` skill when available
+
+### MODE STYLE GUIDE
+
+Use this mode only when I explicitly ask for pedagogical help to reproduce a visual, screenshot, or Figma design in code.
+
+Expected behavior:
+
+- answer in French
+- explain what visual structure and styling I should implement before giving code
+- help me translate the design into Tailwind, `global.css`, or existing UI primitives without defaulting to the full final solution
+- mention existing or optional libraries only when they are actually justified
+- for detailed behavior, use the dedicated `style-guide` skill when available
+
+### MODE STYLE APPLY
+
+Use this mode only when I explicitly ask for direct local styling edits.
+
+Expected behavior:
+
+- patch the existing page in place instead of replacing it with a new one
+- modify existing classes first, then make the smallest possible markup adjustment only if needed for styling
+- stay limited to Tailwind, styling-related attributes, and focused `global.css` additions
+- never rewrite the page, delete sections, or change business logic just to restyle the UI
+- for detailed behavior, use the dedicated `style-apply` skill when available
 
 ### MODE DEBUG
 
@@ -170,6 +195,19 @@ Expected behavior:
 - do not treat this as formal PR review by default
 - do not treat this as MODE DEBUG unless a real observed bug exists
 - for detailed behavior, use the dedicated `self-review` skill when available
+
+### AGENT-RULES
+
+Use this mode when I want to create, change, review, move, simplify, or remove agent instructions for this repository.
+
+Expected behavior:
+
+- inspect the current repository instruction files before deciding
+- tell me whether the rule belongs in the root `AGENTS.md`, a local `AGENTS.md`, an existing skill, a new skill, MCP usage policy, chat context only, or nowhere
+- detect duplicates, contradictions, and bloated instruction design
+- ask only the minimum clarifying questions when necessary
+- when recent Codex behavior matters, use Docs MCP first if available, otherwise use official OpenAI documentation
+- for detailed behavior, use the dedicated `agent-rules` skill when available
 
 ## MCP usage policy
 
@@ -204,6 +242,13 @@ Do not use MCPs unnecessarily when the repository itself is enough.
   - instrumentation-related files
 
 ---
+
+### Internationalization
+
+- This project uses `next-intl`.
+- When a task introduces or changes translation usage, keep the `messages/` locale files synchronized.
+- Prefer updating `fr.json`, `en.json`, and other existing locale files directly instead of only warning about missing translation keys.
+- For detailed behavior, use the dedicated `i18n-messages` skill when available.
 
 ## Execution style
 
