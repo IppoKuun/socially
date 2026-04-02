@@ -24,8 +24,6 @@ type TrackingData = {
   createdAt?: Date | null;
 };
 
-const t = await getTranslations();
-
 // Cette fonction vas etre appellée par component, et permettra lors du signIn social, la reception des data Trackée pour better auth //
 
 export async function getTrackingDataForAuth(): Promise<
@@ -64,6 +62,8 @@ export default async function createProfile(
   _prevState: FormState,
   FormData: FormData,
 ) {
+  const t = await getTranslations();
+
   try {
     const trackingData = await getTrackingDataForAuth();
 
