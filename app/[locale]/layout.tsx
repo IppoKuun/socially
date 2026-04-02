@@ -1,4 +1,3 @@
-import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
@@ -29,40 +28,36 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
   // Si non on lui envoie le composant Banner avec le serv Action avec tout les infos dont ont a besoin //
   // Si oui on regarde si il a accepté Cookies Banner, si il a accepté on regarde si sa session est active //
   // Si elle est pas active User vient de se reconnecter //
-  const session = await getSession();
-  if (!session) {
-    const c = await cookies();
-    const h = await headers();
-    const hasConsent = c.get("cookie_consent");
-    const language = h.get("accept-language");
-    const refere = h.get("referer");
+  const c = await cookies();
+  const h = await headers();
+  const hasConsent = c.get("cookie_consent");
+  const language = h.get("accept-language");
+  const refere = h.get("referer");
 
-    if (!hasConsent) {
-      console.log("redirect COOKIE banner");
-      cookiesBanner = (
-        <CookiesConsentBanner refere={refere} language={language} />
-      );
-    }
+  if (!hasConsent) {
+    cookiesBanner = (
+      <CookiesConsentBanner refere={refere} language={language} />
+    );
+  }
 
-    // Si user a accepté les cookies, on regarde si il a deja une session, si non ont lui increment sont visitCount //
-    if (hasConsent?.value === "true") {
-      const visitorId = c.get("visitorId")?.value;
-      const sessionActive = c.get("session_active");
-      if (sessionActive?.value !== "true") {
-        if (visitorId) {
-          // UPDATE MANY POUR EVITEZ UN CRASH //
-          await myPrisma.anonymousVisitor.updateMany({
-            where: { visitorId },
-            data: { visitCount: { increment: 1 } },
-          });
-          c.set("session_active", "true", {
-            path: "/",
-            httpOnly: true,
-            secure: true,
-            sameSite: "lax",
-            // PAS DE MAX AGE : Le cookies se supprime lors de la déconnexion //
-          });
-        }
+  // Si user a accepté les cookies, on regarde si il a deja une session, si non ont lui increment sont visitCount //
+  if (hasConsent?.value === "true") {
+    const visitorId = c.get("visitorId")?.value;
+    const sessionActive = c.get("session_active");
+    if (sessionActive?.value !== "true") {
+      if (visitorId) {
+        // UPDATE MANY POUR EVITEZ UN CRASH //
+        await myPrisma.anonymousVisitor.updateMany({
+          where: { visitorId },
+          data: { visitCount: { increment: 1 } },
+        });
+        c.set("session_active", "true", {
+          path: "/",
+          httpOnly: true,
+          secure: true,
+          sameSite: "lax",
+          // PAS DE MAX AGE : Le cookies se supprime lors de la déconnexion //
+        });
       }
     }
   }

@@ -2,6 +2,26 @@
   "cookies": {
     "title": "Preferencias de cookies",
     "description": "Usamos cookies para mejorar tu experiencia, recordar tus preferencias y comprender las fuentes de tráfico.",
+    "sections": {
+      "whatChanges": {
+        "title": "Qué cambia para ti",
+        "item1": "Recordar algunas preferencias útiles durante tu visita.",
+        "item2": "Entender mejor cómo los visitantes descubren Socially.",
+        "item3": "Mejorar la experiencia con el tiempo sin añadir fricción a la interfaz."
+      },
+      "ifYouDecline": {
+        "title": "Si rechazas",
+        "item1": "Socially sigue siendo accesible con normalidad.",
+        "item2": "No se activa ningún seguimiento no esencial.",
+        "item3": "No se conservará cierta información de la visita."
+      },
+      "commitment": {
+        "title": "Nuestro compromiso",
+        "item1": "No se deposita ninguna cookie no esencial antes de tu consentimiento.",
+        "item2": "Sin mensajes ambiguos ni decisiones ocultas.",
+        "item3": "Podrás cambiar esta decisión más adelante."
+      }
+    },
     "accept": "Aceptar cookies",
     "decline": "Rechazar",
     "settings": "Gestionar preferencias"

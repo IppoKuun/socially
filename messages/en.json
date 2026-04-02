@@ -2,6 +2,26 @@
   "cookies": {
     "title": "Cookies preferences",
     "description": "We use cookies to improve your experience, remember your preferences and understand traffic sources.",
+    "sections": {
+      "whatChanges": {
+        "title": "What this changes for you",
+        "item1": "Remember a few useful preferences during your visit.",
+        "item2": "Better understand how visitors discover Socially.",
+        "item3": "Improve the experience over time without adding UI friction."
+      },
+      "ifYouDecline": {
+        "title": "If you decline",
+        "item1": "Socially remains available as usual.",
+        "item2": "No non-essential tracking is enabled.",
+        "item3": "Some visit information will not be kept."
+      },
+      "commitment": {
+        "title": "Our commitment",
+        "item1": "No non-essential cookies are set before your consent.",
+        "item2": "No ambiguous wording and no hidden choices.",
+        "item3": "You will be able to change this decision later."
+      }
+    },
     "accept": "Accept cookies",
     "decline": "Decline",
     "settings": "Manage preferences"

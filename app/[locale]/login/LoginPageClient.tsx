@@ -104,7 +104,7 @@ export default function LoginPageClient() {
             src={sociallyWhiteLogo}
             alt="Socially logo"
             priority
-            className="h-auto w-[165px]  self-center xl:w-[390px]"
+            className="h-auto w-[165px] self-center xl:w-[390px]"
           ></Image>
           <h1 className="text-gradient mt-8 max-w-[14ch] font-manrope text-[clamp(2.1rem,5.8vw,4.5rem)] leading-[0.88] tracking-[-0.08em]">
             {t("hero")}
