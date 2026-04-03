@@ -2,12 +2,13 @@ import { myPrisma } from "@/lib/prisma";
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { cookies, headers } from "next/headers";
 
 import CookiesConsentBanner from "../components/CookiesConsentBanner";
 
 import { routing } from "@/i18n/routing";
+import { getSession } from "@/lib/authSession";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -19,6 +20,20 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
 
   if (!hasLocale(routing.locales, locale)) {
     notFound();
+  }
+
+  // CHECK si user a onboarded ou pas //
+  // A changer de logique/emplacement si ça ruine performance //
+  const session = await getSession();
+  if (session) {
+    const id = session.user.id;
+    const user = await myPrisma.userProfile.findUnique({
+      where: { userId: id },
+    });
+
+    if (!user?.hasOnboarded) {
+      redirect("/onboarding");
+    }
   }
 
   const messages = await getMessages();
