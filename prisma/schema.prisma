@@ -110,6 +110,7 @@ model UserProfile {
 
 
   hasOnboarded Boolean @default(false)
+  onboardedStep Int @default(0)
   intent Intent?
   occupation String?
 

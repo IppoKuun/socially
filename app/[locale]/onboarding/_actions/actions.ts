@@ -12,7 +12,7 @@ export async function verifyUsername(FormData: FormData) {
   const inputusername = FormData.get("username");
 
   const username = await myPrisma.userProfile.findUnique({
-    where: { userName: String(inputusername) },
+    where: { username: String(inputusername) },
   });
 
   if (username) {
@@ -110,7 +110,7 @@ export async function stepOneValidOnboarding(id: string, formData: FormData) {
     where: { userId: id },
     // Ici spread operator prends toutes les propriété de parsed
     //  (objets avec tout ce que zod a parsé) et les envoie a data //
-    data: { ...parsed },
+    data: { ...parsed, onboardedStep: 1 },
   });
 }
 
@@ -130,7 +130,7 @@ export async function stepTwoValidOnboarding(id: string, FormData: FormData) {
   await myPrisma.userProfile.updateMany({
     where: { userId: id },
 
-    data: { ...parsed, hasOnboarded: true },
+    data: { ...parsed, onboardedStep: 2 },
   });
 
   return { ok: false, userMsg: true };

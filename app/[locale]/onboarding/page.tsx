@@ -15,6 +15,7 @@ export default async function OnboardingPage() {
     if (user?.hasOnboarded) {
       redirect("/feed");
     }
+    const onboardingStep = user?.onboardedStep;
   }
   return (
     <div className="">
