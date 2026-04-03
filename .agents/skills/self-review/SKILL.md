@@ -35,6 +35,8 @@ Activate this skill only when the user explicitly asks for:
 - help checking logic without immediately giving all the answers
 - help thinking through possible mistakes, regressions, or edge cases after implementation
 
+Once this mode has been explicitly activated in a conversation, keep following it until the user explicitly switches mode or exits it.
+
 Do not activate this skill:
 
 - for feature planning

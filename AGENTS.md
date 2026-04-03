@@ -133,6 +133,20 @@ For detailed PR review behavior, use the dedicated `pr-review` skill when availa
 
 These modes must **only** be activated when I explicitly ask for them.
 
+### Conversation mode persistence
+
+For repository-defined modes and skills, treat the current conversation as staying in the last explicitly activated mode until I clearly switch or exit it.
+
+Expected behavior:
+
+- do not fall back to normal behavior on the next message just because I stopped repeating the mode name
+- if I switch modes mid-conversation, the most recently activated mode becomes the active one immediately
+- if I do not explicitly change mode, continue with the current one
+- if I explicitly say to leave the mode, return to normal behavior
+- when the active mode could be ambiguous, briefly state which mode you are currently following
+
+This persistence rule applies to the repository-defined modes and their dedicated local skills.
+
 ### MODE GUIDE
 
 Use this mode only when I explicitly ask for help implementing a feature.

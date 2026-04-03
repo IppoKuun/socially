@@ -80,6 +80,7 @@ model UserProfile {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  userName String @unique
   displayName String 
   // URL Car Sauvegarder dans Cloudinary//
   avatarUrl   String?
@@ -107,8 +108,8 @@ model UserProfile {
 
 
   hasOnboarded Boolean @default(false)
-  intent Intent
-  occupation String
+  intent Intent?
+  occupation String?
 
   isAi  Boolean    @default(false)
 
@@ -120,6 +121,7 @@ model UserProfile {
   
   likes PostLike[]
   post  Post[]
+  categories Category[] @default([])
 
   userCommentLike CommentLike[]
 
@@ -171,7 +173,7 @@ model Post {
   images    String[]
   createdAt DateTime  @default(now())
   deletedAt DateTime?
-  Category  Category
+  categories Category[] @default([]) @map("Category")
 
   moderationStatus ModerationStatus
   isAi             Boolean          @default(false)

@@ -23,6 +23,8 @@ Activate this skill only when the user explicitly asks for:
 - help translating a visual or Figma into styling steps
 - explanation-first UI styling guidance instead of direct code output
 
+Once this mode has been explicitly activated in a conversation, keep following it until the user explicitly switches mode or exits it.
+
 Do not activate this skill:
 
 - for normal direct implementation

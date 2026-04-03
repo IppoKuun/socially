@@ -29,6 +29,8 @@ Activate this skill only when the user explicitly asks for:
 - help debugging a real bug
 - help understanding a real runtime, test, build, or logic failure they encountered
 
+Once this mode has been explicitly activated in a conversation, keep following it until the user explicitly switches mode or exits it.
+
 Do not activate this skill:
 
 - during normal feature implementation

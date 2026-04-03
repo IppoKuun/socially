@@ -31,6 +31,8 @@ Activate this skill only when the user explicitly asks for:
 - help implementing a feature in a pedagogical way
 - explanation-first guidance instead of direct implementation
 
+Once this mode has been explicitly activated in a conversation, keep following it until the user explicitly switches mode or exits it.
+
 Do not activate this skill:
 
 - for normal direct coding requests

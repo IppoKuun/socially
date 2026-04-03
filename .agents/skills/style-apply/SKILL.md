@@ -21,6 +21,8 @@ Activate this skill only when the user explicitly asks for:
 - direct local styling edits
 - Tailwind-first visual implementation
 
+Once this mode has been explicitly activated in a conversation, keep following it until the user explicitly switches mode or exits it.
+
 Do not activate this skill:
 
 - for explanation-first guidance
