@@ -80,11 +80,13 @@ model UserProfile {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  userName String @unique
-  displayName String 
+  username String @unique
+  displayname String 
   // URL Car Sauvegarder dans Cloudinary//
   avatarUrl   String?
+  avatarPublicId String?
   bannerUrl   String?
+  bannerPublicId String?
   bio         String?
   language    String
   theme       Theme    @default(DARK)
@@ -320,6 +322,7 @@ model Message {
   receiver   UserProfile @relation("Receiver", fields: [receiverId], references: [id])
 
   imagesUrl String?
+  imagesPublicId String?
 
   sharedPostId String?
   sharedPost   Post?   @relation(fields: [sharedPostId], references: [id], onDelete: SetNull)
@@ -368,6 +371,7 @@ model StaffProfile {
   displayName String 
   // URL Car Sauvegarder dans Cloudinary//
   avatarUrl   String?
+  avatarPublicid String?
   deletedAt        DateTime?
   defineltyDeleted DateTime?
 
