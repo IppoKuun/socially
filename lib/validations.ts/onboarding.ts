@@ -29,10 +29,7 @@ export const onboardingSchema = z.object({
   username: z.string().min(3),
   displayName: z.string().min(15).optional(),
   bio: z.string().min(200).optional(),
-  intent: z.enum(["PUBLISH", "READ", "DEBATE", "NETWORK"]),
-  occupation: z.string().min(35),
   avatarUrl: z.string().url().optional(),
-  bannerUrl: z.string().url().optional(),
 });
 
 export const onboardingSchemaStepTwo = z.object({

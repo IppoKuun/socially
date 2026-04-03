@@ -1,7 +1,9 @@
-import ProfileCard from "@/app/components/ProfileCard";
 import { getSession } from "@/lib/authSession";
 import { redirect } from "next/navigation";
 import { myPrisma } from "@/lib/prisma";
+import StepFinal from "./_components/StepFinal";
+import StepTwo from "./_components/StepTwo";
+import StepOne from "./_components/StepOne";
 
 export default async function OnboardingPage() {
   // Si user a déjà onboarded on l'envoie a feed //
@@ -16,10 +18,18 @@ export default async function OnboardingPage() {
       redirect("/feed");
     }
     const onboardingStep = user?.onboardedStep;
+    const renderStep = () => {
+      switch (onboardingStep) {
+        case 0:
+          return (
+            <StepOne user={session.user} providerImage={session?.user?.image} />
+          );
+        case 1:
+          return <StepTwo />;
+        case 2:
+          return <StepFinal />;
+      }
+    };
   }
-  return (
-    <div className="">
-      <ProfileCard />
-    </div>
-  );
+  return <div className=""></div>;
 }

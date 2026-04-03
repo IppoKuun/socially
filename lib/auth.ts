@@ -94,7 +94,8 @@ const createAuth = () =>
               await myPrisma.userProfile.create({
                 data: {
                   userId: user.id,
-                  displayName: user.name,
+
+                  displayname: user.name,
                   avatarUrl: user.image,
                   hasAcceptedCookies:
                     typedUser?.trackingData?.hasAcceptedCookies,
@@ -129,7 +130,7 @@ const createAuth = () =>
       nextCookies(),
     ],
   });
-
+export type User = typeof auth.$Infer.Session.user;
 type AuthInstance = ReturnType<typeof createAuth>;
 
 // SINGLETON POUR BETTER AUTH //

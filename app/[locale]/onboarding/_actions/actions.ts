@@ -8,7 +8,15 @@ import {
 } from "@/lib/validations.ts/onboarding";
 import { getSession } from "@/lib/authSession";
 
-export async function verifyUsername(FormData: FormData) {
+export type stepFormState = {
+  ok: boolean;
+  userMsg: string;
+};
+
+export async function verifyUsername(
+  prevstate: stepFormState,
+  FormData: FormData,
+) {
   const inputusername = FormData.get("username");
 
   const username = await myPrisma.userProfile.findUnique({
@@ -23,7 +31,10 @@ export async function verifyUsername(FormData: FormData) {
 }
 
 // Fonction appeler lors du submit de la premiere étape //
-export async function uploadImage(FormData: FormData) {
+export async function uploadImage(
+  prevState: stepFormState,
+  FormData: FormData,
+) {
   const session = await getSession();
   const avatar = FormData.get("avatar");
   const banner = FormData.get("banner");
@@ -41,7 +52,10 @@ export async function uploadImage(FormData: FormData) {
       const parseAvatar = uploadImageSchema.safeParse({ image: avatar });
 
       if (!parseAvatar.success) {
-        return { ok: false, userMsg: parseAvatar.error.flatten().fieldErrors };
+        return {
+          ok: false,
+          userMsg: `${parseAvatar.error.flatten().fieldErrors}`,
+        };
       }
 
       const { secure_url, public_id } = (await uploadCloudinary(
@@ -56,7 +70,10 @@ export async function uploadImage(FormData: FormData) {
       const parseBanner = uploadImageSchema.safeParse({ image: banner });
 
       if (!parseBanner.success) {
-        return { ok: false, userMsg: parseBanner.error.flatten().fieldErrors };
+        return {
+          ok: false,
+          userMsg: `${parseBanner.error.flatten().fieldErrors}`,
+        };
       }
 
       const { secure_url, public_id } = (await uploadCloudinary(
@@ -81,14 +98,15 @@ export async function uploadImage(FormData: FormData) {
   return {
     ok: true,
     userMsg: "",
-    data: {
-      avatarUrl: dataToUpdate.avatarUrl ?? null,
-      bannerUrl: dataToUpdate.bannerUrl ?? null,
-    },
   };
 }
 
-export async function stepOneValidOnboarding(id: string, formData: FormData) {
+export async function stepOneValidOnboarding(
+  prevState: stepFormState,
+  formData: FormData,
+) {
+  const session = await getSession();
+
   // Prendre toutes les propriété d'un coup //
   const raw = Object.fromEntries(formData.entries());
 
@@ -96,22 +114,19 @@ export async function stepOneValidOnboarding(id: string, formData: FormData) {
   delete raw.avatar;
   delete raw.banner;
 
-  // intent et catégories seront aux steps 2 onboarding //
-  delete raw.intent;
-  delete raw.categories;
-
   const parsed = onboardingSchema.safeParse(raw);
 
   if (!parsed.success) {
-    return { ok: false, userMsg: parsed.error.flatten().fieldErrors };
+    return { ok: false, userMsg: `${parsed.error.flatten().fieldErrors}` };
   }
 
   await myPrisma.userProfile.updateMany({
-    where: { userId: id },
+    where: { userId: session?.user.id },
     // Ici spread operator prends toutes les propriété de parsed
     //  (objets avec tout ce que zod a parsé) et les envoie a data //
     data: { ...parsed, onboardedStep: 1 },
   });
+  return { ok: true, userMsg: "" };
 }
 
 export async function stepTwoValidOnboarding(id: string, FormData: FormData) {
@@ -124,7 +139,7 @@ export async function stepTwoValidOnboarding(id: string, FormData: FormData) {
   });
 
   if (!parsed.success) {
-    return { ok: false, userMsg: parsed.error.flatten().fieldErrors };
+    return { ok: false, userMsg: `${parsed.error.flatten().fieldErrors}` };
   }
 
   await myPrisma.userProfile.updateMany({

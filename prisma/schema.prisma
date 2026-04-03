@@ -80,7 +80,7 @@ model UserProfile {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  username String @unique
+  username String? @unique
   displayname String 
   // URL Car Sauvegarder dans Cloudinary//
   avatarUrl   String?
