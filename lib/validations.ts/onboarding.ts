@@ -26,10 +26,32 @@ export const uploadImageSchema = z.object({
 });
 // MESSAGE D'ERREUR GERER PAR ZOD i18n //
 export const onboardingSchema = z.object({
-  username: z.string().min(3),
-  displayName: z.string().min(15).optional(),
-  bio: z.string().min(200).optional(),
-  avatarUrl: z.string().url().optional(),
+  username: z
+    .string()
+    .min(2)
+    .max(20)
+    .trim()
+    .toLowerCase()
+    .regex(/^[a-z0-9_]+$/),
+  displayName: z.string().min(2).max(30).trim(),
+
+  bio: z
+    .string()
+    .min(160)
+    .trim()
+    .optional()
+    .transform((v) => (v === "" ? null : v)), // On transforme tout les string vide en null  //
+
+  avatarUrl: z
+    .string()
+    .url()
+    .optional()
+    .transform((v) => (v === "" ? null : v)),
+  occupation: z
+    .string()
+    .max(30)
+    .trim()
+    .transform((v) => (v === "" ? null : v)),
 });
 
 export const onboardingSchemaStepTwo = z.object({
