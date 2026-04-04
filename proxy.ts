@@ -16,6 +16,7 @@ export async function proxy(request: NextRequest) {
   let key: "login" | "auth" | "global" | "admin";
   if (pathname.startsWith("/api/auth")) {
     key = "auth";
+    return NextResponse.next();
   } else if (pathname.endsWith("login") && request.method === "POST") {
     key = "login";
   } else if (pathname.startsWith("/admin")) {
@@ -57,13 +58,10 @@ export async function proxy(request: NextRequest) {
     );
   }
   // On return rien si une route API est sollicité //
-  if (key === "auth") {
-    return NextResponse.next();
-  }
 
   return handleI18n(request);
 }
 
 export const config = {
-  matcher: ["/((?!_next|_vercel|monitoring|.*\\..*).*)"],
+  matcher: ["/((?!api/auth|_next|_vercel|monitoring|.*\\..*).*)"],
 };
