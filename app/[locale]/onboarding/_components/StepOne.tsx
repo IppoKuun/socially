@@ -6,8 +6,9 @@ import {
   verifyUsername,
 } from "../_actions/actions";
 import { CircleUserRound, Images } from "lucide-react";
-import { useActionState, useState } from "react";
+import { useActionState, useState, useRef } from "react";
 import { User } from "@/lib/auth";
+import { useDebouncedCallback } from "use-debounce";
 
 interface stepOneProps {
   user: User;
@@ -22,13 +23,20 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
     stepOneValidOnboarding,
     initialState,
   );
-  const [usernameState, userNameAction, userNamePending] = useActionState(
+  const [usernameState, userNameAction] = useActionState(
     verifyUsername,
     initialState,
   );
 
   const [uploadProfileState, uploadProfileAction, uploadPending] =
     useActionState(uploadImage, initialState);
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const debouncedSubmit = useDebouncedCallback(() => {
+    // On demande au formulaire de se soumettre
+    formRef.current?.requestSubmit();
+  }, 2000);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -54,7 +62,7 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
             className="hidden"
             accept="image/*"
             onChange={handleFileChange}
-            disabled={userNamePending}
+            disabled={uploadPending}
             type="file"
           ></input>
           {previewUrl ? (
@@ -71,15 +79,25 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
           {uploadProfileState && (
             <p className="">{uploadProfileState.userMsg}</p>
           )}
-          {/**A CHANGER DEMPLACEMENT POUR QIUE CA VAS AU CENTRE */}
+          {/**A CHANGER DEMPLACEMENT POUR QUE CA VAS AU CENTRE */}
           <Images className="opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </form>
         <input name="username" className=""></input>
         {usernameState && <p className="">{usernameState.userMsg}</p>}
-
-        <input name="displayname" defaultValue={user.name} className=""></input>
+        <form action={userNameAction}>
+          <input
+            name="displayname"
+            defaultValue={user.name}
+            className=""
+            onChange={debouncedSubmit}
+            // PETIT INDICATIONS VISUEL A METTRE POUR COMPRENDRE QUE ça CHERCHE //
+          ></input>
+        </form>
         <input name="bio" className=""></input>
-        <button type="submit" disabled={isPending}></button>
+        <input name="occupation"></input>
+        <button type="submit" disabled={isPending}>
+          Passez a l'étape suivante
+        </button>
       </form>
     </main>
   );

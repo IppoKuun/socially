@@ -7,6 +7,7 @@ import {
   onboardingSchemaStepTwo,
 } from "@/lib/validations.ts/onboarding";
 import { getSession } from "@/lib/authSession";
+import { revalidatePath } from "next/cache";
 
 export type stepFormState = {
   ok: boolean;
@@ -30,13 +31,13 @@ export async function verifyUsername(
   return { ok: true, userMsg: "Nom disponible" };
 }
 
-// Fonction appeler lors du submit de la premiere étape //
 export async function uploadImage(
   prevState: stepFormState,
   FormData: FormData,
 ) {
   const session = await getSession();
   const avatar = FormData.get("avatar");
+  // Banner est mis mais pas utilisé, je l'ai deplacé hors-scope mais je garde pour une futur version //
   const banner = FormData.get("banner");
   const dataToUpdate: {
     avatarUrl?: string;
@@ -126,6 +127,7 @@ export async function stepOneValidOnboarding(
     //  (objets avec tout ce que zod a parsé) et les envoie a data //
     data: { ...parsed, onboardedStep: 1 },
   });
+  revalidatePath("/onboarding");
   return { ok: true, userMsg: "" };
 }
 
@@ -147,6 +149,8 @@ export async function stepTwoValidOnboarding(id: string, FormData: FormData) {
 
     data: { ...parsed, onboardedStep: 2 },
   });
+
+  revalidatePath("/onboarding");
 
   return { ok: false, userMsg: true };
 }
