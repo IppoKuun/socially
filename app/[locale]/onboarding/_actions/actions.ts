@@ -8,10 +8,17 @@ import {
 } from "@/lib/validations.ts/onboarding";
 import { getSession } from "@/lib/authSession";
 import { revalidatePath } from "next/cache";
+import { error } from "console";
 
 export type stepFormState = {
   ok: boolean;
   userMsg: string;
+  errors?: {
+    username?: string[];
+    displayName?: string[];
+    bio?: string[];
+    // ...
+  };
 };
 
 export async function verifyUsername(
@@ -55,7 +62,8 @@ export async function uploadImage(
       if (!parseAvatar.success) {
         return {
           ok: false,
-          userMsg: `${parseAvatar.error.flatten().fieldErrors}`,
+          userMsg: `Impossible de téléchargé votre photo de profile, veuillez ressayé`,
+          errors: parseAvatar.error.flatten().fieldErrors,
         };
       }
 
@@ -73,7 +81,8 @@ export async function uploadImage(
       if (!parseBanner.success) {
         return {
           ok: false,
-          userMsg: `${parseBanner.error.flatten().fieldErrors}`,
+          userMsg: "",
+          errors: parseBanner.error.flatten().fieldErrors,
         };
       }
 
@@ -90,6 +99,7 @@ export async function uploadImage(
       data: dataToUpdate,
     });
   } catch (error) {
+    console.error(error);
     return {
       ok: false,
       userMsg: "Echec lors de l'upload de l'image veuillez ressayé",
@@ -118,7 +128,11 @@ export async function stepOneValidOnboarding(
   const parsed = onboardingSchema.safeParse(raw);
 
   if (!parsed.success) {
-    return { ok: false, userMsg: `${parsed.error.flatten().fieldErrors}` };
+    return {
+      ok: false,
+      userMsg: "Erreur lors l'envoie des données",
+      errors: parsed.error.flatten().fieldErrors,
+    };
   }
 
   await myPrisma.userProfile.updateMany({
@@ -141,7 +155,11 @@ export async function stepTwoValidOnboarding(id: string, FormData: FormData) {
   });
 
   if (!parsed.success) {
-    return { ok: false, userMsg: `${parsed.error.flatten().fieldErrors}` };
+    return {
+      ok: false,
+      userMsg: "Erreur lors de l'envoie de données veuillez ressayé",
+      errors: parsed.error.flatten().fieldErrors,
+    };
   }
 
   await myPrisma.userProfile.updateMany({
