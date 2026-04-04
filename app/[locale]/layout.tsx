@@ -19,6 +19,9 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
   const { children, params } = props;
   const { locale } = await params;
 
+  const h = await headers();
+  const pathname = h.get("x-pathname");
+
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
@@ -32,7 +35,7 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
       where: { userId: id },
     });
 
-    if (!user?.hasOnboarded) {
+    if (!user?.hasOnboarded && pathname !== "/onboarding") {
       redirect("/onboarding");
     }
   }
@@ -46,7 +49,7 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
   // Si oui on regarde si il a accepté Cookies Banner, si il a accepté on regarde si sa session est active //
   // Si elle est pas active User vient de se reconnecter //
   const c = await cookies();
-  const h = await headers();
+
   const hasConsent = c.get("cookie_consent");
   const language = h.get("accept-language");
   const refere = h.get("referer");

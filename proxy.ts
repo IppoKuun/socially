@@ -57,9 +57,15 @@ export async function proxy(request: NextRequest) {
       { status: 429 },
     );
   }
-  // On return rien si une route API est sollicité //
 
-  return handleI18n(request);
+  const response = handleI18n(request);
+
+  //On mets un headers x-pathname pour que tout les server components puisse y accédée //
+  // Ont le mets dans les requetre de handleI18n pour tout mettre en meme temps
+  // car ont peut return qu'une seule réponse HTTP a la fois autant fusionner nos requetes//
+  response.headers.set("x-pathname", pathname);
+
+  return response;
 }
 
 export const config = {

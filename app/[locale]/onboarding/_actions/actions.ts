@@ -1,3 +1,4 @@
+"use server";
 import { uploadCloudinary } from "@/lib/cloudinaryConfig";
 import { myPrisma } from "@/lib/prisma";
 import { UploadApiResponse } from "cloudinary";
