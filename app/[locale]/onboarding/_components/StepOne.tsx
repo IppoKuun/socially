@@ -1,6 +1,7 @@
 "use client";
 import Image, { StaticImageData } from "next/image";
 import {
+  stepFormState,
   stepOneValidOnboarding,
   uploadImage,
   verifyUsername,
@@ -18,7 +19,7 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
   const [previewUrl, setPreviewUrl] = useState<string | StaticImageData | null>(
     providerImage ?? null,
   );
-  const initialState = { ok: false, userMsg: "" };
+  const initialState: stepFormState = { ok: false, userMsg: "" };
   const [state, formAction, isPending] = useActionState(
     stepOneValidOnboarding,
     initialState,
@@ -28,8 +29,10 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
     initialState,
   );
 
+  const initialImageState = { ok: false, userMsg: "" };
+
   const [uploadProfileState, uploadProfileAction, uploadPending] =
-    useActionState(uploadImage, initialState);
+    useActionState(uploadImage, initialImageState);
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -82,21 +85,25 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
           {/**A CHANGER DEMPLACEMENT POUR QUE CA VAS AU CENTRE */}
           <Images className="opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </form>
-        <input name="username" className=""></input>
-        {usernameState && <p className="">{usernameState.userMsg}</p>}
+        <input name="displayname" className=""></input>
+        <p className="">{state.errors?.displayName?.join(",")}</p>
         <form action={userNameAction}>
           <input
-            name="displayname"
+            name="username"
             defaultValue={user.name}
             className=""
             onChange={debouncedSubmit}
             // PETIT INDICATIONS VISUEL A METTRE POUR COMPRENDRE QUE ça CHERCHE //
           ></input>
         </form>
+        {usernameState && <p className="">{usernameState.userMsg}</p>}
+        <p className="">{state.errors?.username?.join(",")}</p>
         <input name="bio" className=""></input>
+        <p className="">{state.errors?.bio?.join(",")}</p>
         <input name="occupation"></input>
+        <p className="">{state.errors?.occupation?.join(",")}</p>
         <button type="submit" disabled={isPending}>
-          Passez a l'étape suivante
+          Passez a l&aposétape suivante
         </button>
       </form>
     </main>

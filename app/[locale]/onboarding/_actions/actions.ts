@@ -8,7 +8,6 @@ import {
 } from "@/lib/validations.ts/onboarding";
 import { getSession } from "@/lib/authSession";
 import { revalidatePath } from "next/cache";
-import { error } from "console";
 
 export type stepFormState = {
   ok: boolean;
@@ -17,7 +16,8 @@ export type stepFormState = {
     username?: string[];
     displayName?: string[];
     bio?: string[];
-    // ...
+    occupation?: string[];
+    avatarUrl?: string[];
   };
 };
 
