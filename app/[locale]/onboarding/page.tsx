@@ -31,5 +31,5 @@ export default async function OnboardingPage() {
       }
     };
   }
-  return <div className=""></div>;
+  return null;
 }

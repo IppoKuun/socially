@@ -1,1 +1,3 @@
-export default function StepTwo() {}
+export default function StepTwo() {
+  return null;
+}

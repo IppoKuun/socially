@@ -1,1 +1,3 @@
-export default function StepFinal() {}
+export default function StepFinal() {
+  return null;
+}
