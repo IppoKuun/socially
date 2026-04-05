@@ -21,4 +21,5 @@
 ### FAIT PAR IA:
 
 - Les fichier traduction pour i18n
+- fichier zod i18n
 - Les animation dans l'onboarding (Ligne synchro avec étape + animation entre les pages avec Framer Motion)

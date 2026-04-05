@@ -1,48 +1,64 @@
 "use server";
 import { uploadCloudinary } from "@/lib/cloudinaryConfig";
+import { getSession } from "@/lib/authSession";
+import { getZodErrorMapForRequest } from "@/lib/i18n/zod";
 import { myPrisma } from "@/lib/prisma";
 import { UploadApiResponse } from "cloudinary";
+import { getTranslations } from "next-intl/server";
 import {
   uploadImageSchema,
   onboardingSchema,
   onboardingSchemaStepTwo,
 } from "@/lib/validations.ts/onboarding";
-import { getSession } from "@/lib/authSession";
 import { revalidatePath } from "next/cache";
 
 export type stepFormState = {
   ok: boolean;
   userMsg: string;
   errors?: {
+    image?: string[];
     username?: string[];
-    displayName?: string[];
+    displayname?: string[];
     bio?: string[];
     occupation?: string[];
     avatarUrl?: string[];
+    categories?: string[];
+    intent?: string[];
   };
 };
 
 export async function verifyUsername(
-  prevstate: stepFormState,
+  _prevstate: stepFormState,
   FormData: FormData,
 ) {
+  const t = await getTranslations("onboarding.actions.verifyUsername");
+  const session = await getSession();
   const inputusername = FormData.get("username");
+  const usernameInput =
+    typeof inputusername === "string" ? inputusername.trim().toLowerCase() : "";
 
-  const username = await myPrisma.userProfile.findUnique({
-    where: { username: String(inputusername) },
-  });
-
-  if (username) {
-    return { ok: false, userMsg: "Nom d'utilisateur déjà pris" }; //translate //
+  if (!usernameInput) {
+    return { ok: false, userMsg: "Veuillez inséré un nom d'utilisateur" };
   }
 
-  return { ok: true, userMsg: "Nom disponible" };
+  const username = await myPrisma.userProfile.findUnique({
+    where: { username: usernameInput },
+  });
+
+  if (username && username.userId !== session?.user.id) {
+    return { ok: false, userMsg: t("taken") };
+  }
+
+  return { ok: true, userMsg: t("available") };
 }
 
 export async function uploadImage(
-  prevState: stepFormState,
+  _prevState: stepFormState,
   FormData: FormData,
 ) {
+  const t = await getTranslations("onboarding.actions.uploadImage");
+  // Ont prends errorMaps maintenant pour avoir la bonne erreur dans la bonne langue //
+  const errorMap = await getZodErrorMapForRequest();
   const session = await getSession();
   const avatar = FormData.get("avatar");
   // Banner est mis mais pas utilisé, je l'ai deplacé hors-scope mais je garde pour une futur version //
@@ -58,12 +74,17 @@ export async function uploadImage(
     // Important de regardé si image vient du format fichier et que size > 0, ça veut dire que l'image
     // vient d'etre uploader et ne vient pas d'un provider //
     if (avatar instanceof File && avatar.size > 0) {
-      const parseAvatar = uploadImageSchema.safeParse({ image: avatar });
+      const parseAvatar = uploadImageSchema.safeParse(
+        { image: avatar },
+        { error: errorMap },
+      );
 
       if (!parseAvatar.success) {
+        const imageErrors = parseAvatar.error.flatten().fieldErrors.image;
+
         return {
           ok: false,
-          userMsg: `Impossible de téléchargé votre photo de profile, veuillez ressayé`,
+          userMsg: imageErrors?.[0] ?? t("validationFailed"),
           errors: parseAvatar.error.flatten().fieldErrors,
         };
       }
@@ -77,12 +98,17 @@ export async function uploadImage(
     }
 
     if (banner instanceof File && banner.size > 0) {
-      const parseBanner = uploadImageSchema.safeParse({ image: banner });
+      const parseBanner = uploadImageSchema.safeParse(
+        { image: banner },
+        { error: errorMap },
+      );
 
       if (!parseBanner.success) {
+        const imageErrors = parseBanner.error.flatten().fieldErrors.image;
+
         return {
           ok: false,
-          userMsg: "",
+          userMsg: imageErrors?.[0] ?? t("validationFailed"),
           errors: parseBanner.error.flatten().fieldErrors,
         };
       }
@@ -103,7 +129,7 @@ export async function uploadImage(
     console.error(error);
     return {
       ok: false,
-      userMsg: "Echec lors de l'upload de l'image veuillez ressayé",
+      userMsg: t("unexpectedError"),
     };
   }
 
@@ -114,9 +140,11 @@ export async function uploadImage(
 }
 
 export async function stepOneValidOnboarding(
-  prevState: stepFormState,
+  _prevState: stepFormState,
   formData: FormData,
 ) {
+  const t = await getTranslations("onboarding.actions.stepOne");
+  const errorMap = await getZodErrorMapForRequest();
   const session = await getSession();
 
   // Prendre toutes les propriété d'un coup //
@@ -126,50 +154,77 @@ export async function stepOneValidOnboarding(
   delete raw.avatar;
   delete raw.banner;
 
-  const parsed = onboardingSchema.safeParse(raw);
+  const parsed = onboardingSchema.safeParse(raw, { error: errorMap });
 
   if (!parsed.success) {
     return {
       ok: false,
-      userMsg: "Erreur lors l'envoie des données",
+      userMsg: "",
       errors: parsed.error.flatten().fieldErrors,
     };
   }
 
-  await myPrisma.userProfile.updateMany({
-    where: { userId: session?.user.id },
-    // Ici spread operator prends toutes les propriété de parsed
-    //  (objets avec tout ce que zod a parsé) et les envoie a data //
-    data: { ...parsed, onboardedStep: 1 },
-  });
-  revalidatePath("/onboarding");
-  return { ok: true, userMsg: "" };
+  try {
+    await myPrisma.userProfile.updateMany({
+      where: { userId: session?.user.id },
+      // Ici parsed.data contient l'objet validé et transformé par Zod.
+      data: { ...parsed.data, onboardedStep: 1 },
+    });
+    revalidatePath("/onboarding");
+
+    return { ok: true, userMsg: "" };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      ok: false,
+      userMsg: t("submitFailed"),
+    };
+  }
 }
 
 export async function stepTwoValidOnboarding(id: string, FormData: FormData) {
-  const userIntent = FormData.get("intent");
-  const userCategories = FormData.get("categories");
+  const t = await getTranslations("onboarding.actions.stepTwo");
+  const errorMap = await getZodErrorMapForRequest();
+  const intent = FormData.get("intent");
+  const categories = FormData.get("categories");
 
-  const parsed = onboardingSchemaStepTwo.safeParse({
-    userIntent,
-    userCategories,
-  });
+  const parsed = onboardingSchemaStepTwo.safeParse(
+    {
+      intent,
+      categories,
+    },
+    { error: errorMap },
+  );
 
   if (!parsed.success) {
     return {
       ok: false,
-      userMsg: "Erreur lors de l'envoie de données veuillez ressayé",
+      userMsg: "",
       errors: parsed.error.flatten().fieldErrors,
     };
   }
 
-  await myPrisma.userProfile.updateMany({
-    where: { userId: id },
+  try {
+    await myPrisma.userProfile.updateMany({
+      where: { userId: id },
 
-    data: { ...parsed, onboardedStep: 2 },
-  });
+      data: {
+        intent: parsed.data.intent,
+        categories: { set: [parsed.data.categories] },
+        onboardedStep: 2,
+      },
+    });
 
-  revalidatePath("/onboarding");
+    revalidatePath("/onboarding");
 
-  return { ok: false, userMsg: true };
+    return { ok: true, userMsg: "" };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      ok: false,
+      userMsg: t("submitFailed"),
+    };
+  }
 }

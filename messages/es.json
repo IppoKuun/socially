@@ -66,10 +66,37 @@
       "fields": {
         "displayName": "Nombre visible",
         "username": "Nombre de usuario",
-        "bio": "Biografía",
-        "occupation": "Ocupación"
+        "bio": "Ej.: Desarrollador web apasionado por la IA y el diseño.",
+        "occupation": "Ej.: Desarrollador full-stack"
       },
       "submit": "Pasar al siguiente paso"
+    },
+    "actions": {
+      "verifyUsername": {
+        "taken": "Este nombre de usuario ya está en uso.",
+        "available": "Nombre de usuario disponible."
+      },
+      "uploadImage": {
+        "validationFailed": "No se puede subir esta imagen. Inténtalo de nuevo.",
+        "unexpectedError": "La subida de la imagen ha fallado. Inténtalo de nuevo."
+      },
+      "stepOne": {
+        "submitFailed": "No se pueden guardar tus datos. Inténtalo de nuevo."
+      },
+      "stepTwo": {
+        "submitFailed": "No se pueden guardar tus preferencias. Inténtalo de nuevo."
+      }
+    },
+    "validation": {
+      "required": "Este campo es obligatorio.",
+      "tooSmallString": "Este campo debe contener al menos {{minimum}} caracteres.",
+      "tooBigString": "Este campo no debe superar los {{maximum}} caracteres.",
+      "invalidUrl": "Introduce una URL válida.",
+      "invalidSelection": "Selecciona una opción válida.",
+      "invalidInput": "El valor introducido no es válido.",
+      "usernamePattern": "Usa solo letras minúsculas, números y guiones bajos.",
+      "imageTooLarge": "La imagen no debe superar {{maximum}} MB.",
+      "invalidImageType": "Solo se aceptan los formatos .jpg, .jpeg, .png y .webp."
     }
   }
 }

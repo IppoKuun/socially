@@ -262,6 +262,8 @@ Do not use MCPs unnecessarily when the repository itself is enough.
 - This project uses `next-intl`.
 - When a task introduces or changes translation usage, keep the `messages/` locale files synchronized.
 - Prefer updating `fr.json`, `en.json`, and other existing locale files directly instead of only warning about missing translation keys.
+- In `i18n-messages`, stay limited to locale files and read-only inspection of code usage.
+- If code changes are needed in components, Zod schemas, server actions, or other app files, explain them but let me edit those files myself.
 - For detailed behavior, use the dedicated `i18n-messages` skill when available.
 
 ## Execution style

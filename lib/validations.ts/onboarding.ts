@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { Category, Intent } from "@prisma/client";
 
-// LES MESSAGES SONT A REFAIRE AVEC I18N //
 const MAX_FILE_SIZE = 5000000; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -9,22 +8,30 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/png",
   "image/webp",
 ];
+const USERNAME_REGEX = /^[a-z0-9_]+$/;
 
 export const uploadImageSchema = z.object({
   image: z
     .any() // On utilise any car 'File' n'existe pas côté serveur en standard TS pur
 
     // On vérifie que le type et taille sois cohérent //
-    .refine(
-      (file) => file?.size <= MAX_FILE_SIZE,
-      `L'image ne doit pas dépasser 5Mo.`,
-    )
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      "Seuls les formats .jpg, .jpeg, .png et .webp sont acceptés.",
-    ),
+    .refine((file) => file?.size <= MAX_FILE_SIZE, {
+      params: {
+        // Obligé de définir les clé pour i18n car c'est une erreur personnalisé et n'as pas de code pourça //
+        i18n: {
+          key: "validation.imageTooLarge",
+          values: {
+            maximum: MAX_FILE_SIZE / 1000000,
+          },
+        },
+      },
+    })
+    .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file?.type), {
+      params: {
+        i18n: "validation.invalidImageType",
+      },
+    }),
 });
-// MESSAGE D'ERREUR GERER PAR ZOD i18n //
 export const onboardingSchema = z.object({
   username: z
     .string()
@@ -32,14 +39,17 @@ export const onboardingSchema = z.object({
     .max(20)
     .trim()
     .toLowerCase()
-    .regex(/^[a-z0-9_]+$/),
-  displayName: z.string().min(2).max(30).trim(),
+    .refine((value) => USERNAME_REGEX.test(value), {
+      params: {
+        i18n: "validation.usernamePattern",
+      },
+    }),
+  displayname: z.string().min(2).max(30).trim(),
 
   bio: z
     .string()
-    .min(160)
     .trim()
-    .optional()
+    .max(160)
     .transform((v) => (v === "" ? null : v)), // On transforme tout les string vide en null  //
 
   avatarUrl: z

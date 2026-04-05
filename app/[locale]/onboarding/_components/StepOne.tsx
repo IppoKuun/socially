@@ -17,6 +17,7 @@ interface stepOneProps {
   providerImage: string | null | undefined;
 }
 export default function StepOne({ user, providerImage }: stepOneProps) {
+  // Ont force google a nous donné le provider Image en HIGH resolution, donc 500px ici //
   const highResProviderImage = providerImage?.includes("googleusercontent.com")
     ? providerImage.replace(/=s\d+-c$/, "=s512-c")
     : providerImage;
@@ -59,8 +60,8 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
     }
   };
   return (
-    <main className="flex flex-col">
-      <form action={formAction} className="flex flex-col items-center">
+    <main className="flex flex-col gap-3 ">
+      <form action={formAction} className="flex flex-col gap-3  items-center">
         <form
           action={uploadProfileAction}
           className="group rounded-full relative cursor-pointer"
@@ -81,7 +82,7 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
               width={256}
               sizes="128px"
               priority
-              className="rounded-full w-32 h-32 object-cover "
+              className="rounded-full w-32 h-32 object-cover"
             ></Image>
           ) : (
             <CircleUserRound
@@ -90,9 +91,9 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
               className="text-muted-foreground"
             />
           )}
-          {uploadProfileState && (
-            <p className="  ">{uploadProfileState.userMsg}</p>
-          )}
+          {uploadProfileState.userMsg ? (
+            <p className="">{uploadProfileState.userMsg}</p>
+          ) : null}
           {/**VERIFIER QUE l'icone Image sois toujours au hoovers au centre */}
           <Images
             size={30}
@@ -102,25 +103,27 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
         <input
           name="displayname"
           placeholder={t("fields.displayName")}
-          className="input-ghost"
+          className="input-ghost font-bold text-3xl  "
         ></input>
-        <p className="">{state.errors?.displayName?.join(",")}</p>
-        <form action={userNameAction}>
+        <p className="">{state.errors?.displayname?.join(",")}</p>
+        <form ref={formRef} action={userNameAction}>
           <input
             name="username"
             placeholder={t("fields.username")}
             defaultValue={user.name ?? ""}
-            className="input-ghost"
+            className="input-ghost font-extralight text-sm "
             onChange={debouncedSubmit}
             // PETIT INDICATIONS VISUEL A METTRE POUR COMPRENDRE QUE ça CHERCHE //
           ></input>
         </form>
-        {usernameState && <p className="">{usernameState.userMsg}</p>}
+        {usernameState.userMsg ? (
+          <p className="">{usernameState.userMsg}</p>
+        ) : null}
         <p className="">{state.errors?.username?.join(",")}</p>
         <input
           name="bio"
           placeholder={t("fields.bio")}
-          className="input-ghost"
+          className="input-ghost   "
         ></input>
         <p className="">{state.errors?.bio?.join(",")}</p>
         <input
@@ -129,6 +132,7 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
           name="occupation"
         ></input>
         <p className="">{state.errors?.occupation?.join(",")}</p>
+        {state.userMsg ? <p className="">{state.userMsg}</p> : null}
         <button type="submit" className="btn-primary" disabled={isPending}>
           {t("submit")}
         </button>

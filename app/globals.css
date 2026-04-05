@@ -221,15 +221,11 @@
 }
 
 .input-ghost {
-  width: fit-content;
-
+  width: 100%;
   padding: 0;
   margin: 0;
-  font-size: 1.875rem;
   text-align: center;
 
-  font-weight: 700;
-  color: white;
   background: transparent;
   border: none;
   outline: none;

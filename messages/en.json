@@ -66,10 +66,37 @@
       "fields": {
         "displayName": "Display name",
         "username": "Username",
-        "bio": "Bio",
-        "occupation": "Occupation"
+        "bio": "e.g. Web developer passionate about AI and design.",
+        "occupation": "e.g. Full-stack developer"
       },
       "submit": "Continue to the next step"
+    },
+    "actions": {
+      "verifyUsername": {
+        "taken": "This username is already taken.",
+        "available": "Username available."
+      },
+      "uploadImage": {
+        "validationFailed": "Unable to upload this image. Please try again.",
+        "unexpectedError": "Image upload failed. Please try again."
+      },
+      "stepOne": {
+        "submitFailed": "Unable to save your information. Please try again."
+      },
+      "stepTwo": {
+        "submitFailed": "Unable to save your preferences. Please try again."
+      }
+    },
+    "validation": {
+      "required": "This field is required.",
+      "tooSmallString": "This field must contain at least {{minimum}} characters.",
+      "tooBigString": "This field must not exceed {{maximum}} characters.",
+      "invalidUrl": "Please enter a valid URL.",
+      "invalidSelection": "Please select a valid option.",
+      "invalidInput": "The provided value is invalid.",
+      "usernamePattern": "Use only lowercase letters, numbers, and underscores.",
+      "imageTooLarge": "The image must not exceed {{maximum}} MB.",
+      "invalidImageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted."
     }
   }
 }
