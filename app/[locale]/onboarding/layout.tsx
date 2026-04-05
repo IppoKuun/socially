@@ -19,7 +19,6 @@ export default async function OnboardingLayout({
       {/* La barre de progression sait où on en est */}
       <MyProgressBar currentStep={step} />
 
-      {/* Ici s'affichera ce que ta page.tsx renvoie (StepOne, Two, etc.) */}
       {children}
     </div>
   );

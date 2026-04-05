@@ -1,5 +1,6 @@
 "use client";
 import Image, { StaticImageData } from "next/image";
+import { useTranslations } from "next-intl";
 import {
   stepFormState,
   stepOneValidOnboarding,
@@ -16,8 +17,13 @@ interface stepOneProps {
   providerImage: string | null | undefined;
 }
 export default function StepOne({ user, providerImage }: stepOneProps) {
+  const highResProviderImage = providerImage?.includes("googleusercontent.com")
+    ? providerImage.replace(/=s\d+-c$/, "=s512-c")
+    : providerImage;
+
+  const t = useTranslations("onboarding.stepOne");
   const [previewUrl, setPreviewUrl] = useState<string | StaticImageData | null>(
-    providerImage ?? null,
+    highResProviderImage ?? null,
   );
   const initialState: stepFormState = { ok: false, userMsg: "" };
   const [state, formAction, isPending] = useActionState(
@@ -53,12 +59,11 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
     }
   };
   return (
-    <main className="">
-      <h1 className="">Créez votre profile</h1>
+    <main className="flex flex-col">
       <form action={formAction} className="flex flex-col items-center">
         <form
           action={uploadProfileAction}
-          className="group rounded-full cursor-pointer"
+          className="group rounded-full relative cursor-pointer"
         >
           <input
             name="avatar"
@@ -71,39 +76,61 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
           {previewUrl ? (
             <Image
               src={previewUrl}
-              alt="photo de profil"
-              height={45}
-              width={50}
-              className="rounded-full"
+              alt={t("avatarAlt")}
+              height={256}
+              width={256}
+              sizes="128px"
+              priority
+              className="rounded-full w-32 h-32 object-cover "
             ></Image>
           ) : (
-            <CircleUserRound />
+            <CircleUserRound
+              size={64}
+              strokeWidth={1.5}
+              className="text-muted-foreground"
+            />
           )}
           {uploadProfileState && (
-            <p className="">{uploadProfileState.userMsg}</p>
+            <p className="  ">{uploadProfileState.userMsg}</p>
           )}
-          {/**A CHANGER DEMPLACEMENT POUR QUE CA VAS AU CENTRE */}
-          <Images className="opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          {/**VERIFIER QUE l'icone Image sois toujours au hoovers au centre */}
+          <Images
+            size={30}
+            className="opacity-0 absolute top-12 left-12 group-hover:opacity-70 transition-opacity duration-300"
+          />
         </form>
-        <input name="displayname" className=""></input>
+        <input
+          name="displayname"
+          placeholder={t("fields.displayName")}
+          className="input-ghost"
+        ></input>
         <p className="">{state.errors?.displayName?.join(",")}</p>
         <form action={userNameAction}>
           <input
             name="username"
-            defaultValue={user.name}
-            className=""
+            placeholder={t("fields.username")}
+            defaultValue={user.name ?? ""}
+            className="input-ghost"
             onChange={debouncedSubmit}
             // PETIT INDICATIONS VISUEL A METTRE POUR COMPRENDRE QUE ça CHERCHE //
           ></input>
         </form>
         {usernameState && <p className="">{usernameState.userMsg}</p>}
         <p className="">{state.errors?.username?.join(",")}</p>
-        <input name="bio" className=""></input>
+        <input
+          name="bio"
+          placeholder={t("fields.bio")}
+          className="input-ghost"
+        ></input>
         <p className="">{state.errors?.bio?.join(",")}</p>
-        <input name="occupation"></input>
+        <input
+          className="input-ghost"
+          placeholder={t("fields.occupation")}
+          name="occupation"
+        ></input>
         <p className="">{state.errors?.occupation?.join(",")}</p>
-        <button type="submit" disabled={isPending}>
-          Passez a l&aposétape suivante
+        <button type="submit" className="btn-primary" disabled={isPending}>
+          {t("submit")}
         </button>
       </form>
     </main>

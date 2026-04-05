@@ -22,7 +22,7 @@ export default async function OnboardingPage() {
     redirect("/feed");
   }
 
-  const onboardingStep = user?.onboardedStep;
+  const onboardingStep = user?.onboardedStep ?? 0;
 
   const renderStep = () => {
     switch (onboardingStep) {

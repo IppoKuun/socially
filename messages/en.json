@@ -55,5 +55,21 @@
     "signupLink": "Create one",
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in"
+  },
+  "onboarding": {
+    "progress": {
+      "stepLabel": "Step {current}/{total}",
+      "title": "Set up your space"
+    },
+    "stepOne": {
+      "avatarAlt": "Profile picture",
+      "fields": {
+        "displayName": "Display name",
+        "username": "Username",
+        "bio": "Bio",
+        "occupation": "Occupation"
+      },
+      "submit": "Continue to the next step"
+    }
   }
 }

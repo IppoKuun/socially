@@ -35,7 +35,7 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
       where: { userId: id },
     });
 
-    if (!user?.hasOnboarded && pathname !== "/onboarding") {
+    if (!user?.hasOnboarded && !pathname?.includes("/onboarding")) {
       redirect("/onboarding");
     }
   }
