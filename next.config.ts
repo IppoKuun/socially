@@ -5,6 +5,12 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      // Je mets 50 pour pouvoir catche moi meme les bodySizeLimits avec zod //
+      bodySizeLimit: "50mb",
+    },
+  },
   images: {
     remotePatterns: [
       {

@@ -221,14 +221,17 @@
 }
 
 .input-ghost {
-  width: 100%;
+  width: fit-content;
   padding: 0;
   margin: 0;
   text-align: center;
-
-  background: transparent;
   border: none;
   outline: none;
+}
+
+.input-ghost-left {
+  width: 100%;
+  text-align: left;
 }
 
 .input-ghost::placeholder {
@@ -254,6 +257,12 @@
   border: none;
   border-radius: var(--radius-md);
   transition: var(--transition);
+}
+
+.btn-primary:disabled {
+  cursor: not-allowed;
+  filter: grayscale(1);
+  opacity: 0.5;
 }
 
 /* Hover du bouton principal :

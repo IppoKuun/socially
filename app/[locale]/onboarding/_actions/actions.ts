@@ -11,6 +11,7 @@ import {
   onboardingSchemaStepTwo,
 } from "@/lib/validations.ts/onboarding";
 import { revalidatePath } from "next/cache";
+import { User } from "lucide-react";
 
 export type stepFormState = {
   ok: boolean;
@@ -120,7 +121,7 @@ export async function uploadImage(
       dataToUpdate.bannerUrl = secure_url;
       dataToUpdate.bannerPublicId = public_id;
     }
-
+    console.log(session?.user.id);
     await myPrisma.userProfile.update({
       where: { userId: session?.user.id },
       data: dataToUpdate,

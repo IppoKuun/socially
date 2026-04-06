@@ -26,7 +26,7 @@ export default async function MyProgressBar({
         className="h-6 rounded-full border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_32px_-18px_rgba(47,124,255,0.45)] [&>div]:rounded-full [&>div]:bg-[linear-gradient(90deg,#f8fbff_0%,#a7d2ff_24%,#5ea1ff_58%,#2f7cff_100%)] [&>div]:shadow-[0_0_18px_rgba(47,124,255,0.45),inset_0_1px_0_rgba(255,255,255,0.35)]"
       />
 
-      <p className="text-center text-xl font-semibold text-white">
+      <p className="text-center text-2xl font-bold text-white">
         {currentStep === 0 && "Créez votre profile"}
         {currentStep === 1 && "Profil détaillé"}
         {currentStep === 2 && "C'est parti !"}
