@@ -59,20 +59,29 @@
   "onboarding": {
     "progress": {
       "stepLabel": "Paso {current}/{total}",
-      "title": "Configura tu espacio"
+      "title": "Configura tu espacio",
+      "stepOneTitle": "Crea tu perfil",
+      "stepTwoTitle": "Perfil detallado",
+      "stepThreeTitle": "¡Vamos!"
     },
     "stepOne": {
       "avatarAlt": "Foto de perfil",
+      "avatarButton": "Cambiar foto de perfil",
       "fields": {
-        "displayName": "Nombre visible",
+        "displayNameLabel": "Nombre público",
+        "displayNamePlaceholder": "Ej.: María García",
+        "usernameLabel": "Tu nombre de usuario",
         "username": "Nombre de usuario",
+        "bioLabel": "Biografía",
         "bio": "Ej.: Desarrollador web apasionado por la IA y el diseño.",
-        "occupation": "Ej.: Desarrollador full-stack"
+        "occupationLabel": "Ocupación",
+        "occupation": "Ej.: Desarrollador web full-stack, profesor de inglés, estudiante"
       },
       "submit": "Pasar al siguiente paso"
     },
     "actions": {
       "verifyUsername": {
+        "missingUsername": "Introduce un nombre de usuario.",
         "taken": "Este nombre de usuario ya está en uso.",
         "available": "Nombre de usuario disponible."
       },

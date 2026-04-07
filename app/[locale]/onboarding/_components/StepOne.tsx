@@ -7,19 +7,29 @@ import {
   uploadImage,
   verifyUsername,
 } from "../_actions/actions";
-import { AtSign, CircleUserRound, Images } from "lucide-react";
+import {
+  CircleUserRound,
+  Images,
+  LoaderCircle,
+  AtSign,
+  Quote,
+  User2,
+  BriefcaseBusiness,
+} from "lucide-react";
 import { useActionState, useState, useRef } from "react";
 import { User } from "@/lib/auth";
 import { useDebouncedCallback } from "use-debounce";
-import { useImageColors } from "@/app/hooks/useImageColors";
+import TextareaAutosize from "react-textarea-autosize";
 
 interface stepOneProps {
   user: User;
   providerImage: string | null | undefined;
 }
 export default function StepOne({ user, providerImage }: stepOneProps) {
-  const [displayname, setDisplayname] = useState<string>("");
+  const [displayname, setDisplayname] = useState<string>(user.name ?? "");
   const [username, setUsername] = useState<string>(user.name ?? "");
+  const [bio, setBio] = useState<string>("");
+  const [occupation, setOccupation] = useState<string>("");
 
   // Ont force google a nous donné le provider Image en HIGH resolution, donc 500px ici //
   const highResProviderImage = providerImage?.includes("googleusercontent.com")
@@ -35,7 +45,7 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
     stepOneValidOnboarding,
     initialState,
   );
-  const [usernameState, userNameAction] = useActionState(
+  const [usernameState, userNameAction, userNamePending] = useActionState(
     verifyUsername,
     initialState,
   );
@@ -74,188 +84,172 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
   const isInvalid =
     displayname.trim().length === 0 || username.trim().length < 3 || isPending;
 
-  const colors = useImageColors(
-    typeof previewUrl === "string" ? previewUrl : null,
-  );
-  const bannerColors =
-    colors.length > 0
-      ? colors
-      : ["hsl(221 54% 50%)", "hsl(224 46% 42%)", "hsl(228 38% 34%)"];
-
-  const gradientStyle = {
-    background: `
-      radial-gradient(circle at 24% 18%, ${bannerColors[0]} 0%, transparent 40%),
-      radial-gradient(circle at 78% 18%, ${bannerColors[1]} 0%, transparent 43%),
-      radial-gradient(circle at 50% 74%, ${bannerColors[2]} 0%, transparent 52%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 42%)
-    `,
-  };
   return (
-    <main className=" px-8">
+    <main className="flex flex-col items-center py-4 px-4">
       <form
-        // Obligé de mettre une ref aux formulaire, c'est avec ce formulaire qu'on vas pouvoir submit
-        //  les autres serv action sans créer d'autre form ??//
         ref={formRef}
         action={formAction}
-        className="relative z-10 flex flex-col rounded-xl items-center gap-1"
+        className=" flex flex-col px-4 py-2 rounded-2xl items-center bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))]
+border border-white/6
+backdrop-blur-md
+
+  h-auto w-full max-w-[700px]"
       >
-        <div className="relative overflow-hidden rounded-2xl border border-white/7 bg-white/[0.03] p-8 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.85)] h-[400px] w-full max-w-[700px]">
-          {/* ← Couche background colorée */}
-          <div
-            className="pointer-events-none absolute inset-0 z-0"
-            style={{
-              ...gradientStyle,
-              filter: "blur(84px) saturate(112%)",
-              transform: "scale(1.04)",
-              opacity: 0.8,
-            }}
-          />
-          {/* Blur + fondu vers ton background #090b10 */}
-          <div
-            className="pointer-events-none absolute inset-0 z-10"
-            style={{
-              background: `
-                radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08) 0%, transparent 42%),
-                linear-gradient(
-                  180deg,
-                  rgba(9, 11, 16, 0.18) 0%,
-                  rgba(9, 11, 16, 0.44) 46%,
-                  rgba(9, 11, 16, 0.78) 100%
-                )
-              `,
-            }}
-          />
-          <div
-            className="pointer-events-none absolute inset-0 z-20"
-            style={{
-              backdropFilter: "blur(28px) saturate(170%)",
-              background: `
-                  linear-gradient(
-                    180deg,
-                    rgba(255, 255, 255, 0.22) 0%,
-                    rgba(255, 255, 255, 0.11) 14%,
-                    rgba(255, 255, 255, 0.05) 34%,
-                    rgba(9, 11, 16, 0.05) 68%,
-                    rgba(9, 11, 16, 0.14) 100%
-                  )
-                `,
-              boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(255,255,255,0.06)",
-            }}
-          />
-
-          <div className="relative z-30 flex flex-col items-center gap-1">
-            {/* PHOTO DE PROFILE */}
-            <div className="group z-10 relative cursor-pointer rounded-full">
-              <label htmlFor="avatar-input" className="cursor-pointer">
-                <input
-                  id="avatar-input"
-                  name="avatar"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  disabled={uploadPending}
-                  type="file"
-                ></input>
-                {previewUrl ? (
-                  <div className="rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(59,130,246,0.14)_100%)] p-[3px]">
-                    <Image
-                      src={previewUrl}
-                      alt={t("avatarAlt")}
-                      height={256}
-                      width={256}
-                      sizes="128px"
-                      priority
-                      className="rounded-full w-32 h-32 object-cover border-2 border-black/12 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.75)] "
-                    ></Image>
-                  </div>
-                ) : (
-                  <CircleUserRound
-                    aria-label={t("avatarAlt")}
-                    size={64}
-                    strokeWidth={1.5}
-                    className="text-muted-foreground"
-                  />
-                )}
-              </label>
-              <button
-                ref={uploadSubmitterRef}
-                type="submit"
-                formAction={uploadProfileAction}
-                className="hidden"
-                tabIndex={-1}
+        <div className="group z-10 relative cursor-pointer rounded-full">
+          <label htmlFor="avatar-input" className="cursor-pointer">
+            <input
+              id="avatar-input"
+              name="avatar"
+              className="hidden"
+              accept="image/*"
+              onChange={handleFileChange}
+              disabled={uploadPending}
+              type="file"
+            ></input>
+            {previewUrl ? (
+              <div className="rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(59,130,246,0.14)_100%)] p-[3px]">
+                <Image
+                  src={previewUrl}
+                  alt={t("avatarAlt")}
+                  height={256}
+                  width={256}
+                  sizes="128px"
+                  priority
+                  className="rounded-full w-32 h-32 object-cover border-2 border-black/12 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.75)] "
+                ></Image>
+              </div>
+            ) : (
+              <CircleUserRound
+                aria-label={t("avatarAlt")}
+                size={64}
+                strokeWidth={1.5}
+                className="text-muted-foreground"
               />
+            )}
+          </label>
+          <button
+            ref={uploadSubmitterRef}
+            type="submit"
+            formAction={uploadProfileAction}
+            className="hidden"
+            tabIndex={-1}
+          />
+          <button
+            type="button"
+            className="absolute bottom-3 right-0 z-10 h-8 w-8 items-center justify-center rounded-full border bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(59,130,246,0.14)_100%)] text-white shadow-[0_10px_30px_rgba(37,99,235,0.38),inset_0_1px_0_rgba(255,255,255,0.28)] backdrop-blur-md transition hover:scale-[1.03] hover:shadow-[0_14px_38px_rgba(37,99,235,0.48),inset_0_1px_0_rgba(255,255,255,0.34)]"
+            aria-label={t("avatarButton")}
+          ></button>
+          {/**VERIFIER QUE l'icone Image sois toujours au hoovers au centre */}
+          <Images
+            size={15}
+            strokeWidth={2}
+            className="absolute bottom-5  left-28 z-20  "
+          />
+        </div>
+        {uploadProfileState.userMsg ? (
+          <p className="form-error">{uploadProfileState.userMsg}</p>
+        ) : null}
+        <div className="w-full flex flex-col gap-4 mt-5">
+          <div className=" form-field-card relative ">
+            <label className="self-start form-field-text form-label">
+              {t("fields.displayNameLabel")}
+            </label>
 
-              {/**VERIFIER QUE l'icone Image sois toujours au hoovers au centre */}
-              <Images
-                size={30}
-                className="opacity-0 absolute top-12 left-12 group-hover:opacity-70 transition-opacity duration-300"
-              />
-            </div>
-            {uploadProfileState.userMsg ? (
-              <p className="">{uploadProfileState.userMsg}</p>
-            ) : null}
-
+            <User2 className="absolute left-5 top-7 " />
             <input
               name="displayname"
-              placeholder={t("fields.displayName")}
+              placeholder={t("fields.displayNamePlaceholder")}
               value={displayname}
-              className="input-ghost font-bold text-3xl w-[50px] "
+              className={`input-ghost form-field-control form-field-control-lg form-field-text ${
+                state.errors?.displayname ? "input-ghost-error" : ""
+              }`}
               onChange={(e) => setDisplayname(e.target.value)}
             ></input>
-            <p className="">{state.errors?.displayname?.join(",")}</p>
-            <div className="relative flex flex-row ml-20 ">
-              <AtSign
-                className="absolute top-1 -left-4 text-white/20"
-                strokeWidth={1.25}
-                size={16}
-              />
-              <input
-                name="username"
-                placeholder={t("fields.username")}
-                value={username}
-                className="input-ghost input-ghost-left font-extralight text-muted-foreground/60 text-sm "
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                  debouncedUsernameCheck();
-                }}
-                // PETIT INDICATIONS VISUEL A METTRE POUR COMPRENDRE QUE ça CHERCHE //
-              />
-            </div>
+          </div>
+          <p className="form-error">{state.errors?.displayname?.[0]}</p>
 
-            {/*"Bouton caché pour le servAction UserName"*/}
-            <button
-              ref={usernameSubmitterRef}
-              type="submit"
-              formAction={userNameAction}
-              className="hidden"
-            />
-            {usernameState.userMsg ? (
-              <p className="">{usernameState.userMsg}</p>
-            ) : null}
-            <p className="">{state.errors?.username?.join(",")}</p>
+          <div className="relative form-field-card">
+            {userNamePending && (
+              <LoaderCircle
+                className="absolute z-50 right-5 top-10 -translate-y-1/2 animate-spin text-white/30"
+                size={26}
+              />
+            )}
+            <label className="self-start form-field-text form-label">
+              {t("fields.usernameLabel")}
+            </label>
 
+            <AtSign className="absolute left-5 top-7" />
             <input
+              name="username"
+              placeholder={t("fields.username")}
+              value={username}
+              className={`input-ghost form-field-control form-field-text font-extralight text-sm ${
+                state.errors?.username
+                  ? "input-ghost-error"
+                  : "text-muted-foreground/60"
+              }`}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                debouncedUsernameCheck();
+              }}
+              // PETIT INDICATIONS VISUEL A METTRE POUR COMPRENDRE QUE ça CHERCHE //
+            />
+          </div>
+          <button
+            ref={usernameSubmitterRef}
+            type="submit"
+            formAction={userNameAction}
+            className="hidden"
+          />
+          {usernameState.userMsg ? (
+            <p
+              className={` ${usernameState.ok ? "form-succes" : "form-error"}  `}
+            >
+              {usernameState.userMsg}
+            </p>
+          ) : null}
+          <p className="form-error">{state.errors?.username?.[0]}</p>
+          <div className=" form-field-card form-field-card-bio relative ">
+            <Quote className="absolute left-5 top-7" />
+            <label className="form-label form-field-text">
+              {t("fields.bioLabel")}
+            </label>
+            <TextareaAutosize
               name="bio"
               placeholder={t("fields.bio")}
-              className="input-ghost   "
+              value={bio}
+              maxLength={160}
+              maxRows={3}
+              className={`form-field-control form-field-text form-field-textarea text-sm appearance-none resize-none outline-none ring-0
+                           transition-all duration-200 ${state.errors?.bio ? "input-ghost-error" : ""}`}
+              onChange={(e) => setBio(e.target.value)}
             />
-            <p className="">{state.errors?.bio?.join(",")}</p>
-
+          </div>
+          <p className="form-error">{state.errors?.bio?.[0]}</p>
+          <div className=" form-field-card relative ">
+            <label className="form-field-text form-label">
+              {t("fields.occupationLabel")}
+            </label>
+            <BriefcaseBusiness className="absolute left-5 top-7" />
             <input
-              className="input-ghost"
+              value={occupation}
+              className={`input-ghost form-field-control form-field-text ${
+                state.errors?.occupation ? "input-ghost-error" : ""
+              }`}
               placeholder={t("fields.occupation")}
               name="occupation"
+              onChange={(e) => setOccupation(e.target.value)}
             ></input>
-            <p className="">{state.errors?.occupation?.join(",")}</p>
-
-            {state.userMsg ? <p className="">{state.userMsg}</p> : null}
           </div>
+          <p className="form-error">{state.errors?.occupation?.[0]}</p>
+
+          {state.userMsg ? <p className="form-error">{state.userMsg}</p> : null}
         </div>
         <button
           type="submit"
           formAction={formAction}
-          className="btn-primary absolute -bottom-15  right-20 sm:left-auto sm:translate-x-0 sm:right-20 "
+          className="btn-primary mt-4 self-center md:absolute md:bottom-3 md:-right-80"
           disabled={isInvalid}
         >
           {t("submit")}

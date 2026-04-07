@@ -11,7 +11,6 @@ import {
   onboardingSchemaStepTwo,
 } from "@/lib/validations.ts/onboarding";
 import { revalidatePath } from "next/cache";
-import { User } from "lucide-react";
 
 export type stepFormState = {
   ok: boolean;
@@ -39,7 +38,7 @@ export async function verifyUsername(
     typeof inputusername === "string" ? inputusername.trim().toLowerCase() : "";
 
   if (!usernameInput) {
-    return { ok: false, userMsg: "Veuillez inséré un nom d'utilisateur" };
+    return { ok: false, userMsg: t("missingUsername") };
   }
 
   const username = await myPrisma.userProfile.findUnique({
@@ -121,7 +120,6 @@ export async function uploadImage(
       dataToUpdate.bannerUrl = secure_url;
       dataToUpdate.bannerPublicId = public_id;
     }
-    console.log(session?.user.id);
     await myPrisma.userProfile.update({
       where: { userId: session?.user.id },
       data: dataToUpdate,
@@ -166,7 +164,7 @@ export async function stepOneValidOnboarding(
   }
 
   try {
-    await myPrisma.userProfile.updateMany({
+    await myPrisma.userProfile.update({
       where: { userId: session?.user.id },
       // Ici parsed.data contient l'objet validé et transformé par Zod.
       data: { ...parsed.data, onboardedStep: 1 },

@@ -59,20 +59,29 @@
   "onboarding": {
     "progress": {
       "stepLabel": "Étape {current}/{total}",
-      "title": "Configurez votre espace"
+      "title": "Configurez votre espace",
+      "stepOneTitle": "Créez votre profil",
+      "stepTwoTitle": "Profil détaillé",
+      "stepThreeTitle": "C'est parti !"
     },
     "stepOne": {
       "avatarAlt": "Photo de profil",
+      "avatarButton": "Modifier la photo de profil",
       "fields": {
-        "displayName": "Nom affiché",
+        "displayNameLabel": "Nom public",
+        "displayNamePlaceholder": "Ex. Marie Dupont",
+        "usernameLabel": "Votre nom d'utilisateur",
         "username": "Nom d'utilisateur",
+        "bioLabel": "Bio",
         "bio": "Ex. Développeur web passionné par l'IA et le design.",
-        "occupation": "Ex. Développeur full-stack"
+        "occupationLabel": "Occupation",
+        "occupation": "Ex. Développeur web full-stack, professeur d'anglais, étudiant"
       },
       "submit": "Passer à l'étape suivante"
     },
     "actions": {
       "verifyUsername": {
+        "missingUsername": "Veuillez saisir un nom d'utilisateur.",
         "taken": "Ce nom d'utilisateur est déjà pris.",
         "available": "Nom d'utilisateur disponible."
       },

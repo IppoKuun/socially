@@ -59,20 +59,29 @@
   "onboarding": {
     "progress": {
       "stepLabel": "Step {current}/{total}",
-      "title": "Set up your space"
+      "title": "Set up your space",
+      "stepOneTitle": "Create your profile",
+      "stepTwoTitle": "Detailed profile",
+      "stepThreeTitle": "Let's go!"
     },
     "stepOne": {
       "avatarAlt": "Profile picture",
+      "avatarButton": "Change profile picture",
       "fields": {
-        "displayName": "Display name",
+        "displayNameLabel": "Public name",
+        "displayNamePlaceholder": "e.g. Emma Johnson",
+        "usernameLabel": "Your username",
         "username": "Username",
+        "bioLabel": "Bio",
         "bio": "e.g. Web developer passionate about AI and design.",
-        "occupation": "e.g. Full-stack developer"
+        "occupationLabel": "Occupation",
+        "occupation": "e.g. Full-stack web developer, English teacher, student"
       },
       "submit": "Continue to the next step"
     },
     "actions": {
       "verifyUsername": {
+        "missingUsername": "Please enter a username.",
         "taken": "This username is already taken.",
         "available": "Username available."
       },
