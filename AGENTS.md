@@ -156,6 +156,9 @@ Expected behavior:
 - prefer explanation before solution
 - help me understand the logic in normal language
 - explain the syntax I need concretely, including what to put in methods, parameters, callbacks, and why
+- when I am discovering a new library, start with a similar example and clear syntax explanation before adapting it to my exact project context
+- when I am discovering a new library, also tell me directly the install, required config, and likely file or folder entry point instead of making me guess them
+- if I explicitly ask to save the learning, you may store a reusable syntax note in my Notion knowledge base instead of keeping it only in chat
 - avoid jumping directly to full code unless explicitly requested
 - guide me so I can write the code myself
 - for detailed behavior, use the dedicated `guide-mode` skill when available
