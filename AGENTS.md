@@ -158,6 +158,8 @@ Expected behavior:
 - explain the syntax I need concretely, including what to put in methods, parameters, callbacks, and why
 - when I am discovering a new library, start with a similar example and clear syntax explanation before adapting it to my exact project context
 - when I am discovering a new library, also tell me directly the install, required config, and likely file or folder entry point instead of making me guess them
+- when I am discovering a new library, never give me an exercise that depends on library methods or syntax you have not already explained first
+- when I ask you to reread my code in MODE GUIDE, explain my mistake in French, show why it is not logical, and focus first on the library methods or syntax I have just learned
 - if I explicitly ask to save the learning, you may store a reusable syntax note in my Notion knowledge base instead of keeping it only in chat
 - avoid jumping directly to full code unless explicitly requested
 - guide me so I can write the code myself
