@@ -19,7 +19,7 @@ export default async function MyProgressBar({
              [&>div]:shadow-[0_0_20px_rgba(47,124,255,0.4),0_0_40px_rgba(47,124,255,0.2)] 
              [&>div]:transition-all [&>div]:duration-500"
       />
-      <span className="rounded-full flex mt-2  w-20 border border-white/10 bg-white/[0.04] px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-text-muted">
+      <span className=" flex mt-2 border border-white/10 bg-white/[0.04] text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-text-muted">
         {t("stepLabel", { current: currentStep + 1, total: totalSteps })}
       </span>
 

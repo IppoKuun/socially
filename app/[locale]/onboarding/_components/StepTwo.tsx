@@ -88,7 +88,7 @@ backdrop-blur-md
         </div>
 
         {state.errors?.categories && (
-          <p className="form-errorx">{state.errors.categories} </p>
+          <p className="form-error">{state.errors.categories?.[0]} </p>
         )}
         <button
           type="submit"

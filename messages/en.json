@@ -62,7 +62,7 @@
       "title": "Set up your space",
       "stepOneTitle": "Create your profile",
       "stepTwoTitle": "Category",
-      "stepThreeTitle": "Let's go!"
+      "stepThreeTitle": "Intent"
     },
     "stepOne": {
       "avatarAlt": "Profile picture",
@@ -84,6 +84,25 @@
       "submit": "Continue to the next step"
     },
     "stepThree": {
+      "description": "Choose the main reason you are joining Socially.",
+      "options": {
+        "publish": {
+          "label": "Create content",
+          "description": "Share your ideas, projects, and posts."
+        },
+        "debate": {
+          "label": "Exchange ideas",
+          "description": "Discuss, debate, and challenge viewpoints."
+        },
+        "network": {
+          "label": "Grow my network",
+          "description": "Meet useful people and build connections."
+        },
+        "read": {
+          "label": "Read content",
+          "description": "Explore posts, learn, and stay informed."
+        }
+      },
       "submit": "Continue to the next step"
     },
     "actions": {

@@ -62,7 +62,7 @@
       "title": "Configurez votre espace",
       "stepOneTitle": "Créez votre profil",
       "stepTwoTitle": "Catégorie",
-      "stepThreeTitle": "C'est parti !"
+      "stepThreeTitle": "Intention"
     },
     "stepOne": {
       "avatarAlt": "Photo de profil",
@@ -84,6 +84,25 @@
       "submit": "Passer à l'étape suivante"
     },
     "stepThree": {
+      "description": "Choisissez l'objectif principal de votre présence sur Socially.",
+      "options": {
+        "publish": {
+          "label": "Créer du contenu",
+          "description": "Partager vos idées, vos projets et vos publications."
+        },
+        "debate": {
+          "label": "Échanger des idées",
+          "description": "Discuter, débattre et confronter vos points de vue."
+        },
+        "network": {
+          "label": "Développer mon réseau",
+          "description": "Rencontrer des profils utiles et créer des connexions."
+        },
+        "read": {
+          "label": "Lire du contenu",
+          "description": "Explorer des posts, apprendre et rester en veille."
+        }
+      },
       "submit": "Passer à l'étape suivante"
     },
     "actions": {

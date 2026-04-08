@@ -65,7 +65,7 @@ export const onboardingSchema = z.object({
 });
 
 export const onboardingSchemaStepTwo = z.object({
-  categories: z.nativeEnum(Category),
+  categories: z.array(z.nativeEnum(Category)).min(1),
 });
 
 export const onboardingSchemaStepThree = z.object({

@@ -236,7 +236,7 @@ export async function stepTwoValidOnboarding(
 ) {
   const t = await getTranslations("onboarding.actions.stepTwo");
   const errorMap = await getZodErrorMapForRequest();
-  const categories = FormData.get("categories");
+  const categories = FormData.getAll("categories");
   const session = await getSession();
 
   const parsed = onboardingSchemaStepTwo.safeParse(
@@ -259,7 +259,7 @@ export async function stepTwoValidOnboarding(
       where: { userId: session?.user.id },
 
       data: {
-        categories: { set: [parsed.data.categories] },
+        categories: { set: parsed.data.categories },
         onboardedStep: 2,
       },
     });
