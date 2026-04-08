@@ -66,9 +66,13 @@ export const onboardingSchema = z.object({
 
 export const onboardingSchemaStepTwo = z.object({
   categories: z.nativeEnum(Category),
+});
+
+export const onboardingSchemaStepThree = z.object({
   intent: z.nativeEnum(Intent),
 });
 
+export type onboardingSchemaThree = z.infer<typeof onboardingSchemaStepThree>;
 export type onboardingSchemaTwo = z.infer<typeof onboardingSchemaStepTwo>;
 export type onboardingSchemaOne = z.infer<typeof onboardingSchema>;
 export type zodUploadimageSchema = z.infer<typeof uploadImageSchema>;

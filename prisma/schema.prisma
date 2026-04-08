@@ -30,22 +30,11 @@ enum Category {
   BUSINESS
   SOCIETY
   POLITICS
-  NEWS
-  SCIENCE
   EDUCATION
   HEALTH
   SPORTS
   ENTERTAINMENT
   CULTURE_ARTS
-  GAMING
-  LIFESTYLE
-  FOOD
-  TRAVEL
-  FASHION_BEAUTY
-  CREATORS
-  FINANCE
-  ENVIRONMENT
-
   @@schema("app")
 }
 
@@ -64,6 +53,7 @@ enum language {
 }
 
 enum Intent {
+  DISCOVER
   PUBLISH
   READ
   DEBATE

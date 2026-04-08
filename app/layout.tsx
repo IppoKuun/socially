@@ -27,9 +27,14 @@ export default async function RootLayout(props: LayoutProps<"/">) {
   const locale = await getLocale();
 
   return (
-    <html lang={locale} className={cn("font-sans", geist.variable)}>
+    <html
+      lang={locale}
+      className={cn("font-sans", geist.variable)}
+      suppressHydrationWarning
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${manrope.variable} ${plusJakartaSans.variable} ${sora.variable} ${spaceGrotesk.variable} ${jetBrainsMono.variable} ${ibmPlexMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         {children}
       </body>

@@ -61,7 +61,7 @@
       "stepLabel": "Step {current}/{total}",
       "title": "Set up your space",
       "stepOneTitle": "Create your profile",
-      "stepTwoTitle": "Detailed profile",
+      "stepTwoTitle": "Category",
       "stepThreeTitle": "Let's go!"
     },
     "stepOne": {
@@ -77,6 +77,13 @@
         "occupationLabel": "Occupation",
         "occupation": "e.g. Full-stack web developer, English teacher, student"
       },
+      "submit": "Continue to the next step"
+    },
+    "stepTwo": {
+      "intro": "Choose the topics you want to see in your feed.",
+      "submit": "Continue to the next step"
+    },
+    "stepThree": {
       "submit": "Continue to the next step"
     },
     "actions": {

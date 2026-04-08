@@ -9,6 +9,7 @@ import {
   uploadImageSchema,
   onboardingSchema,
   onboardingSchemaStepTwo,
+  onboardingSchemaStepThree,
 } from "@/lib/validations.ts/onboarding";
 import { revalidatePath } from "next/cache";
 
@@ -182,15 +183,64 @@ export async function stepOneValidOnboarding(
   }
 }
 
-export async function stepTwoValidOnboarding(id: string, FormData: FormData) {
+export async function stepThreeValidOnboarding(
+  _prevData: stepFormState,
+  FormData: FormData,
+) {
+  const t = await getTranslations("onboarding.actions.stepThree");
+  const errorMap = await getZodErrorMapForRequest();
+  const session = await getSession();
+
+  const intent = FormData.get("intent");
+
+  const parsed = onboardingSchemaStepThree.safeParse(
+    {
+      intent,
+    },
+    { error: errorMap },
+  );
+  if (!parsed.success) {
+    return {
+      ok: false,
+      userMsg: "",
+      errors: parsed.error.flatten().fieldErrors,
+    };
+  }
+  try {
+    await myPrisma.userProfile.update({
+      where: { userId: session?.user.id },
+
+      data: {
+        intent: parsed.data.intent,
+        onboardedStep: 3,
+        hasOnboarded: true,
+      },
+    });
+
+    revalidatePath("/onboarding");
+
+    return { ok: true, userMsg: "" };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      ok: false,
+      userMsg: t("submitFailed"),
+    };
+  }
+}
+
+export async function stepTwoValidOnboarding(
+  _prevData: stepFormState,
+  FormData: FormData,
+) {
   const t = await getTranslations("onboarding.actions.stepTwo");
   const errorMap = await getZodErrorMapForRequest();
-  const intent = FormData.get("intent");
   const categories = FormData.get("categories");
+  const session = await getSession();
 
   const parsed = onboardingSchemaStepTwo.safeParse(
     {
-      intent,
       categories,
     },
     { error: errorMap },
@@ -205,11 +255,10 @@ export async function stepTwoValidOnboarding(id: string, FormData: FormData) {
   }
 
   try {
-    await myPrisma.userProfile.updateMany({
-      where: { userId: id },
+    await myPrisma.userProfile.update({
+      where: { userId: session?.user.id },
 
       data: {
-        intent: parsed.data.intent,
         categories: { set: [parsed.data.categories] },
         onboardedStep: 2,
       },

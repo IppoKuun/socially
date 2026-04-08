@@ -61,7 +61,7 @@
       "stepLabel": "Étape {current}/{total}",
       "title": "Configurez votre espace",
       "stepOneTitle": "Créez votre profil",
-      "stepTwoTitle": "Profil détaillé",
+      "stepTwoTitle": "Catégorie",
       "stepThreeTitle": "C'est parti !"
     },
     "stepOne": {
@@ -77,6 +77,13 @@
         "occupationLabel": "Occupation",
         "occupation": "Ex. Développeur web full-stack, professeur d'anglais, étudiant"
       },
+      "submit": "Passer à l'étape suivante"
+    },
+    "stepTwo": {
+      "intro": "Choisissez les sujets que vous voulez retrouver dans votre fil.",
+      "submit": "Passer à l'étape suivante"
+    },
+    "stepThree": {
       "submit": "Passer à l'étape suivante"
     },
     "actions": {

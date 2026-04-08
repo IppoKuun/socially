@@ -61,7 +61,7 @@
       "stepLabel": "Paso {current}/{total}",
       "title": "Configura tu espacio",
       "stepOneTitle": "Crea tu perfil",
-      "stepTwoTitle": "Perfil detallado",
+      "stepTwoTitle": "Categoría",
       "stepThreeTitle": "¡Vamos!"
     },
     "stepOne": {
@@ -77,6 +77,13 @@
         "occupationLabel": "Ocupación",
         "occupation": "Ej.: Desarrollador web full-stack, profesor de inglés, estudiante"
       },
+      "submit": "Pasar al siguiente paso"
+    },
+    "stepTwo": {
+      "intro": "Elige los temas que quieres ver en tu feed.",
+      "submit": "Pasar al siguiente paso"
+    },
+    "stepThree": {
       "submit": "Pasar al siguiente paso"
     },
     "actions": {
