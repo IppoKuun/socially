@@ -1,0 +1,9 @@
+// Petit fichier config ts pour intégré
+// toutes les config de base et y ajoutez jest et node //
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["jest", "node"]
+  },
+  "include": ["./**/*.ts"]
+}

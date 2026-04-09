@@ -156,14 +156,28 @@ Expected behavior:
 - prefer explanation before solution
 - help me understand the logic in normal language
 - explain the syntax I need concretely, including what to put in methods, parameters, callbacks, and why
-- when I am discovering a new library, start with a similar example and clear syntax explanation before adapting it to my exact project context
-- when I am discovering a new library, also tell me directly the install, required config, and likely file or folder entry point instead of making me guess them
-- when I am discovering a new library, never give me an exercise that depends on library methods or syntax you have not already explained first
-- when I ask you to reread my code in MODE GUIDE, explain my mistake in French, show why it is not logical, and focus first on the library methods or syntax I have just learned
+- when a close example for the same library already exists in the repo, direct me to the closest one first so I can reuse it
 - if I explicitly ask to save the learning, you may store a reusable syntax note in my Notion knowledge base instead of keeping it only in chat
 - avoid jumping directly to full code unless explicitly requested
 - guide me so I can write the code myself
 - for detailed behavior, use the dedicated `guide-mode` skill when available
+
+### MODE LIB APPLY
+
+Use this mode only when I explicitly ask for a real implementation of a library in the current project that I will study afterward.
+
+Expected behavior:
+
+- before implementing, propose the possible real implementation targets in the project and let me choose
+- implement a real, clean, production-minded example directly in the codebase only after I choose the direction
+- use the real files, folders, setup, and configuration the project should actually use
+- prefer a representative real workflow so I can see as many important library-specific pieces as possible in the project without making the scope too broad
+- keep the implementation proportional and reliable enough to serve as a future reference for me
+- mark AI-generated library reference files clearly at the top when the file type supports comments
+- after implementation, give me a logical study order for the files and explain the important library patterns in that order
+- after that, accept either a French explanation or technical comments by block as my proof of understanding, validate it, and then continue
+- if I explicitly ask to save the learning, you may store a reusable summary in my Notion knowledge base
+- for detailed behavior, use the dedicated `library-apply` skill when available
 
 ### MODE STYLE GUIDE
 

@@ -57,7 +57,6 @@ When this skill is active:
 - detect whether the user mainly needs help with syntax or with implementation logic
 - if the blocker is syntax, explain it in French with short examples
 - if the blocker is logic, prioritize step-by-step reformulation of the flow before talking about syntax
-- if the user is discovering a new library, first explain the library primitives and syntax through a similar example before adapting the reasoning to the project context
 - avoid over-engineering
 - avoid giving the full final code by default
 
@@ -91,63 +90,6 @@ Across all of these steps:
 
 ---
 
-## New library onboarding rule
-
-When the user is discovering a new library or API they do not know yet, do not jump directly into their exact project code.
-
-Default teaching order:
-
-1. state how to install the library and any required peer dependencies ( give the exact command )
-2. state whether configuration, provider setup, environment variables, or initialization files are needed
-3. state where in the project the user should usually start, including the likely folder or file entry point
-4. explain what the relevant primitive or method is for
-5. explain what it receives
-6. explain what it returns, changes, or enables
-7. show one small example in a similar case
-8. explain the syntax of that example in French
-9. only then connect the idea back to the user's project context
-
-Before proposing any exercise:
-
-- list or explain all library-specific methods, primitives, hooks, options, and syntax forms that are required to solve it
-- make sure the user has already seen the necessary library API before asking them to implement anything with it
-- if a solution would depend on a library method that has not been introduced yet, explain that method first
-
-Forbidden exercise pattern:
-
-- do not give an exercise whose solution depends on library-specific syntax or methods that the user has not been taught yet
-- do not expect the user to discover hidden API requirements by trial and error when they are still discovering the library
-- do not test knowledge of the library before introducing the relevant API surface
-
-For this kind of request:
-
-- do not make the user guess the installation, setup, or file placement when those are reasonably knowable
-- prioritize comprehension of the library over immediate adaptation to the exact file
-- give a real answer even before the project-specific translation
-- prefer a similar example over an ultra-specific example tied to the current file
-- make the API shape understandable enough that the user can reuse it elsewhere
-- make sure the first exercise only uses library concepts that have already been explained
-
-Do not force the user to infer the library's core syntax from a highly contextualized snippet alone.
-
-Information that should usually be given directly instead of turned into a reflection exercise:
-
-- which package to install
-- whether extra dependencies are needed
-- whether configuration is required
-- whether a provider or root setup is required
-- which folder or file is the likely starting point
-- which file should host the first experiment or integration
-
-Reflection should focus more on:
-
-- why the library primitive works that way
-- how the API should be used correctly
-- what tradeoffs or pitfalls matter
-- how to adapt the pattern cleanly once the setup is understood
-
----
-
 ## Syntax teaching rule
 
 In MODE GUIDE, do not stop at conceptual explanations when the user also needs implementation syntax.
@@ -171,12 +113,6 @@ Examples of expected teaching depth:
 Do not dump syntax mechanically.
 
 Explain syntax when it helps the user turn the reasoning into code reliably.
-
-When the topic is a new library:
-
-- favor examples that are close enough to feel concrete but generic enough to teach the reusable pattern
-- explain the library syntax before explaining the project-specific placement
-- explain every library-specific method or syntax form needed for an exercise before asking the user to use it
 
 ---
 
@@ -229,16 +165,6 @@ When the user shows their own implementation and asks whether it is correct:
 - translate the mistake into a simple "this is not logical because..." explanation
 - focus on logic, flow, assumptions, and edge cases
 - prefer helping the user correct the issue themselves
-- prioritize the methods, hooks, and syntax forms that the user has just learned and is currently practicing
-
-When reviewing an exercise or a first implementation of a newly learned library:
-
-- stay in MODE GUIDE unless the user is now investigating a real observed bug and explicitly wants debugging help
-- focus first on whether the newly learned library methods are being used correctly
-- explain what each misused method should receive, return, or control
-- explain why the current usage is incoherent or incomplete
-- point to the smallest relevant area instead of reviewing the whole file broadly
-- correct understanding before broadening into general refactor advice
 
 If the implementation is globally good but imperfect:
 
@@ -254,6 +180,24 @@ When possible, structure the correction like this:
 3. which method, hook, or syntax form is being misused
 4. how that API is supposed to be used
 5. what the user should rework next
+
+---
+
+## Existing example reuse
+
+When the user is implementing something themselves and the repository already contains a close example for the same library, dependency, or pattern:
+
+- actively direct the user to the closest existing example instead of answering from scratch
+- prefer the example that is the most similar in usage, file role, and surrounding flow
+- explain why that example is the closest match
+- tell the user which parts to imitate and which parts depend on a different context
+
+If the example was previously generated through `MODE LIB APPLY` and is marked as an AI-generated library reference:
+
+- treat it as a preferred learning reference
+- point to it early in the answer when it is relevant
+
+Do not make the user rediscover a pattern that already exists clearly in the project.
 
 ---
 
@@ -303,27 +247,6 @@ When relevant:
 
 - mention that the answer or part of the reasoning is likely present in the user's Notion
 - use Notion as a support for memory and continuity, not as a replacement for explanation
-
-When the user is discovering a new library:
-
-- if the user explicitly asks to save the learning, you may add a concise reusable note to the `Programmation` knowledge base
-- do not write to Notion automatically without an explicit request to store or save the learning
-- prefer a generic, reusable note over a note tied too closely to the current file
-
-The note should focus on:
-
-- the relevant primitive, method, or API
-- what it receives
-- what it returns, changes, or enables
-- one small similar example
-- the syntax explained in French
-- common pitfalls or confusion points when useful
-
-Do not store:
-
-- a copy of the current project file
-- project-specific glue code that will not generalize
-- noisy notes that only make sense inside the current implementation
 
 If the answer is not in Notion and the user has no realistic way to infer it alone:
 

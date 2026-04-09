@@ -24,3 +24,4 @@
 - fichier zod i18n
 - Les animation dans l'onboarding (Ligne synchro avec étape + animation entre les pages avec Framer Motion)
 - L'étape 3 de onboarding
+- Onboarding JEST test
