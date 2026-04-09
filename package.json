@@ -9,6 +9,9 @@
     "start": "next start",
     "lint": "eslint",
     "test": "jest",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:install": "playwright install chromium",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch"
   },
@@ -46,6 +49,7 @@
     "zod-i18n-map": "^2.27.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",
