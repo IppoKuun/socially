@@ -8,7 +8,7 @@ type SignupUser = {
   username: string;
 };
 
-// Fonction pour créer un robot user, ont lui mets un suffix aléatoire pour que chaque test sois différenciée //
+// Fonction pour créer un robot user, ont lui mets un suffix aléatoire pour que évitez les collisions d'unicité //
 function createSignupUser(): SignupUser {
   const uniqueSuffix = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
