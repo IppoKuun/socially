@@ -94,4 +94,5 @@ export default async function createProfile(
   }
   const locale = await getLocale();
   redirect({ href: "/onboarding", locale });
+  return { ok: true, userMsg: "" };
 }
