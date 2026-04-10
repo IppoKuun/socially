@@ -89,6 +89,14 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
       <form
         ref={formRef}
         action={formAction}
+        onKeyDown={(e) => {
+          const target = e.target as HTMLElement;
+          // La touche entré ne submit plus le form //
+          if (e.key !== "Enter") return;
+          if (target.tagName === "TEXTAREA") return;
+
+          e.preventDefault();
+        }}
         className=" flex flex-col px-4 py-2 rounded-2xl items-center bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))]
 border border-white/6
 backdrop-blur-md
