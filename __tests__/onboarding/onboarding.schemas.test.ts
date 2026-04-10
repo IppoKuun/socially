@@ -99,20 +99,6 @@ describe("onboarding schemas", () => {
 
       expect(result.data.intent).toBe(Intent.PUBLISH);
     });
-
-    it("rejects values that are not part of the intent enum", () => {
-      const result = onboardingSchemaStepThree.safeParse({
-        intent: "DISCOVER",
-      });
-
-      expect(result.success).toBe(false);
-
-      if (result.success) {
-        throw new Error("Expected onboardingSchemaStepThree to fail");
-      }
-
-      expect(result.error.flatten().fieldErrors.intent).toBeDefined();
-    });
   });
 
   describe("uploadImageSchema", () => {

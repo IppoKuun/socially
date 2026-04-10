@@ -58,16 +58,32 @@ export async function proxy(request: NextRequest) {
     );
   }
 
-  const response = handleI18n(request);
+  // Ici, on prends tout les headers de la request, ajoute le notre pour le renvoyez
+  // C'est obligatoire car si on ajoutez un headers comme ça Next peut supprimé les anciens Headers
+  // "Copier coller" les headers avec le notre nous permets de gardé a 100% tout les headers  //
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", pathname);
 
-  //On mets un headers x-pathname pour que tout les server components puisse y accédée //
-  // Ont le mets dans les requetre de handleI18n pour tout mettre en meme temps
-  // car ont peut return qu'une seule réponse HTTP a la fois autant fusionner nos requetes//
-  response.headers.set("x-pathname", pathname);
+  const response = handleI18n(request);
+  const upstreamHeaders = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
+  for (const [key, value] of upstreamHeaders.headers) {
+    if (
+      key === "x-middleware-override-headers" ||
+      key.startsWith("x-middleware-request-")
+    ) {
+      response.headers.set(key, value);
+    }
+  }
 
   return response;
 }
 
 export const config = {
-  matcher: ["/((?!api/auth|_next|_vercel|monitoring|.*\\..*).*)"],
+  // Tout les routes sur lequelle i18n ne doit pas etre appliqué //
+  matcher: ["/((?!api|_next|_vercel|monitoring|.*\\..*).*)"],
 };

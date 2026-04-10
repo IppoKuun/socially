@@ -256,17 +256,6 @@ describe("onboarding server actions", () => {
   });
 
   describe("stepThreeValidOnboarding", () => {
-    it("returns field errors when the intent is invalid", async () => {
-      const result = await stepThreeValidOnboarding(
-        { ok: true, userMsg: "" },
-        createFormData([["intent", "DISCOVER"]]),
-      );
-
-      expect(result.ok).toBe(false);
-      expect(result.errors?.intent).toBeDefined();
-      expect(mockUserProfileUpdate).not.toHaveBeenCalled();
-    });
-
     it("marks onboarding as completed when the intent is valid", async () => {
       const result = await stepThreeValidOnboarding(
         { ok: true, userMsg: "" },

@@ -20,7 +20,7 @@ jobs:
           node-version: 20
 
       - name: Installation des dépendances
-        run: npm install
+        run: npm ci
 
       - name: Génération du client Prisma
         run: npx prisma generate

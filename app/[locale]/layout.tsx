@@ -1,14 +1,14 @@
 import { myPrisma } from "@/lib/prisma";
+import { redirect, routing } from "@/i18n/routing";
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { cookies, headers } from "next/headers";
 
 import CookiesConsentBanner from "../components/CookiesConsentBanner";
 import AnonymousSessionTracker from "../components/AnonymousSessionTracker";
 
-import { routing } from "@/i18n/routing";
 import { getSession } from "@/lib/authSession";
 
 export function generateStaticParams() {
@@ -36,7 +36,7 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
     });
 
     if (!user?.hasOnboarded && !pathname?.includes("/onboarding")) {
-      redirect("/onboarding");
+      redirect({ href: "/onboarding", locale });
     }
   }
 
