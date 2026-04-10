@@ -30,22 +30,11 @@ enum Category {
   BUSINESS
   SOCIETY
   POLITICS
-  NEWS
-  SCIENCE
   EDUCATION
   HEALTH
   SPORTS
   ENTERTAINMENT
   CULTURE_ARTS
-  GAMING
-  LIFESTYLE
-  FOOD
-  TRAVEL
-  FASHION_BEAUTY
-  CREATORS
-  FINANCE
-  ENVIRONMENT
-
   @@schema("app")
 }
 
@@ -64,6 +53,7 @@ enum language {
 }
 
 enum Intent {
+  DISCOVER
   PUBLISH
   READ
   DEBATE
@@ -80,10 +70,13 @@ model UserProfile {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  displayName String 
+  username String? @unique
+  displayname String 
   // URL Car Sauvegarder dans Cloudinary//
   avatarUrl   String?
+  avatarPublicId String?
   bannerUrl   String?
+  bannerPublicId String?
   bio         String?
   language    String
   theme       Theme    @default(DARK)
@@ -107,8 +100,9 @@ model UserProfile {
 
 
   hasOnboarded Boolean @default(false)
-  intent Intent
-  occupation String
+  onboardedStep Int @default(0)
+  intent Intent?
+  occupation String?
 
   isAi  Boolean    @default(false)
 
@@ -120,6 +114,7 @@ model UserProfile {
   
   likes PostLike[]
   post  Post[]
+  categories Category[] @default([])
 
   userCommentLike CommentLike[]
 
@@ -171,7 +166,7 @@ model Post {
   images    String[]
   createdAt DateTime  @default(now())
   deletedAt DateTime?
-  Category  Category
+  categories Category[] @default([]) @map("Category")
 
   moderationStatus ModerationStatus
   isAi             Boolean          @default(false)
@@ -318,6 +313,7 @@ model Message {
   receiver   UserProfile @relation("Receiver", fields: [receiverId], references: [id])
 
   imagesUrl String?
+  imagesPublicId String?
 
   sharedPostId String?
   sharedPost   Post?   @relation(fields: [sharedPostId], references: [id], onDelete: SetNull)
@@ -366,6 +362,7 @@ model StaffProfile {
   displayName String 
   // URL Car Sauvegarder dans Cloudinary//
   avatarUrl   String?
+  avatarPublicid String?
   deletedAt        DateTime?
   defineltyDeleted DateTime?
 

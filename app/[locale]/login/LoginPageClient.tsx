@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useActionState, useState } from "react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/routing";
 import Image from "next/image";
 import createProfile, { getTrackingDataForAuth } from "./_actions/actions";
 import { signIn } from "@/lib/authClient";
@@ -16,6 +16,7 @@ export default function LoginPageClient() {
   const [password, setPassword] = useState<string>("");
 
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations("login");
   const pageShellClass =
     "mx-auto flex h-[100svh] w-full max-w-md flex-col justify-center overflow-hidden px-4 py-4 sm:max-w-lg sm:px-6 sm:py-5 lg:grid lg:max-w-[1500px] lg:grid-cols-[minmax(0,1.08fr)_minmax(360px,420px)] lg:items-stretch lg:gap-6 lg:px-6 lg:py-6 xl:px-8 xl:py-8";
@@ -70,7 +71,7 @@ export default function LoginPageClient() {
       },
       {
         onSuccess: () => {
-          router.push("/feed");
+          router.push("/feed", { locale });
         },
         onError: (ctx) => {
           if (ctx.error) {
@@ -95,8 +96,8 @@ export default function LoginPageClient() {
         provider: "google",
 
         // ONBOARDING MAIS SI USER A DEJA ONBOARDING, VERS FEED //
-        callbackURL: "/feed",
-        newUserCallbackURL: "/onboarding",
+        callbackURL: `/${locale}/feed`,
+        newUserCallbackURL: `/${locale}/onboarding`,
         additionalData: {
           trackingData,
         },

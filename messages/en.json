@@ -55,5 +55,83 @@
     "signupLink": "Create one",
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in"
+  },
+  "onboarding": {
+    "progress": {
+      "stepLabel": "Step {current}/{total}",
+      "title": "Set up your space",
+      "stepOneTitle": "Create your profile",
+      "stepTwoTitle": "Category",
+      "stepThreeTitle": "Intent"
+    },
+    "stepOne": {
+      "avatarAlt": "Profile picture",
+      "avatarButton": "Change profile picture",
+      "fields": {
+        "displayNameLabel": "Public name",
+        "displayNamePlaceholder": "e.g. Emma Johnson",
+        "usernameLabel": "Your username",
+        "username": "Username",
+        "bioLabel": "Bio",
+        "bio": "e.g. Web developer passionate about AI and design.",
+        "occupationLabel": "Occupation",
+        "occupation": "e.g. Full-stack web developer, English teacher, student"
+      },
+      "submit": "Continue to the next step"
+    },
+    "stepTwo": {
+      "intro": "Choose the topics you want to see in your feed.",
+      "submit": "Continue to the next step"
+    },
+    "stepThree": {
+      "description": "Choose the main reason you are joining Socially.",
+      "options": {
+        "publish": {
+          "label": "Create content",
+          "description": "Share your ideas, projects, and posts."
+        },
+        "debate": {
+          "label": "Exchange ideas",
+          "description": "Discuss, debate, and challenge viewpoints."
+        },
+        "network": {
+          "label": "Grow my network",
+          "description": "Meet useful people and build connections."
+        },
+        "read": {
+          "label": "Read content",
+          "description": "Explore posts, learn, and stay informed."
+        }
+      },
+      "submit": "Continue to the next step"
+    },
+    "actions": {
+      "verifyUsername": {
+        "missingUsername": "Please enter a username.",
+        "taken": "This username is already taken.",
+        "available": "Username available."
+      },
+      "uploadImage": {
+        "validationFailed": "Unable to upload this image. Please try again.",
+        "unexpectedError": "Image upload failed. Please try again."
+      },
+      "stepOne": {
+        "submitFailed": "Unable to save your information. Please try again."
+      },
+      "stepTwo": {
+        "submitFailed": "Unable to save your preferences. Please try again."
+      }
+    },
+    "validation": {
+      "required": "This field is required.",
+      "tooSmallString": "This field must contain at least {{minimum}} characters.",
+      "tooBigString": "This field must not exceed {{maximum}} characters.",
+      "invalidUrl": "Please enter a valid URL.",
+      "invalidSelection": "Please select a valid option.",
+      "invalidInput": "The provided value is invalid.",
+      "usernamePattern": "Use only lowercase letters, numbers, and underscores.",
+      "imageTooLarge": "The image must not exceed {{maximum}} MB.",
+      "invalidImageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted."
+    }
   }
 }

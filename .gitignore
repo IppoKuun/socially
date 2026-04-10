@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+/playwright-report
+/test-results
 
 # next.js
 /.next/
@@ -47,3 +49,5 @@ next-env.d.ts
 
 
 .AGENTS.md
+
+test.ts

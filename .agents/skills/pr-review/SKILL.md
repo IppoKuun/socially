@@ -33,6 +33,8 @@ Activate this skill when:
 - a GitHub PR review task is being performed
 - the task is clearly about validating existing code rather than writing new code
 
+Once this workflow has been explicitly activated in a conversation, keep following it until the user explicitly switches mode or exits it.
+
 Do not activate this skill:
 
 - for feature planning

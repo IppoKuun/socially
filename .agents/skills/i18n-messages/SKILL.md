@@ -1,6 +1,6 @@
 ---
 name: i18n-messages
-description: Use this skill when a task adds, changes, or depends on next-intl translation keys and the messages files must be updated. Use it to detect new or renamed translation keys from useTranslations and t(...) calls, then keep the locale files in the messages folder in sync. Do not use it for feature planning, PR review, or debugging unless the main task is specifically translation-key maintenance.
+description: Use this skill when a task adds, changes, or depends on next-intl translation keys and the messages files must be updated. Use it to detect new or renamed translation keys from useTranslations and t(...) calls, then keep the locale files in the messages folder in sync. This skill is messages-file-only: it must not rewrite application code such as components, schemas, server actions, or other logic files. Do not use it for feature planning, PR review, or debugging unless the main task is specifically translation-key maintenance.
 ---
 
 # i18n Messages
@@ -16,7 +16,7 @@ The goal is to:
 - keep locale structures synchronized
 - reduce manual translation-file maintenance for the user
 
-This skill is for message-file maintenance, not for teaching i18n theory.
+This skill is for message-file maintenance, not for teaching i18n theory or rewriting application code.
 
 ---
 
@@ -30,12 +30,16 @@ Activate this skill when a task:
 - introduces new UI text that should live in `messages/`
 - requires syncing locale files after UI/content changes
 
+Once this workflow has been explicitly activated in a conversation, keep following it until the user explicitly switches mode or exits it.
+
 Do not activate this skill:
 
 - for general feature planning
 - for debugging unrelated runtime issues
 - for formal PR review
 - when the task has nothing to do with translation keys or locale files
+
+If the task mainly requires changing application code to introduce i18n support, keep this skill focused on identifying the needed message keys and explaining the code-side changes without applying them.
 
 ---
 
@@ -50,6 +54,42 @@ When this skill is active:
 - prefer fixing the message files directly instead of only warning about missing keys
 
 Do not make the user manage routine `messages/` updates manually when the intent is clear.
+
+---
+
+## Messages-only rule
+
+This skill must not modify application code.
+
+Do not edit:
+
+- components
+- pages
+- layouts
+- server actions
+- Zod schemas
+- validators
+- hooks
+- utilities
+- services
+- loaders
+- any other code file outside the locale files
+
+Allowed edits:
+
+- files inside `messages/`
+
+Allowed read-only inspection:
+
+- inspect code files to identify the keys, namespaces, placeholders, and wording context that the locale files must support
+
+If code changes are needed to wire translation into Zod, server actions, components, or any other runtime flow:
+
+- explain exactly what the user should change
+- do not apply those code changes yourself in this skill
+- do not rewrite the surrounding file to "help"
+
+Even if the issue is obvious or the change seems routine, the user remains responsible for editing the code-side integration.
 
 ---
 
@@ -108,9 +148,9 @@ Do not over-explain the translation choices unless needed.
 
 If the user's proposed key naming is weak, unclear, inconsistent, or misleading:
 
-- you may create a better key name
+- you may suggest a better key name
 - keep it consistent with the project structure
-- briefly tell the user what key name you used and why it is better
+- briefly tell the user what key name you recommend and why it is better
 
 Examples of acceptable reasons:
 
@@ -119,7 +159,7 @@ Examples of acceptable reasons:
 - less ambiguity
 - more scalable structure
 
-Do not silently invent a confusing naming scheme.
+Do not silently invent a confusing naming scheme or silently force a rename in application code.
 
 ---
 
@@ -163,7 +203,7 @@ Do:
 - inspect related UI files
 - inspect translation usage
 - sync locale files
-- improve poor key naming if justified
+- suggest better key naming if justified
 
 Do not:
 
@@ -171,6 +211,7 @@ Do not:
 - redesign the whole i18n architecture unnecessarily
 - start a full code review because of a missing key
 - force the user into a debugging workflow for routine i18n updates
+- edit schemas, server actions, or other code files to wire i18n in place of the user
 
 Stay practical and efficient.
 
@@ -182,9 +223,10 @@ If the task changes UI copy and introduces new translation usage:
 
 1. inspect the code changes
 2. identify the new or changed keys
-3. update `messages/` locale files
-4. keep locales aligned
-5. mention any deliberate key rename briefly if one was made
+3. explain any required code-side i18n wiring without editing the code files
+4. update `messages/` locale files
+5. keep locales aligned
+6. mention any recommended key rename briefly if one was suggested
 
 Prefer direct maintenance over repetitive warnings.
 
@@ -200,3 +242,5 @@ Do not silently switch to:
 - PR review mode
 
 If a broader issue is detected, mention the appropriate mode briefly, but keep this skill focused on i18n messages maintenance.
+
+Do not cross the boundary from locale maintenance into application-code editing.

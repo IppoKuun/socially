@@ -55,5 +55,83 @@
     "signupLink": "Créer un compte",
     "loginPrompt": "Vous avez déjà un compte ?",
     "loginLink": "Se connecter"
+  },
+  "onboarding": {
+    "progress": {
+      "stepLabel": "Étape {current}/{total}",
+      "title": "Configurez votre espace",
+      "stepOneTitle": "Créez votre profil",
+      "stepTwoTitle": "Catégorie",
+      "stepThreeTitle": "Intention"
+    },
+    "stepOne": {
+      "avatarAlt": "Photo de profil",
+      "avatarButton": "Modifier la photo de profil",
+      "fields": {
+        "displayNameLabel": "Nom public",
+        "displayNamePlaceholder": "Ex. Marie Dupont",
+        "usernameLabel": "Votre nom d'utilisateur",
+        "username": "Nom d'utilisateur",
+        "bioLabel": "Bio",
+        "bio": "Ex. Développeur web passionné par l'IA et le design.",
+        "occupationLabel": "Occupation",
+        "occupation": "Ex. Développeur web full-stack, professeur d'anglais, étudiant"
+      },
+      "submit": "Passer à l'étape suivante"
+    },
+    "stepTwo": {
+      "intro": "Choisissez les sujets que vous voulez retrouver dans votre fil.",
+      "submit": "Passer à l'étape suivante"
+    },
+    "stepThree": {
+      "description": "Choisissez l'objectif principal de votre présence sur Socially.",
+      "options": {
+        "publish": {
+          "label": "Créer du contenu",
+          "description": "Partager vos idées, vos projets et vos publications."
+        },
+        "debate": {
+          "label": "Échanger des idées",
+          "description": "Discuter, débattre et confronter vos points de vue."
+        },
+        "network": {
+          "label": "Développer mon réseau",
+          "description": "Rencontrer des profils utiles et créer des connexions."
+        },
+        "read": {
+          "label": "Lire du contenu",
+          "description": "Explorer des posts, apprendre et rester en veille."
+        }
+      },
+      "submit": "Passer à l'étape suivante"
+    },
+    "actions": {
+      "verifyUsername": {
+        "missingUsername": "Veuillez saisir un nom d'utilisateur.",
+        "taken": "Ce nom d'utilisateur est déjà pris.",
+        "available": "Nom d'utilisateur disponible."
+      },
+      "uploadImage": {
+        "validationFailed": "Impossible d'envoyer cette image. Réessayez.",
+        "unexpectedError": "L'envoi de l'image a échoué. Réessayez."
+      },
+      "stepOne": {
+        "submitFailed": "Impossible d'enregistrer vos informations. Réessayez."
+      },
+      "stepTwo": {
+        "submitFailed": "Impossible d'enregistrer vos préférences. Réessayez."
+      }
+    },
+    "validation": {
+      "required": "Ce champ est obligatoire.",
+      "tooSmallString": "Ce champ doit contenir au moins {{minimum}} caractères.",
+      "tooBigString": "Ce champ ne doit pas dépasser {{maximum}} caractères.",
+      "invalidUrl": "Veuillez saisir une URL valide.",
+      "invalidSelection": "Veuillez sélectionner une option valide.",
+      "invalidInput": "La valeur saisie est invalide.",
+      "usernamePattern": "Utilise uniquement des lettres minuscules, des chiffres et des underscores.",
+      "imageTooLarge": "L'image ne doit pas dépasser {{maximum}} Mo.",
+      "invalidImageType": "Seuls les formats .jpg, .jpeg, .png et .webp sont acceptés."
+    }
   }
 }

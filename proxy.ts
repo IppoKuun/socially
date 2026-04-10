@@ -16,6 +16,7 @@ export async function proxy(request: NextRequest) {
   let key: "login" | "auth" | "global" | "admin";
   if (pathname.startsWith("/api/auth")) {
     key = "auth";
+    return NextResponse.next();
   } else if (pathname.endsWith("login") && request.method === "POST") {
     key = "login";
   } else if (pathname.startsWith("/admin")) {
@@ -56,14 +57,33 @@ export async function proxy(request: NextRequest) {
       { status: 429 },
     );
   }
-  // On return rien si une route API est sollicité //
-  if (key === "auth") {
-    return NextResponse.next();
+
+  // Ici, on prends tout les headers de la request, ajoute le notre pour le renvoyez
+  // C'est obligatoire car si on ajoutez un headers comme ça Next peut supprimé les anciens Headers
+  // "Copier coller" les headers avec le notre nous permets de gardé a 100% tout les headers  //
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", pathname);
+
+  const response = handleI18n(request);
+  const upstreamHeaders = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
+  for (const [key, value] of upstreamHeaders.headers) {
+    if (
+      key === "x-middleware-override-headers" ||
+      key.startsWith("x-middleware-request-")
+    ) {
+      response.headers.set(key, value);
+    }
   }
 
-  return handleI18n(request);
+  return response;
 }
 
 export const config = {
-  matcher: ["/((?!_next|_vercel|monitoring|.*\\..*).*)"],
+  // Tout les routes sur lequelle i18n ne doit pas etre appliqué //
+  matcher: ["/((?!api|_next|_vercel|monitoring|.*\\..*).*)"],
 };

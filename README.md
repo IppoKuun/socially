@@ -20,4 +20,9 @@
 
 ### FAIT PAR IA:
 
-- i18n
+- Les fichier traduction pour i18n
+- fichier zod i18n
+- Les animation dans l'onboarding (Ligne synchro avec étape + animation entre les pages avec Framer Motion)
+- L'étape 3 de onboarding
+- Onboarding JEST test
+- La sidebar Publique

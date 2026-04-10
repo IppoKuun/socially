@@ -55,5 +55,83 @@
     "signupLink": "Crear una cuenta",
     "loginPrompt": "¿Ya tienes una cuenta?",
     "loginLink": "Iniciar sesión"
+  },
+  "onboarding": {
+    "progress": {
+      "stepLabel": "Paso {current}/{total}",
+      "title": "Configura tu espacio",
+      "stepOneTitle": "Crea tu perfil",
+      "stepTwoTitle": "Categoría",
+      "stepThreeTitle": "Intención"
+    },
+    "stepOne": {
+      "avatarAlt": "Foto de perfil",
+      "avatarButton": "Cambiar foto de perfil",
+      "fields": {
+        "displayNameLabel": "Nombre público",
+        "displayNamePlaceholder": "Ej.: María García",
+        "usernameLabel": "Tu nombre de usuario",
+        "username": "Nombre de usuario",
+        "bioLabel": "Biografía",
+        "bio": "Ej.: Desarrollador web apasionado por la IA y el diseño.",
+        "occupationLabel": "Ocupación",
+        "occupation": "Ej.: Desarrollador web full-stack, profesor de inglés, estudiante"
+      },
+      "submit": "Pasar al siguiente paso"
+    },
+    "stepTwo": {
+      "intro": "Elige los temas que quieres ver en tu feed.",
+      "submit": "Pasar al siguiente paso"
+    },
+    "stepThree": {
+      "description": "Elige la razón principal por la que quieres estar en Socially.",
+      "options": {
+        "publish": {
+          "label": "Crear contenido",
+          "description": "Compartir tus ideas, proyectos y publicaciones."
+        },
+        "debate": {
+          "label": "Intercambiar ideas",
+          "description": "Hablar, debatir y contrastar puntos de vista."
+        },
+        "network": {
+          "label": "Ampliar mi red",
+          "description": "Conocer perfiles útiles y crear conexiones."
+        },
+        "read": {
+          "label": "Leer contenido",
+          "description": "Explorar publicaciones, aprender y mantenerte al día."
+        }
+      },
+      "submit": "Pasar al siguiente paso"
+    },
+    "actions": {
+      "verifyUsername": {
+        "missingUsername": "Introduce un nombre de usuario.",
+        "taken": "Este nombre de usuario ya está en uso.",
+        "available": "Nombre de usuario disponible."
+      },
+      "uploadImage": {
+        "validationFailed": "No se puede subir esta imagen. Inténtalo de nuevo.",
+        "unexpectedError": "La subida de la imagen ha fallado. Inténtalo de nuevo."
+      },
+      "stepOne": {
+        "submitFailed": "No se pueden guardar tus datos. Inténtalo de nuevo."
+      },
+      "stepTwo": {
+        "submitFailed": "No se pueden guardar tus preferencias. Inténtalo de nuevo."
+      }
+    },
+    "validation": {
+      "required": "Este campo es obligatorio.",
+      "tooSmallString": "Este campo debe contener al menos {{minimum}} caracteres.",
+      "tooBigString": "Este campo no debe superar los {{maximum}} caracteres.",
+      "invalidUrl": "Introduce una URL válida.",
+      "invalidSelection": "Selecciona una opción válida.",
+      "invalidInput": "El valor introducido no es válido.",
+      "usernamePattern": "Usa solo letras minúsculas, números y guiones bajos.",
+      "imageTooLarge": "La imagen no debe superar {{maximum}} MB.",
+      "invalidImageType": "Solo se aceptan los formatos .jpg, .jpeg, .png y .webp."
+    }
   }
 }

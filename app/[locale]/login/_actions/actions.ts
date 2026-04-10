@@ -1,12 +1,12 @@
 "use server";
 
+import { redirect } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { myPrisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { APIError } from "better-auth";
 import { myError } from "@/lib/myError";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 export type FormState = {
   userMsg: string | null;
@@ -92,5 +92,7 @@ export default async function createProfile(
       return { ok: false, userMsg: t("login.error.userMsg") };
     }
   }
-  redirect("/onboarding");
+  const locale = await getLocale();
+  redirect({ href: "/onboarding", locale });
+  return { ok: true, userMsg: "" };
 }

@@ -5,7 +5,24 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    serverActions: {
+      // Je mets 50 pour pouvoir catche moi meme les bodySizeLimits avec zod //
+      bodySizeLimit: "20mb",
+    },
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com", // Google
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com", // Ton Cloudinary
+      },
+    ],
+  },
 };
 
 export default withSentryConfig(withNextIntl(nextConfig), {
@@ -43,5 +60,5 @@ export default withSentryConfig(withNextIntl(nextConfig), {
       // Automatically tree-shake Sentry logger statements to reduce bundle size
       removeDebugLogging: true,
     },
-  }
+  },
 });

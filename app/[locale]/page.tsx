@@ -1,5 +1,5 @@
 import { getSession } from "@/lib/authSession";
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/routing";
 
 export default async function Home({
   params,
@@ -9,9 +9,9 @@ export default async function Home({
   const { locale } = await params;
   const session = await getSession();
   if (!session) {
-    redirect(`/${locale}/login`);
+    redirect({ href: "/login", locale });
   } else {
-    redirect(`/${locale}/feed`);
+    redirect({ href: "/feed", locale });
   }
   return <div className=""></div>;
 }

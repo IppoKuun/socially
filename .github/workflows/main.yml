@@ -2,9 +2,9 @@ name: CI Socially
 
 on:
   push:
-    branches: [ master, develop ]
+    branches: [master, develop]
   pull_request:
-    branches: [ master, develop ]
+    branches: [master, develop]
 
 jobs:
   build-and-test:
@@ -17,10 +17,10 @@ jobs:
       - name: Installation de Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Installation des dépendances
-        run: npm install
+        run: npm ci
 
       - name: Génération du client Prisma
         run: npx prisma generate
@@ -38,5 +38,8 @@ jobs:
 
       - name: Tentative de Build
         run: npm run build
+
+      - name: Run unit tests
+        run: npm test
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL}}

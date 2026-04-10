@@ -36,6 +36,8 @@ Activate this skill when the user wants to:
 - decide whether something belongs in `AGENTS.md`, a skill, MCP policy, or nowhere
 - verify how Codex instructions should be structured
 
+Once this mode has been explicitly activated in a conversation, keep following it until the user explicitly switches mode or exits it.
+
 Do not activate this skill for:
 
 - normal feature implementation

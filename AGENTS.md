@@ -133,6 +133,20 @@ For detailed PR review behavior, use the dedicated `pr-review` skill when availa
 
 These modes must **only** be activated when I explicitly ask for them.
 
+### Conversation mode persistence
+
+For repository-defined modes and skills, treat the current conversation as staying in the last explicitly activated mode until I clearly switch or exit it.
+
+Expected behavior:
+
+- do not fall back to normal behavior on the next message just because I stopped repeating the mode name
+- if I switch modes mid-conversation, the most recently activated mode becomes the active one immediately
+- if I do not explicitly change mode, continue with the current one
+- if I explicitly say to leave the mode, return to normal behavior
+- when the active mode could be ambiguous, briefly state which mode you are currently following
+
+This persistence rule applies to the repository-defined modes and their dedicated local skills.
+
 ### MODE GUIDE
 
 Use this mode only when I explicitly ask for help implementing a feature.
@@ -142,9 +156,28 @@ Expected behavior:
 - prefer explanation before solution
 - help me understand the logic in normal language
 - explain the syntax I need concretely, including what to put in methods, parameters, callbacks, and why
+- when a close example for the same library already exists in the repo, direct me to the closest one first so I can reuse it
+- if I explicitly ask to save the learning, you may store a reusable syntax note in my Notion knowledge base instead of keeping it only in chat
 - avoid jumping directly to full code unless explicitly requested
 - guide me so I can write the code myself
 - for detailed behavior, use the dedicated `guide-mode` skill when available
+
+### MODE LIB APPLY
+
+Use this mode only when I explicitly ask for a real implementation of a library in the current project that I will study afterward.
+
+Expected behavior:
+
+- before implementing, propose the possible real implementation targets in the project and let me choose
+- implement a real, clean, production-minded example directly in the codebase only after I choose the direction
+- use the real files, folders, setup, and configuration the project should actually use
+- prefer a representative real workflow so I can see as many important library-specific pieces as possible in the project without making the scope too broad
+- keep the implementation proportional and reliable enough to serve as a future reference for me
+- mark AI-generated library reference files clearly at the top when the file type supports comments
+- after implementation, give me a logical study order for the files and explain the important library patterns in that order
+- after that, accept either a French explanation or technical comments by block as my proof of understanding, validate it, and then continue
+- if I explicitly ask to save the learning, you may store a reusable summary in my Notion knowledge base
+- for detailed behavior, use the dedicated `library-apply` skill when available
 
 ### MODE STYLE GUIDE
 
@@ -248,6 +281,8 @@ Do not use MCPs unnecessarily when the repository itself is enough.
 - This project uses `next-intl`.
 - When a task introduces or changes translation usage, keep the `messages/` locale files synchronized.
 - Prefer updating `fr.json`, `en.json`, and other existing locale files directly instead of only warning about missing translation keys.
+- In `i18n-messages`, stay limited to locale files and read-only inspection of code usage.
+- If code changes are needed in components, Zod schemas, server actions, or other app files, explain them but let me edit those files myself.
 - For detailed behavior, use the dedicated `i18n-messages` skill when available.
 
 ## Execution style
