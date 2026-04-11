@@ -145,6 +145,8 @@
       "trending": "Trending",
       "notif": "Notif",
       "message": "Message",
+      "search": "Search",
+      "profile": "Profile",
       "feedback": "Feedback",
       "settings": "Settings"
     },
@@ -172,6 +174,11 @@
         "title": "Message",
         "description": "Accede a tus futuras conversaciones privadas desde el shell autenticado compartido.",
         "placeholder": "La mensajería privada aún no está conectada. Esta ruta está disponible a propósito para validar la navegación de extremo a extremo."
+      },
+      "search": {
+        "title": "Search",
+        "description": "Prepara la futura superficie de búsqueda para usuarios y publicaciones dentro del shell autenticado.",
+        "placeholder": "La búsqueda aún no está implementada. Esta ruta ya existe para que la navegación móvil ampliada siga siendo totalmente utilizable."
       },
       "feedback": {
         "title": "Feedback",

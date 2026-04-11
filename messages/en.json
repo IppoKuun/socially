@@ -145,6 +145,8 @@
       "trending": "Trending",
       "notif": "Notif",
       "message": "Message",
+      "search": "Search",
+      "profile": "Profile",
       "feedback": "Feedback",
       "settings": "Settings"
     },
@@ -172,6 +174,11 @@
         "title": "Message",
         "description": "Access your future private conversations from the shared authenticated shell.",
         "placeholder": "Private messaging is not wired yet. This route is intentionally live so the shell can be validated end to end."
+      },
+      "search": {
+        "title": "Search",
+        "description": "Prepare the future search surface for users and posts inside the authenticated shell.",
+        "placeholder": "Search is not implemented yet. This route exists now so the expanded mobile navigation stays fully usable."
       },
       "feedback": {
         "title": "Feedback",

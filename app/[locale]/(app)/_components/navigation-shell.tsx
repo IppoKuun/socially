@@ -9,6 +9,7 @@ import {
   House,
   MessageCircleMore,
   MessageSquarePlus,
+  Search,
   Settings,
   TrendingUp,
   LucideIcon,
@@ -46,6 +47,8 @@ type NavigationItem = {
     | "trending"
     | "notif"
     | "message"
+    | "search"
+    | "profile"
     | "feedback"
     | "settings";
 };
@@ -60,7 +63,16 @@ const desktopItems: NavigationItem[] = [
   { href: "/settings", icon: Settings, key: "settings" },
 ];
 
-const mobileItems = desktopItems.filter((item) => item.key !== "feedback");
+const mobileItems: NavigationItem[] = [
+  { href: "/feed", icon: House, key: "home" },
+  { href: "/discover", icon: Compass, key: "discover" },
+  { href: "/trending", icon: TrendingUp, key: "trending" },
+  { href: "/notifications", icon: Bell, key: "notif" },
+  { href: "/messages", icon: MessageCircleMore, key: "message" },
+  { href: "/search", icon: Search, key: "search" },
+  { href: "/profile", icon: CircleUserRound, key: "profile" },
+  { href: "/feedback", icon: MessageSquarePlus, key: "feedback" },
+];
 
 // Fonction qui vas nous etre utile pour surligné la navigation courante //
 function isActivePath(pathname: string, href: string) {
@@ -193,7 +205,7 @@ export function MobileBottomBar() {
        * Pas de bouton physique homme et ont également une bottome bar de naviguation, c'est fait pour évitez confusion
        * et chevauchement des 2 barre
        */}
-      <ul className="grid grid-cols-5 gap-1">
+      <ul className="grid grid-cols-4 gap-1">
         {mobileItems.map((item) => {
           const Icon = item.icon;
           const isActive = isActivePath(pathname, item.href);

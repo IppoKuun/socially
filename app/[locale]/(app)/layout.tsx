@@ -47,8 +47,8 @@ export default async function AuthenticatedAppLayout({
       <DesktopAppSidebar user={navigationUser} />
 
       <SidebarInset className="app-shell-background">
-        <div className="flex min-h-screen flex-1 flex-col pb-22 md:pb-0">
-          {/* pb-22 padding pour bottom bar / flex-1 : éléments prendre littéralement tout la place restante laisser par sidebar */}
+        <div className="flex min-h-screen flex-1 flex-col pb-[9.5rem] md:pb-0">
+          {/* padding bas pour la bottom bar mobile sur 2 lignes / flex-1 : le conteneur grandit pour prendre l'espace vertical disponible */}
 
           <div className="mx-auto flex w-full max-w-[960px] flex-1 flex-col px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
             {children}
