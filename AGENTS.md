@@ -162,6 +162,19 @@ Expected behavior:
 - guide me so I can write the code myself
 - for detailed behavior, use the dedicated `guide-mode` skill when available
 
+### MODE TASK BRIEF
+
+Use this mode only when I explicitly ask for help preparing an implementation brief before coding starts.
+
+Expected behavior:
+
+- help me fill my task template without taking over the whole thinking process
+- ask targeted questions when important scope or constraints are still unclear
+- propose concrete options when my request could be interpreted in multiple valid ways
+- help me produce a brief I can copy into a new implementation conversation
+- do not start coding from this mode
+- for detailed behavior, use the dedicated `task-brief` skill when available
+
 ### MODE LIB APPLY
 
 Use this mode only when I explicitly ask for a real implementation of a library in the current project that I will study afterward.
@@ -273,6 +286,21 @@ Do not use MCPs unnecessarily when the repository itself is enough.
   - `prisma/`
   - `i18n/`
   - instrumentation-related files
+
+---
+
+## Post-implementation learning handoff
+
+After implementing a task that creates or meaningfully introduces multiple files, always provide a logical study order for the files the user should read next.
+
+Expected behavior:
+
+- identify the files that matter most for understanding the implementation
+- order them in a way that makes the flow easier to understand
+- explain briefly why that order is the right one
+- help the user know where to start before they add comments or study the code in detail
+
+Do not leave the user with only a flat list of created files when a study path would help.
 
 ---
 

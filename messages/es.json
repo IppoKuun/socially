@@ -120,6 +120,9 @@
       },
       "stepTwo": {
         "submitFailed": "No se pueden guardar tus preferencias. Inténtalo de nuevo."
+      },
+      "stepThree": {
+        "submitFailed": "No se puede guardar tu intención. Inténtalo de nuevo."
       }
     },
     "validation": {
@@ -132,6 +135,59 @@
       "usernamePattern": "Usa solo letras minúsculas, números y guiones bajos.",
       "imageTooLarge": "La imagen no debe superar {{maximum}} MB.",
       "invalidImageType": "Solo se aceptan los formatos .jpg, .jpeg, .png y .webp."
+    }
+  },
+  "appShell": {
+    "brandAlt": "Logo de Socially",
+    "navigation": {
+      "home": "Home",
+      "discover": "Discover",
+      "trending": "Trending",
+      "notif": "Notif",
+      "message": "Message",
+      "feedback": "Feedback",
+      "settings": "Settings"
+    },
+    "pages": {
+      "feed": {
+        "title": "Home Feed",
+        "description": "Discover what's happening in your network."
+      },
+      "discover": {
+        "title": "Discover",
+        "description": "Reúne superficies editoriales de descubrimiento, cuentas y destacados en un mismo lugar.",
+        "placeholder": "El contenido Discover aún no está implementado. Este placeholder mantiene una página real accesible mientras se construye."
+      },
+      "trending": {
+        "title": "Trending",
+        "description": "Sigue las publicaciones y conversaciones que están recibiendo más atención ahora mismo.",
+        "placeholder": "La lógica Trending todavía no está conectada. Esta ruta ya existe para validar el shell de navegación."
+      },
+      "notifications": {
+        "title": "Notif",
+        "description": "Consulta la actividad más reciente vinculada a tu cuenta y a tu contenido.",
+        "placeholder": "La agrupación de notificaciones y los estados leído/no leído llegarán más adelante. Por ahora esta página es un placeholder limpio."
+      },
+      "messages": {
+        "title": "Message",
+        "description": "Accede a tus futuras conversaciones privadas desde el shell autenticado compartido.",
+        "placeholder": "La mensajería privada aún no está conectada. Esta ruta está disponible a propósito para validar la navegación de extremo a extremo."
+      },
+      "feedback": {
+        "title": "Feedback",
+        "description": "Prepara una superficie dedicada al feedback beta sin construir todavía todo el flujo.",
+        "placeholder": "El flujo completo de feedback queda fuera de este ticket. Esta página ya existe como una ruta placeholder navegable."
+      },
+      "settings": {
+        "title": "Settings",
+        "description": "Centraliza los accesos a preferencias y gestión de la cuenta.",
+        "placeholder": "Las secciones de Settings se implementarán por etapas. Este placeholder permite mantener la navegación estable."
+      },
+      "profile": {
+        "title": "Profile",
+        "description": "Consulta los elementos públicos básicos de tu perfil desde el shell autenticado.",
+        "placeholder": "Añade tu bio en el onboarding o en un futuro ticket de edición de perfil para sustituir este texto."
+      }
     }
   }
 }

@@ -120,6 +120,9 @@
       },
       "stepTwo": {
         "submitFailed": "Unable to save your preferences. Please try again."
+      },
+      "stepThree": {
+        "submitFailed": "Unable to save your intent. Please try again."
       }
     },
     "validation": {
@@ -132,6 +135,59 @@
       "usernamePattern": "Use only lowercase letters, numbers, and underscores.",
       "imageTooLarge": "The image must not exceed {{maximum}} MB.",
       "invalidImageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted."
+    }
+  },
+  "appShell": {
+    "brandAlt": "Socially logo",
+    "navigation": {
+      "home": "Home",
+      "discover": "Discover",
+      "trending": "Trending",
+      "notif": "Notif",
+      "message": "Message",
+      "feedback": "Feedback",
+      "settings": "Settings"
+    },
+    "pages": {
+      "feed": {
+        "title": "Home Feed",
+        "description": "Discover what's happening in your network."
+      },
+      "discover": {
+        "title": "Discover",
+        "description": "Surface editorial discovery blocks, accounts and highlights from one place.",
+        "placeholder": "Discover content is not implemented yet. This placeholder keeps the navigation fully functional while the real page is built."
+      },
+      "trending": {
+        "title": "Trending",
+        "description": "Track the posts and discussions getting the most attention right now.",
+        "placeholder": "Trending logic is still pending. This route exists now so the new shell can navigate to a stable page."
+      },
+      "notifications": {
+        "title": "Notif",
+        "description": "Review the latest activity linked to your account and your content.",
+        "placeholder": "Notification grouping and read states will arrive later. For now this page is a clean placeholder route."
+      },
+      "messages": {
+        "title": "Message",
+        "description": "Access your future private conversations from the shared authenticated shell.",
+        "placeholder": "Private messaging is not wired yet. This route is intentionally live so the shell can be validated end to end."
+      },
+      "feedback": {
+        "title": "Feedback",
+        "description": "Collect beta feedback in a dedicated surface without building the full flow yet.",
+        "placeholder": "The complete feedback workflow is outside this ticket. This page exists now as a real navigable placeholder."
+      },
+      "settings": {
+        "title": "Settings",
+        "description": "Centralize preferences and account management entry points.",
+        "placeholder": "Settings sections will be implemented incrementally. This placeholder keeps the navigation stable."
+      },
+      "profile": {
+        "title": "Profile",
+        "description": "Review the public basics of your profile from the authenticated app shell.",
+        "placeholder": "Add your bio during onboarding or a future profile-edit ticket to replace this placeholder text."
+      }
     }
   }
 }
