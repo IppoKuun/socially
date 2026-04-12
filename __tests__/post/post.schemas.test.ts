@@ -1,5 +1,4 @@
 import { postSchema } from "@/lib/validations.ts/post";
-import { title } from "process";
 
 describe("post schema", () => {
   it("normalise and accept a valid input", () => {
@@ -8,7 +7,6 @@ describe("post schema", () => {
       content: "Codex et Claude",
       imagesUrl: "https://chatgpt.com/fr-FR",
     });
-
     expect(result.success).toBe(true);
     expect(result.data?.title).toBe("Les meuilleurs IA pour dev");
     expect(result.data?.imagesUrl).toBe("https://chatgpt.com/fr-FR");
