@@ -163,6 +163,7 @@ model Post {
   id        String    @id @default(cuid())
   title     String
   content   String?
+  slug      String
   images    String[]
   createdAt DateTime  @default(now())
   deletedAt DateTime?
