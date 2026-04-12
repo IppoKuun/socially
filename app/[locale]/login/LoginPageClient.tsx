@@ -19,7 +19,7 @@ export default function LoginPageClient() {
   const locale = useLocale();
   const t = useTranslations("login");
   const pageShellClass =
-    "mx-auto flex h-[100svh] w-full max-w-md flex-col justify-center overflow-hidden px-4 py-4 sm:max-w-lg sm:px-6 sm:py-5 lg:grid lg:max-w-[1500px] lg:grid-cols-[minmax(0,1.08fr)_minmax(360px,420px)] lg:items-stretch lg:gap-6 lg:px-6 lg:py-6 xl:px-8 xl:py-8";
+    "mx-auto flex min-h-[100svh] w-full max-w-md flex-col justify-center overflow-y-auto px-4 py-4 sm:max-w-lg sm:px-6 sm:py-5 lg:grid lg:max-w-[1500px] lg:grid-cols-[minmax(0,1.08fr)_minmax(360px,420px)] lg:items-stretch lg:gap-6 lg:px-6 lg:py-6 xl:px-8 xl:py-8";
   const visualPanelClass =
     "relative hidden min-h-0 overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(160deg,#162235_0%,#0e141d_42%,#090c12_100%)] px-8 py-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_28px_90px_-45px_rgba(0,0,0,0.96)] lg:flex lg:flex-col lg:justify-between before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.08),transparent_22%),radial-gradient(circle_at_72%_14%,rgba(111,170,255,0.18),transparent_30%),linear-gradient(180deg,transparent_58%,rgba(6,8,12,0.42)_100%)] before:content-[''] after:pointer-events-none after:absolute after:inset-x-[10%] after:bottom-0 after:h-px after:bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)] after:content-['']";
   const formColumnClass = "flex min-h-0 w-full flex-col justify-center lg:py-2";

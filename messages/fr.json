@@ -120,6 +120,9 @@
       },
       "stepTwo": {
         "submitFailed": "Impossible d'enregistrer vos préférences. Réessayez."
+      },
+      "stepThree": {
+        "submitFailed": "Impossible d'enregistrer votre intention. Réessayez."
       }
     },
     "validation": {
@@ -132,6 +135,66 @@
       "usernamePattern": "Utilise uniquement des lettres minuscules, des chiffres et des underscores.",
       "imageTooLarge": "L'image ne doit pas dépasser {{maximum}} Mo.",
       "invalidImageType": "Seuls les formats .jpg, .jpeg, .png et .webp sont acceptés."
+    }
+  },
+  "appShell": {
+    "brandAlt": "Logo Socially",
+    "navigation": {
+      "home": "Home",
+      "discover": "Discover",
+      "trending": "Trending",
+      "notif": "Notif",
+      "message": "Message",
+      "search": "Search",
+      "profile": "Profile",
+      "feedback": "Feedback",
+      "settings": "Settings"
+    },
+    "pages": {
+      "feed": {
+        "title": "Home Feed",
+        "description": "Discover what's happening in your network."
+      },
+      "discover": {
+        "title": "Discover",
+        "description": "Retrouve les surfaces de découverte éditoriale, les comptes et les temps forts au même endroit.",
+        "placeholder": "Le contenu Discover n'est pas encore implémenté. Ce placeholder garde une vraie page accessible pendant la construction."
+      },
+      "trending": {
+        "title": "Trending",
+        "description": "Suis les posts et discussions qui attirent le plus d'attention en ce moment.",
+        "placeholder": "La logique Trending n'est pas encore branchée. Cette route existe déjà pour valider le shell de navigation."
+      },
+      "notifications": {
+        "title": "Notif",
+        "description": "Consulte les dernières activités liées à ton compte et à ton contenu.",
+        "placeholder": "Le regroupement des notifications et les états lu/non lu arriveront plus tard. Pour l'instant cette page reste un placeholder propre."
+      },
+      "messages": {
+        "title": "Message",
+        "description": "Accède à tes futures conversations privées depuis le shell authentifié partagé.",
+        "placeholder": "La messagerie privée n'est pas encore câblée. Cette route est volontairement disponible pour valider la navigation de bout en bout."
+      },
+      "search": {
+        "title": "Search",
+        "description": "Prépare la future surface de recherche pour les utilisateurs et les posts dans le shell authentifié.",
+        "placeholder": "La recherche n'est pas encore implémentée. Cette route existe déjà pour que la navigation mobile étendue reste pleinement utilisable."
+      },
+      "feedback": {
+        "title": "Feedback",
+        "description": "Prépare une surface dédiée au feedback beta sans construire tout le flux pour l'instant.",
+        "placeholder": "Le vrai workflow feedback est hors scope de ce ticket. Cette page existe déjà comme route placeholder navigable."
+      },
+      "settings": {
+        "title": "Settings",
+        "description": "Centralise les entrées vers les préférences et la gestion du compte.",
+        "placeholder": "Les sections Settings seront implémentées progressivement. Ce placeholder permet de garder une navigation stable."
+      },
+      "profile": {
+        "title": "Profile",
+        "description": "Retrouve les bases publiques de ton profil depuis le shell authentifié.",
+        "placeholder": "Ajoute ta bio dans l'onboarding ou dans un futur ticket d'édition de profil pour remplacer ce texte."
+      }
     }
   }
 }
