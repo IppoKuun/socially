@@ -160,5 +160,9 @@ export default async function createPost(
     return { ok: false, userMsg: "Impossible de créer le post" };
   }
 
+  if (created.moderationStatus === "UNCERTAIN") {
+    return { ok: true, userMsg: " Attention, votre post a été jugé sensible" };
+  }
+
   return { ok: true, userMsg: "" };
 }
