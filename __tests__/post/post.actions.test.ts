@@ -6,7 +6,6 @@
 // title/Content : IA juge UNSAFE et retourne false, avec reasons
 // Title/Content/Image : ZOD ok, cloudindary fail, erreur appropriée*
 // Title/Content/image : ZOD accept, IA UNCERTAINS sur texte, slug deja pris, reffait un nv slug, return ok avec moderations unsafe
-// Title/Content/Image : Tout doit bien passé et return ok: true, userMsg:"" //
 // Tout est bon mais rateLimits atteints //
 
 const mockModerationPost = jest.fn();
@@ -233,6 +232,31 @@ describe("app creation post", () => {
       unsafeImage: [0, 2],
     });
     expect(mockDeleteCloudinary).toHaveBeenCalledTimes(4);
+    expect(mockCreatePost).not.toHaveBeenCalled();
+  });
+  it("reject If AI say title / CONTENT isnt appropriates", async () => {
+    mockModerationPost.mockResolvedValue({
+      ModerationStatus: "UNSAFE",
+      reasons: "Vous etes un danger pour la civilisation",
+      unsafeImages: [],
+    });
+    const state = await createPost(
+      { ok: true, userMsg: "" },
+      createFormData([
+        ["title", "Le rassemblement natrional est un bon partie politique"],
+        [
+          "content",
+          "le RN est un bon partie politique, et veulent du bien de la France",
+        ],
+      ]),
+    );
+
+    expect(state).toEqual({
+      ok: false,
+      userMsg: "Votre contenue viole notre politique d'utilisation",
+      reasons: "Vous etes un danger pour la civilisation",
+      unsafeImages: [],
+    });
     expect(mockCreatePost).not.toHaveBeenCalled();
   });
 });
