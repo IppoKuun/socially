@@ -15,6 +15,7 @@ const mockUserProfileFindUnique = jest.fn();
 const mockRateLimit = jest.fn();
 const mockuploadCloudinary = jest.fn();
 const mockCreatePost = jest.fn();
+const mockSlug = jest.fn();
 
 jest.mock("@/lib/cloudinaryCondfig", () => ({
   uploadCloudinary: (...args: unknown[]) => mockuploadCloudinary(...args),
@@ -26,6 +27,10 @@ jest.mock("@/lib/authSession", () => ({
 
 jest.mock("@/lib/IA", () => ({
   moderatePostContent: (...args: unknown[]) => mockModerationPost(...args),
+}));
+
+jest.mock("@/lib/", () => ({
+  generateSlug: (...args: unknown[]) => mockSlug(...args),
 }));
 
 jest.mock("@/lib/prisma", () => ({
@@ -81,6 +86,11 @@ describe("app creation post", () => {
   (beforeEach(() => {
     consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
     mockGetSession.mockResolvedValue({ user: { id: "testUser-123" } });
+    mockUserProfileFindUnique.mockResolvedValue({
+      userId: "testUserProfile-123",
+    });
+    mockRateLimit.mockResolvedValue({ success: true });
+
     mockuploadCloudinary.mockResolvedValue({
       secure_url: "https://res.cloudinary.com/socially/default.png",
       public_id: "default-image",
@@ -90,6 +100,37 @@ describe("app creation post", () => {
       consoleSpy.mockRestore();
     }));
 
-  it("accept and give a category to a normal post");
-  // Après chaque test ont reset ce qu'il y'a dans notre console.error qu'on a créer avec notre espion //
+  it("accept a normal payload with IA answer, zod parsing, creation of slug and post", async () => {
+    mockModerationPost.mockResolvedValue({
+      ModerationStatus: "SAFE",
+      categories: "SPORTS",
+    });
+    mockSlug.mockResolvedValue({ slug: "js-meuilleure-language-V1StG_" });
+
+    const state = await createPost(
+      { ok: true, userMsg: "" },
+      createFormData([
+        ["title", "Js meuilleure language"],
+        [
+          "content",
+          "Il permet de développer à la fois le frontend ET, le backend ",
+        ],
+      ]),
+    );
+
+    expect(state.ok).toEqual({ ok: true, userMsg: "" });
+    expect(mockCreatePost).toHaveBeenCalledWith({
+      where: { userId: "testUserProfile-123" },
+      data: {
+        title: "Js meuilleure language",
+        slug: "js-meuilleure-language-V1StG_",
+        ModerationStatus: "SAFE",
+        content:
+          "Il permet de développer à la fois le frontend ET, le backend ",
+        imagesUrl: [],
+        categries: "SPORTS",
+        userId: "testUserProfile-123",
+      },
+    });
+  });
 });
