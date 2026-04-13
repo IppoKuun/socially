@@ -1,3 +1,4 @@
+import { myError } from "../myError";
 import { openai } from "./clients";
 import { classedCategories, moderationPostPrompt } from "./prompt";
 
@@ -16,28 +17,33 @@ export default async function Moderation({
   content,
   imageUrl,
 }: ModerationInput) {
+  if (!title && !content && !imageUrl) {
+    throw new myError("Aucun contenu a modéré");
+  }
+
   const inputTextData = {
-    kind: kind ?? null,
-    language: language ?? null,
+    kind: kind,
+    language: language,
     title: title ?? null,
     content: content ?? null,
   };
 
-  const inputImageData =
-    imageUrl?.map((url) => ({
-      type: "input_image" as const,
-      image_url: url,
-    })) ?? [];
-  const inputData = {
-    content: {
-      inputText: inputTextData,
-      InputIamge: inputImageData,
-    },
-  };
   const response = await openai.responses.create({
     model: "gpt-5.4-nano",
     instructions: moderationPostPrompt,
-    input: JSON.stringify(inputData, null, 2),
+    input: [
+      {
+        role: "user",
+        content: [
+          { type: "input_text", text: JSON.stringify(inputTextData, null, 2) },
+          ...(imageUrl?.map((url) => ({
+            type: "input_image" as const,
+            image_url: url,
+            detail: "auto" as const,
+          })) ?? []),
+        ],
+      },
+    ],
 
     text: {
       format: {
@@ -55,7 +61,7 @@ export default async function Moderation({
               type: "string",
               enum: ["SAFE", "UNCERTAIN", "UNSAFE"],
             },
-            unsafeImage: {
+            unsafeImages: {
               type: "array",
               items: { type: "number" },
             },
@@ -68,6 +74,9 @@ export default async function Moderation({
     },
   });
 
-  const parsed = JSON.parse(response.output_text);
-  return parsed;
+  if (!response.output_text) {
+    throw new myError("Réponse vide ou refus du modèle.");
+  }
+
+  return JSON.parse(response.output_text);
 }
