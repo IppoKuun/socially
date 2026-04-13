@@ -17,9 +17,18 @@ const mockuploadCloudinary = jest.fn();
 const mockCreatePost = jest.fn();
 const mockSlug = jest.fn();
 const mockSearchPost = jest.fn();
+const mockDeleteCloudinary = jest.fn();
 
 jest.mock("@/lib/cloudinaryConfig", () => ({
   uploadCloudinary: (...args: unknown[]) => mockuploadCloudinary(...args),
+}));
+
+jest.mock("cloudinary", () => ({
+  v2: {
+    uploader: {
+      destroy: (...args: unknown[]) => mockDeleteCloudinary(...args),
+    },
+  },
 }));
 
 jest.mock("@/lib/authSession", () => ({
@@ -55,7 +64,7 @@ import { ModerationStatus } from "@prisma/client";
 
 function createFormData(
   entries: Array<[string, string | File]>,
-  multiEntries: Array<[string, string]> = [],
+  multiEntries: Array<[string, string | File]> = [],
 ) {
   const formData = new FormData();
 
@@ -141,8 +150,10 @@ describe("app creation post", () => {
     });
     // Cela veut dire que le slug n'est pas pris //
     mockSearchPost.mockResolvedValue({ slug: "react_vs_vue-Jbzçsm" });
-    mockSlug.mockResolvedValueOnce({ slug: "react_vs_vue-Jbzçsm" });
-    mockSlug.mockResolvedValueOnce({ slug: "react_vs_vue-8ez9eg5" });
+
+    mockSlug
+      .mockResolvedValueOnce({ slug: "react_vs_vue-Jbzçsm" })
+      .mockResolvedValueOnce({ slug: "react_vs_vue-8ez9eg5" });
 
     const state = await createPost(
       { ok: true, userMsg: "" },
@@ -168,5 +179,60 @@ describe("app creation post", () => {
         UserId: "testUserProfile-123",
       },
     });
+  });
+  it("zod reject if image isnt valid", async () => {
+    const state = await createPost(
+      { ok: false, userMsg: "" },
+      createFormData([
+        ["title", "POST with invalide image"],
+
+        [
+          "images",
+          new File(["image1"], "fakeimage.png", { type: "image/gif" }),
+        ],
+        ["images", new File(["image2"], "real.png", { type: "image/png" })],
+        [
+          "images",
+          new File(["image3"], "fakeimage3.png", { type: "image/gif" }),
+        ],
+      ]),
+    );
+
+    expect(state.error).toBeDefined();
+    expect(mockModerationPost).not.toHaveBeenCalled();
+    expect(mockuploadCloudinary).not.toHaveBeenCalled();
+  });
+  // title/content/image : Zod valide mais IA juge unsafe sur image, IA retourne UNSAFE avec Reasons + un tab des images, suppresion cloudinary marche bien return ok false avec moderationStatus
+
+  it("accepte payload but IA juges images unsafe and return reasons with unsafeImage and images are deleted", async () => {
+    mockModerationPost.mockResolvedValue({
+      ModerationStatus: "UNSAFE",
+      reasons: "Contenu de vos images beaucoup trop violent",
+      unsafeImages: [0, 2],
+    });
+    mockDeleteCloudinary
+      .mockResolvedValueOnce({ result: "ok" })
+      .mockResolvedValueOnce({ result: "ok" })
+      .mockResolvedValueOnce({ result: "ok" })
+      .mockResolvedValueOnce({ result: "ok" });
+
+    const state = await createPost(
+      { ok: false, userMsg: "" },
+      createFormData([
+        ["title", "POST with unsafe image"],
+        ["images", new File(["image1"], "unsafeImage", { type: "image/png" })],
+        ["images", new File(["image2"], "safeImage", { type: "image/png" })],
+        ["images", new File(["image3"], "unsafeImage2", { type: "image/png" })],
+        ["images", new File(["image4"], "safeImage2", { type: "image/png" })],
+      ]),
+    );
+    expect(state).toEqual({
+      ok: false,
+      userMsg: "Votre contenue viole notre politique d'utilisation",
+      reasons: "Contenu beaucoup trop violent",
+      unsafeImage: [0, 2],
+    });
+    expect(mockDeleteCloudinary).toHaveBeenCalledTimes(4);
+    expect(mockCreatePost).not.toHaveBeenCalled();
   });
 });
