@@ -16,8 +16,9 @@ const mockRateLimit = jest.fn();
 const mockuploadCloudinary = jest.fn();
 const mockCreatePost = jest.fn();
 const mockSlug = jest.fn();
+const mockSearchPost = jest.fn();
 
-jest.mock("@/lib/cloudinaryCondfig", () => ({
+jest.mock("@/lib/cloudinaryConfig", () => ({
   uploadCloudinary: (...args: unknown[]) => mockuploadCloudinary(...args),
 }));
 
@@ -38,13 +39,9 @@ jest.mock("@/lib/prisma", () => ({
     userProfile: {
       findUnique: (...args: unknown[]) => mockUserProfileFindUnique(...args),
     },
-  },
-}));
-
-jest.mock("@/lib/prisma", () => ({
-  myPrisma: {
     Post: {
       create: (...args: unknown[]) => mockCreatePost(...args),
+      findUnique: (...args: unknown[]) => mockSearchPost(...args),
     },
   },
 }));
@@ -54,6 +51,7 @@ jest.mock("@/lib/rateLimits", () => ({
 }));
 
 import { createPost } from "@/app/actions/post";
+import { ModerationStatus } from "@prisma/client";
 
 function createFormData(
   entries: Array<[string, string | File]>,
@@ -89,6 +87,7 @@ describe("app creation post", () => {
     mockUserProfileFindUnique.mockResolvedValue({
       userId: "testUserProfile-123",
     });
+
     mockRateLimit.mockResolvedValue({ success: true });
 
     mockuploadCloudinary.mockResolvedValue({
@@ -105,6 +104,8 @@ describe("app creation post", () => {
       ModerationStatus: "SAFE",
       categories: "SPORTS",
     });
+    // Cela veut dire que le slug n'est pas pris //
+    mockSearchPost.mockResolvedValue({});
     mockSlug.mockResolvedValue({ slug: "js-meuilleure-language-V1StG_" });
 
     const state = await createPost(
@@ -118,9 +119,8 @@ describe("app creation post", () => {
       ]),
     );
 
-    expect(state.ok).toEqual({ ok: true, userMsg: "" });
+    expect(state).toEqual({ ok: true, userMsg: "" });
     expect(mockCreatePost).toHaveBeenCalledWith({
-      where: { userId: "testUserProfile-123" },
       data: {
         title: "Js meuilleure language",
         slug: "js-meuilleure-language-V1StG_",
@@ -128,8 +128,44 @@ describe("app creation post", () => {
         content:
           "Il permet de développer à la fois le frontend ET, le backend ",
         imagesUrl: [],
-        categries: "SPORTS",
+        categries: "TECH",
         userId: "testUserProfile-123",
+      },
+    });
+  });
+
+  it("accept a normal payload but IA give incertain and slug is already taken", async () => {
+    mockModerationPost.mockResolvedValue({
+      ModerationStatus: "UNCERTAIN",
+      categories: "TECH",
+    });
+    // Cela veut dire que le slug n'est pas pris //
+    mockSearchPost.mockResolvedValue({ slug: "react_vs_vue-Jbzçsm" });
+    mockSlug.mockResolvedValueOnce({ slug: "react_vs_vue-Jbzçsm" });
+    mockSlug.mockResolvedValueOnce({ slug: "react_vs_vue-8ez9eg5" });
+
+    const state = await createPost(
+      { ok: true, userMsg: "" },
+      createFormData([
+        ["title", "React vs Vue"],
+        ["content", "Un comparatif détaillé des deux frameworks."],
+      ]),
+    );
+
+    expect(state).toEqual({
+      ok: true,
+      userMsg: "Attention, votre post a été jugé sensible",
+    });
+    expect(mockSlug).toHaveBeenCalledTimes(2);
+    expect(mockCreatePost).toHaveBeenCalledWith({
+      data: {
+        title: "",
+        slug: "",
+        content: "Un comparatif détaillé des deux frameworks.",
+        categories: ["TECH"],
+        ModerationStatus: "UNCERTAIN",
+        imagesUrl: [],
+        UserId: "testUserProfile-123",
       },
     });
   });
