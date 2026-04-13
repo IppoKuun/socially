@@ -16,31 +16,42 @@ export default async function Moderation({
   content,
   imageUrl,
 }: ModerationInput) {
-  const inputData = {
+  const inputTextData = {
     kind: kind ?? null,
     language: language ?? null,
     title: title ?? null,
     content: content ?? null,
-    image: imageUrl ?? null,
+  };
+
+  const inputImageData =
+    imageUrl?.map((url) => ({
+      type: "input_image" as const,
+      image_url: url,
+    })) ?? [];
+  const inputData = {
+    content: {
+      inputText: inputTextData,
+      InputIamge: inputImageData,
+    },
   };
   const response = await openai.responses.create({
     model: "gpt-5.4-nano",
     instructions: moderationPostPrompt,
     input: JSON.stringify(inputData, null, 2),
+
     text: {
       format: {
         type: "json_schema",
-
         name: "SOC-IA-Moderation",
         strict: true,
         schema: {
           type: "object",
           properties: {
-            Category: {
+            categories: {
               type: "array",
-              items: { type: "string", enum: [classedCategories] },
+              items: { type: "string", enum: classedCategories },
             },
-            ModerationStatus: {
+            moderationStatus: {
               type: "string",
               enum: ["SAFE", "UNCERTAIN", "UNSAFE"],
             },
@@ -48,7 +59,7 @@ export default async function Moderation({
               type: "array",
               items: { type: "number" },
             },
-            Reasons: { type: "string" },
+            reasons: { type: "array", items: { type: "string" } },
           },
           required: ["ModerationStatus"],
           additionalProperties: false,

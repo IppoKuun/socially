@@ -6,7 +6,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function uploadCloudinary(file: File) {
+type CloudinaryResult = {
+  secure_url: string;
+  public_id: string;
+};
+
+export async function uploadCloudinary(file: File): Promise<CloudinaryResult> {
   // On convertit l'image Buffer, c'est le format attendu par Node.js pour que Cloudinary puisse traiter l'image //
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
@@ -15,7 +20,7 @@ export async function uploadCloudinary(file: File) {
     cloudinary.uploader
       .upload_stream({ folder: "Socially" }, (error, result) => {
         if (error) reject(error);
-        resolve(result);
+        resolve(result!);
       })
       .end(buffer);
   });
