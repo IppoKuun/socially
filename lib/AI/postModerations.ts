@@ -10,14 +10,14 @@ type ModerationInput = {
   imageUrl?: string[];
 };
 
-export default async function Moderation({
+export default async function moderatePostContent({
   language,
   kind,
   title,
   content,
   imageUrl,
 }: ModerationInput) {
-  if (!title && !content && !imageUrl) {
+  if (!title && !content && imageUrl?.length === 0) {
     throw new myError("Aucun contenu a modéré");
   }
 
@@ -36,15 +36,17 @@ export default async function Moderation({
         role: "user",
         content: [
           { type: "input_text", text: JSON.stringify(inputTextData, null, 2) },
+          // Si image URL est présent, pour chaque image créer un obj avec type et l'url de l'image  //
           ...(imageUrl?.map((url) => ({
             type: "input_image" as const,
             image_url: url,
-            detail: "auto" as const,
+            detail: "auto" as const, //ici c'est juste pour TS //
           })) ?? []),
         ],
       },
     ],
 
+    // Définition de comment l'IA vas nous renvoyé la réponse //
     text: {
       format: {
         type: "json_schema",
@@ -67,7 +69,12 @@ export default async function Moderation({
             },
             reasons: { type: "array", items: { type: "string" } },
           },
-          required: ["ModerationStatus"],
+          required: [
+            "moderationStatus",
+            "categories",
+            "unsafeImages",
+            "reasons",
+          ],
           additionalProperties: false,
         },
       },
