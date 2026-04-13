@@ -9,20 +9,43 @@ import { nanoid } from "nanoid";
 import { myPrisma } from "@/lib/prisma";
 import slugify from "slugify";
 import { getSession } from "@/lib/authSession";
+import { rateLimits } from "@/lib/rateLimits";
 
 export default async function createPost(
   _prevstate: FormState,
   FormData: FormData,
 ) {
+  const errorMap = await getZodErrorMapForRequest();
+
   const session = await getSession();
   if (!session) {
-    return { ok: false, userMsg: " Veuillez vous connctez pour publiez" };
+    return { ok: false, userMsg: "Veuillez vous connctez pour publiez" };
   }
   const user = await myPrisma.userProfile.findUnique({
     where: { userId: session.user.id },
   });
-  const errorMap = await getZodErrorMapForRequest();
 
+  const limiter = rateLimits["postPublish"];
+
+  const idUser = user?.id;
+  const identifier = idUser ?? session.user.id;
+
+  if (!identifier) {
+    return {
+      ok: false,
+      userMsg: "Requête rejetée : Impossible d'identifier la source.",
+    };
+  }
+  const { success, reset } = await limiter.limit(identifier!);
+  // Erreur si limite attente //
+  if (!success) {
+    const diffMs = reset - Date.now();
+    const seconds = Math.ceil(diffMs / (1000 * 60)).toFixed(1);
+    return {
+      ok: false,
+      userMsg: `Vous avez effectué trop de requete, veuilleuez ressayé dans : ${seconds} min`,
+    };
+  }
   const raw = Object.fromEntries(FormData);
 
   // On vérifie que chaque images a le bon type, sinon erreur //
@@ -38,7 +61,7 @@ export default async function createPost(
   // Et enfin, envoyez les images a l'IA moderation qui a besoin de ces URL pour modéré les images//
 
   const images = FormData.getAll("images");
-  const imagesParsed = images.map((image) => {
+  images.map((image) => {
     const result = uploadImageSchema.safeParse(image, { error: errorMap });
 
     if (!result.success) {
