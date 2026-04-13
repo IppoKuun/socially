@@ -47,3 +47,49 @@ jest.mock("@/lib/prisma", () => ({
 jest.mock("@/lib/rateLimits", () => ({
   rateLimits: (...args: unknown[]) => mockRateLimit(...args),
 }));
+
+import { createPost } from "@/app/actions/post";
+
+function createFormData(
+  entries: Array<[string, string | File]>,
+  multiEntries: Array<[string, string]> = [],
+) {
+  const formData = new FormData();
+
+  for (const [key, value] of entries) {
+    formData.set(key, value);
+  }
+
+  for (const [key, value] of multiEntries) {
+    formData.append(key, value);
+  }
+
+  return formData;
+}
+
+describe("app creation post", () => {
+  // Initialisation de notre espion qui vas avoir comme but de voir ce que la console renvoie en cas d'erreur
+  // Ont fait une variable car son utilisation dépends d'énormement de chose qui sont spécifique a un test,
+  // et modifié la variable la modifie pour tout les fichier, donc ici on s'occupe uniquement de typé l'espion sur la console.error  .
+  // Chaque test pourra alors custom et définir la variable comme il le souhaite //
+  let consoleSpy: jest.SpiedFunction<typeof console.error>;
+
+  // Avant chaque test ont remplace la vrai fonction console.error par la notre //
+  // et créer des values de base qui seront utile dans nos test //
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  (beforeEach(() => {
+    consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    mockGetSession.mockResolvedValue({ user: { id: "testUser-123" } });
+    mockuploadCloudinary.mockResolvedValue({
+      secure_url: "https://res.cloudinary.com/socially/default.png",
+      public_id: "default-image",
+    });
+  }),
+    afterEach(() => {
+      consoleSpy.mockRestore();
+    }));
+
+  it("accept and give a category to a normal post");
+  // Après chaque test ont reset ce qu'il y'a dans notre console.error qu'on a créer avec notre espion //
+});
