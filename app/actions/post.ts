@@ -104,7 +104,7 @@ export default async function createPost(
     if (!result) {
       console.error("Impossible de supprimé images après rejets d'IA");
     }
-    return { ok: false, error: parsed.error.flatten().fieldErrors };
+    return { ok: false, errors: parsed.error.flatten().fieldErrors };
   }
 
   //??//

@@ -340,3 +340,14 @@ Build code that is:
 Do not optimize for speed alone.
 Do not optimize for cleverness.
 Optimize for clarity, reliability, and solid engineering judgment.
+
+When implementing from a well-scoped brief, strongly prefer the simplest readable solution that satisfies the task.
+
+Avoid:
+
+- unnecessary helpers
+- premature abstractions
+- fragmented files or layers that make the code slower to reread
+- over-engineered syntax when a simpler expression would be enough
+
+Do not turn a clean, narrow task into a heavy architecture exercise.
