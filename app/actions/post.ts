@@ -10,40 +10,56 @@ import { myPrisma } from "@/lib/prisma";
 import slugify from "slugify";
 import { getSession } from "@/lib/authSession";
 import { rateLimits } from "@/lib/rateLimits";
+import { getTranslations } from "next-intl/server";
 
-export default async function createPost(
-  _prevstate: FormState,
-  FormData: FormData,
-) {
-  const errorMap = await getZodErrorMapForRequest();
+export async function generateSlug(title: string) {
+  const slugID = nanoid(6);
+  const baseSlug = slugify(title, {
+    lower: true, // tout en minuscule
+    strict: true, // enlève les caractères spéciaux (!, @, #)
+    trim: true, // enlève les espaces inutiles
+  });
+  const slug = `${baseSlug}-${slugID}`;
+  const verifySlug = await myPrisma.post.findUnique({
+    where: { slug },
+  });
+  if (verifySlug) return await generateSlug(title);
+
+  return slug;
+}
+export async function createPost(_prevstate: FormState, FormData: FormData) {
+  const t = await getTranslations("post.actions.create");
+  const errorMap = await getZodErrorMapForRequest("post");
 
   const session = await getSession();
   if (!session) {
-    return { ok: false, userMsg: "Veuillez vous connctez pour publiez" };
+    return { ok: false, userMsg: t("authRequired") };
   }
   const user = await myPrisma.userProfile.findUnique({
     where: { userId: session.user.id },
   });
+  if (!user) {
+    return { ok: false, userMsg: t("profileNotFound") };
+  }
 
-  const limiter = rateLimits["postPublish"];
+  const limiter = rateLimits.postPublish;
 
-  const idUser = user?.id;
-  const identifier = idUser ?? session.user.id;
+  const identifier = user?.id ?? session.user.id;
 
   if (!identifier) {
     return {
       ok: false,
-      userMsg: "Requête rejetée : Impossible d'identifier la source.",
+      userMsg: t("missingIdentifier"),
     };
   }
-  const { success, reset } = await limiter.limit(identifier!);
+  const { success, reset } = await limiter.limit(identifier);
   // Erreur si limite attente //
   if (!success) {
     const diffMs = reset - Date.now();
-    const seconds = Math.ceil(diffMs / (1000 * 60)).toFixed(1);
+    const min = Math.ceil(diffMs / (1000 * 60));
     return {
       ok: false,
-      userMsg: `Vous avez effectué trop de requete, veuilleuez ressayé dans : ${seconds} min`,
+      userMsg: t("rateLimited", { min }),
     };
   }
   const raw = Object.fromEntries(FormData);
@@ -54,7 +70,7 @@ export default async function createPost(
   );
 
   if (!rawFiles) {
-    return { ok: false, userMsg: "Veuillez entrez que des images" };
+    return { ok: false, userMsg: t("invalidFiles") };
   }
 
   // Parsing de chaque image avec Zod, qui vas nous permettre d'upload sur Cloudinary
@@ -68,7 +84,7 @@ export default async function createPost(
       return {
         ok: false,
         userMsg: "Erreur lors de l'envoie de votre image",
-        errors: result.error.flatten().fieldErrors,
+        errors: result.error.flatten().fieldErrors.image,
       };
     }
   });
@@ -79,26 +95,34 @@ export default async function createPost(
   if (!results) {
     return {
       ok: false,
-      userMsg: "L'envoie d'images a échoué, veuillez ressayé",
+      userMsg: t("uploadFailed"),
     };
   }
 
   const urls = results.map((r) => r.secure_url);
   const ids = results.map((r) => r.public_id);
-  const moderation = await Moderation({
-    language: String(raw.language) ?? "en",
-    kind: "POST",
-    title: String(raw.title),
-    content: String(raw.content),
-    imageUrl: urls,
-  });
+
+  //??//
+  let moderation;
+
+  try {
+    moderation = await Moderation({
+      language: raw.language ? String(raw.language) : "en",
+      kind: "POST",
+      title: String(raw.title),
+      content: String(raw.content),
+      imageUrl: urls,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+
   if (!moderation) {
     return {
       ok: false,
-      userMsg: "Impossible de modéré le status du post avec l'IA.",
+      userMsg: t("moderationUnavailable"),
     };
   }
-  const IAcategories = moderation.categories;
 
   if (moderation.ModerationStatus === "UNSAFE") {
     const result = await Promise.all(
@@ -106,6 +130,7 @@ export default async function createPost(
         cloudinary.uploader.destroy(id, { resource_type: "image" }),
       ),
     );
+
     // Ici, ont logge l'erreur pour nous meme et pas pour User car aucune utilisé a ce qu'il sois
     // au courant que l'image n'est pas réussi a cloudinary Après que son poste est été jugée unsafe //
     if (!result) {
@@ -114,35 +139,23 @@ export default async function createPost(
 
     return {
       ok: false,
-      userMsg: "Votre contenue viole notre politique d'utilisation",
+      userMsg: t("unsafeContent"),
       reasons: moderation.reasons,
+      unsafeImage: moderation.unsafeImages,
     };
   }
 
-  const parsed = postSchema.safeParse({ raw }, { error: errorMap });
+  const IAcategories = moderation.categories;
+
+  const parsed = postSchema.safeParse(
+    { title: raw.title, content: raw.content, imagesUrl: urls },
+    { error: errorMap },
+  );
   if (!parsed.success) {
     return { ok: false, error: parsed.error.flatten().fieldErrors };
   }
 
-  async function generateSlug() {
-    const slugID = nanoid(6);
-    const baseSlug = slugify(parsed.data!.title, {
-      lower: true, // tout en minuscule
-      strict: true, // enlève les caractères spéciaux (!, @, #)
-      trim: true, // enlève les espaces inutiles
-    });
-    const slug = `${baseSlug}-${slugID}`;
-    const verifySlug = await myPrisma.post.findUnique({
-      where: { slug: slug },
-    });
-    // Tant qu'on trouve un slug existant, on refait la fonction //
-    while (verifySlug) {
-      return await generateSlug();
-    }
-    return slug;
-  }
-
-  const postSlug = await generateSlug();
+  const postSlug = await generateSlug(parsed.data.title);
 
   const created = await myPrisma.post.create({
     data: {
@@ -150,18 +163,18 @@ export default async function createPost(
       moderationStatus: moderation.moderationStatus,
       slug: postSlug,
       content: parsed.data?.content,
-      imagesUrl: urls,
+      imagesUrl: parsed.data.imagesUrl ?? [],
       categories: IAcategories,
       userId: user!.id,
     },
   });
 
   if (!created) {
-    return { ok: false, userMsg: "Impossible de créer le post" };
+    return { ok: false, userMsg: t("createFailed") };
   }
 
   if (created.moderationStatus === "UNCERTAIN") {
-    return { ok: true, userMsg: " Attention, votre post a été jugé sensible" };
+    return { ok: true, userMsg: t("sensitiveWarning") };
   }
 
   return { ok: true, userMsg: "" };

@@ -137,6 +137,33 @@
       "invalidImageType": "Solo se aceptan los formatos .jpg, .jpeg, .png y .webp."
     }
   },
+  "post": {
+    "actions": {
+      "create": {
+        "authRequired": "Inicia sesión para publicar.",
+        "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+        "missingIdentifier": "Solicitud rechazada: no se pudo identificar el origen.",
+        "rateLimited": "Has publicado demasiado contenido recientemente. Inténtalo de nuevo dentro de {minutes} minuto(s).",
+        "invalidFiles": "Envía solo imágenes.",
+        "imageValidationFailed": "No se pudo validar esta imagen. Inténtalo de nuevo.",
+        "uploadFailed": "La subida de las imágenes ha fallado. Inténtalo de nuevo.",
+        "moderationUnavailable": "No se puede revisar esta publicación ahora mismo. Inténtalo de nuevo.",
+        "unsafeContent": "Tu contenido infringe nuestra política de uso.",
+        "createFailed": "No se puede crear la publicación. Inténtalo de nuevo.",
+        "sensitiveWarning": "Atención: tu publicación ha sido considerada sensible."
+      }
+    },
+    "validation": {
+      "required": "Este campo es obligatorio.",
+      "tooSmallString": "Este campo debe contener al menos {{minimum}} caracteres.",
+      "tooBigString": "Este campo no debe superar los {{maximum}} caracteres.",
+      "invalidUrl": "Introduce una URL válida.",
+      "invalidSelection": "Selecciona una opción válida.",
+      "invalidInput": "El valor introducido no es válido.",
+      "imageTooLarge": "La imagen no debe superar {{maximum}} MB.",
+      "invalidImageType": "Solo se aceptan los formatos .jpg, .jpeg, .png y .webp."
+    }
+  },
   "appShell": {
     "brandAlt": "Logo de Socially",
     "navigation": {

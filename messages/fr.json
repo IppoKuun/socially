@@ -137,6 +137,33 @@
       "invalidImageType": "Seuls les formats .jpg, .jpeg, .png et .webp sont acceptés."
     }
   },
+  "post": {
+    "actions": {
+      "create": {
+        "authRequired": "Veuillez vous connecter pour publier.",
+        "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "missingIdentifier": "Requête rejetée : source introuvable.",
+        "rateLimited": "Vous avez publié trop de contenu récemment. Réessayez dans {minutes} minute(s).",
+        "invalidFiles": "Veuillez envoyer uniquement des images.",
+        "imageValidationFailed": "Impossible de valider cette image. Réessayez.",
+        "uploadFailed": "L'envoi des images a échoué. Réessayez.",
+        "moderationUnavailable": "Impossible de vérifier ce post pour le moment. Réessayez.",
+        "unsafeContent": "Votre contenu enfreint notre politique d'utilisation.",
+        "createFailed": "Impossible de créer le post. Réessayez.",
+        "sensitiveWarning": "Attention, votre post a été jugé sensible."
+      }
+    },
+    "validation": {
+      "required": "Ce champ est obligatoire.",
+      "tooSmallString": "Ce champ doit contenir au moins {{minimum}} caractères.",
+      "tooBigString": "Ce champ ne doit pas dépasser {{maximum}} caractères.",
+      "invalidUrl": "Veuillez saisir une URL valide.",
+      "invalidSelection": "Veuillez sélectionner une option valide.",
+      "invalidInput": "La valeur saisie est invalide.",
+      "imageTooLarge": "L'image ne doit pas dépasser {{maximum}} Mo.",
+      "invalidImageType": "Seuls les formats .jpg, .jpeg, .png et .webp sont acceptés."
+    }
+  },
   "appShell": {
     "brandAlt": "Logo Socially",
     "navigation": {

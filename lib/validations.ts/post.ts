@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { Category, ModerationStatus } from "@prisma/client";
 
 const postLimitSize = 8000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -45,7 +44,7 @@ export const postSchema = z.object({
     .max(500)
     .optional()
     .transform((v) => (v === "" ? null : v)),
-  imagesUrl: z.url().optional(),
+  imagesUrl: z.array(z.url()).optional(),
 });
 
 export type postSchemaType = z.infer<typeof postSchema>;

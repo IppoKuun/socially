@@ -137,6 +137,33 @@
       "invalidImageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted."
     }
   },
+  "post": {
+    "actions": {
+      "create": {
+        "authRequired": "Please sign in to publish.",
+        "profileNotFound": "We could not find your profile. Please try again later.",
+        "missingIdentifier": "Request rejected: source could not be identified.",
+        "rateLimited": "You have published too much content recently. Please try again in {minutes} minute(s).",
+        "invalidFiles": "Please upload images only.",
+        "imageValidationFailed": "We could not validate this image. Please try again.",
+        "uploadFailed": "Image upload failed. Please try again.",
+        "moderationUnavailable": "We could not review this post right now. Please try again.",
+        "unsafeContent": "Your content violates our usage policy.",
+        "createFailed": "Unable to create the post. Please try again.",
+        "sensitiveWarning": "Warning: your post has been flagged as sensitive."
+      }
+    },
+    "validation": {
+      "required": "This field is required.",
+      "tooSmallString": "This field must contain at least {{minimum}} characters.",
+      "tooBigString": "This field must not exceed {{maximum}} characters.",
+      "invalidUrl": "Please enter a valid URL.",
+      "invalidSelection": "Please select a valid option.",
+      "invalidInput": "The provided value is invalid.",
+      "imageTooLarge": "The image must not exceed {{maximum}} MB.",
+      "invalidImageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted."
+    }
+  },
   "appShell": {
     "brandAlt": "Socially logo",
     "navigation": {

@@ -17,6 +17,8 @@ const mockCreatePost = jest.fn();
 const mockSlug = jest.fn();
 const mockSearchPost = jest.fn();
 const mockDeleteCloudinary = jest.fn();
+const mockGetZodErrorMapForRequest = jest.fn();
+const mockGetTranslations = jest.fn();
 
 jest.mock("@/lib/cloudinaryConfig", () => ({
   uploadCloudinary: (...args: unknown[]) => mockuploadCloudinary(...args),
@@ -28,6 +30,15 @@ jest.mock("cloudinary", () => ({
       destroy: (...args: unknown[]) => mockDeleteCloudinary(...args),
     },
   },
+}));
+
+jest.mock("@/lib/i18n/zod", () => ({
+  getZodErrorMapForRequest: (...args: unknown[]) =>
+    mockGetZodErrorMapForRequest(...args),
+}));
+
+jest.mock("next-intl/server", () => ({
+  getTranslations: (...args: unknown[]) => mockGetTranslations(...args),
 }));
 
 jest.mock("@/lib/authSession", () => ({
@@ -77,19 +88,20 @@ function createFormData(
   return formData;
 }
 
-describe("app creation post", () => {
-  // Initialisation de notre espion qui vas avoir comme but de voir ce que la console renvoie en cas d'erreur
-  // Ont fait une variable car son utilisation dépends d'énormement de chose qui sont spécifique a un test,
-  // et modifié la variable la modifie pour tout les fichier, donc ici on s'occupe uniquement de typé l'espion sur la console.error  .
-  // Chaque test pourra alors custom et définir la variable comme il le souhaite //
-  let consoleSpy: jest.SpiedFunction<typeof console.error>;
+function createTranslationMock(namespace = "messages") {
+  return (key: string) => `${namespace}.${key}`;
+}
 
-  // Avant chaque test ont remplace la vrai fonction console.error par la notre //
-  // et créer des values de base qui seront utile dans nos test //
+describe("app creation post", () => {
+  let consoleSpy: jest.SpiedFunction<typeof console.error>;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   (beforeEach(() => {
     consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    mockGetTranslations.mockImplementation(async (namespace?: string) =>
+      createTranslationMock(namespace),
+    );
+    mockGetZodErrorMapForRequest.mockResolvedValue(undefined);
     mockGetSession.mockResolvedValue({ user: { id: "testUser-123" } });
     mockUserProfileFindUnique.mockResolvedValue({
       userId: "testUserProfile-123",
@@ -162,7 +174,7 @@ describe("app creation post", () => {
 
     expect(state).toEqual({
       ok: true,
-      userMsg: "Attention, votre post a été jugé sensible",
+      userMsg: "post.actions.create.sensitiveWarning",
     });
     expect(mockSlug).toHaveBeenCalledTimes(2);
     expect(mockCreatePost).toHaveBeenCalledWith({
@@ -194,7 +206,7 @@ describe("app creation post", () => {
         ],
       ]),
     );
-
+    expect(state.ok).toBe(false);
     expect(state.error).toBeDefined();
     expect(mockModerationPost).not.toHaveBeenCalled();
     expect(mockuploadCloudinary).not.toHaveBeenCalled();
@@ -225,7 +237,7 @@ describe("app creation post", () => {
     );
     expect(state).toEqual({
       ok: false,
-      userMsg: "Votre contenue viole notre politique d'utilisation",
+      userMsg: "post.actions.create.unsafeContent",
       reasons: "Contenu beaucoup trop violent",
       unsafeImage: [0, 2],
     });
@@ -251,7 +263,7 @@ describe("app creation post", () => {
 
     expect(state).toEqual({
       ok: false,
-      userMsg: "Votre contenue viole notre politique d'utilisation",
+      userMsg: "post.actions.create.unsafeContent",
       reasons: "Vous etes un danger pour la civilisation",
       unsafeImages: [],
     });
@@ -277,8 +289,7 @@ describe("app creation post", () => {
 
     expect(state).toEqual({
       ok: false,
-      userMsg:
-        "Vous avez effectué trop de requete, veuilleuez ressayé dans : 5.0 min",
+      userMsg: "post.actions.create.rateLimited",
     });
     expect(mockCreatePost).not.toHaveBeenCalled();
     expect(mockModerationPost).not.toHaveBeenCalled();
