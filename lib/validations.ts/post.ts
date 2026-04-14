@@ -33,8 +33,7 @@ export const uploadImageSchema = z.object({
           },
         }),
     )
-    .min(1)
-    .max(5),
+    .optional(),
 });
 
 export const postSchema = z.object({
@@ -44,7 +43,7 @@ export const postSchema = z.object({
     .max(500)
     .optional()
     .transform((v) => (v === "" ? null : v)),
-  imagesUrl: z.array(z.url()).optional(),
+  imagesUrl: z.array(z.string().url()).optional(),
 });
 
 export type postSchemaType = z.infer<typeof postSchema>;

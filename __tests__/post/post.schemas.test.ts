@@ -5,11 +5,11 @@ describe("post schema", () => {
     const result = postSchema.safeParse({
       title: "    Les meuilleurs IA pour dev   ",
       content: "Codex et Claude",
-      imagesUrl: "https://chatgpt.com/fr-FR",
+      imagesUrl: ["https://chatgpt.com/fr-FR"],
     });
     expect(result.success).toBe(true);
     expect(result.data?.title).toBe("Les meuilleurs IA pour dev");
-    expect(result.data?.imagesUrl).toBe("https://chatgpt.com/fr-FR");
+    expect(result.data?.imagesUrl).toEqual(["https://chatgpt.com/fr-FR"]);
   });
   it("reject if title is not present", () => {
     const result = postSchema.safeParse({

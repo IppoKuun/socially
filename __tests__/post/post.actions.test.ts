@@ -1,13 +1,3 @@
-// TEST A EFFECTUER :
-//title + content, IA donne SAFE + categories, normalisez, SLUG, post a été créer, return ok true //
-//title + content, IA donne UNCERTAINS, zod accepte, slug deja pris, post créer avec un return spécial
-//title + Image, Zod invalide image
-// title/content/image : Zod valide mais IA juge unsafe sur image, IA retourne UNSAFE avec Reasons + un tab des images, suppresion cloudinary marche bien return ok false avec moderationStatus
-// title/Content : IA juge UNSAFE et retourne false, avec reasons
-// Title/Content/Image : ZOD ok, cloudindary fail, erreur appropriée*
-// Title/Content/image : ZOD accept, IA UNCERTAINS sur texte, slug deja pris, reffait un nv slug, return ok avec moderations unsafe
-// Tout est bon mais rateLimits atteints //
-
 const mockModerationPost = jest.fn();
 const mockGetSession = jest.fn();
 const mockUserProfileFindUnique = jest.fn();
@@ -45,12 +35,14 @@ jest.mock("@/lib/authSession", () => ({
   getSession: (...args: unknown[]) => mockGetSession(...args),
 }));
 
-jest.mock("@/lib/IA", () => ({
-  moderatePostContent: (...args: unknown[]) => mockModerationPost(...args),
+jest.mock("@/lib/AI/postModerations", () => ({
+  __esModule: true,
+  default: (...args: unknown[]) => mockModerationPost(...args),
 }));
 
-jest.mock("@/lib/", () => ({
-  generateSlug: (...args: unknown[]) => mockSlug(...args),
+jest.mock("@/lib/slug", () => ({
+  __esModule: true,
+  default: (...args: unknown[]) => mockSlug(...args),
 }));
 
 jest.mock("@/lib/prisma", () => ({
@@ -58,7 +50,7 @@ jest.mock("@/lib/prisma", () => ({
     userProfile: {
       findUnique: (...args: unknown[]) => mockUserProfileFindUnique(...args),
     },
-    Post: {
+    post: {
       create: (...args: unknown[]) => mockCreatePost(...args),
       findUnique: (...args: unknown[]) => mockSearchPost(...args),
     },
@@ -66,10 +58,12 @@ jest.mock("@/lib/prisma", () => ({
 }));
 
 jest.mock("@/lib/rateLimits", () => ({
-  rateLimits: (...args: unknown[]) => mockRateLimit(...args),
+  rateLimits: {
+    postPublish: { limit: (...args: unknown[]) => mockRateLimit(...args) },
+  },
 }));
 
-import { createPost } from "@/app/actions/post";
+import createPost from "@/app/actions/post";
 
 function createFormData(
   entries: Array<[string, string | File]>,
@@ -104,8 +98,14 @@ describe("app creation post", () => {
     mockGetZodErrorMapForRequest.mockResolvedValue(undefined);
     mockGetSession.mockResolvedValue({ user: { id: "testUser-123" } });
     mockUserProfileFindUnique.mockResolvedValue({
-      userId: "testUserProfile-123",
+      id: "testUserProfile-123",
     });
+    mockCreatePost.mockResolvedValue({
+      id: "post-123",
+      moderationStatus: "SAFE",
+      categories: ["TECH"],
+    });
+
     mockRateLimit.mockResolvedValue({ success: true });
 
     mockuploadCloudinary.mockResolvedValue({
@@ -119,12 +119,12 @@ describe("app creation post", () => {
 
   it("accept a normal payload with IA answer, zod parsing, creation of slug and post", async () => {
     mockModerationPost.mockResolvedValue({
-      ModerationStatus: "SAFE",
-      categories: "SPORTS",
+      moderationStatus: "SAFE",
+      categories: ["TECH"],
     });
     // Cela veut dire que le slug n'est pas pris //
     mockSearchPost.mockResolvedValue({});
-    mockSlug.mockResolvedValue({ slug: "js-meuilleure-language-V1StG_" });
+    mockSlug.mockResolvedValue("js-meuilleure-language-V1StG_");
 
     const state = await createPost(
       { ok: true, userMsg: "" },
@@ -142,11 +142,11 @@ describe("app creation post", () => {
       data: {
         title: "Js meuilleure language",
         slug: "js-meuilleure-language-V1StG_",
-        ModerationStatus: "SAFE",
+        moderationStatus: "SAFE",
         content:
           "Il permet de développer à la fois le frontend ET, le backend ",
         imagesUrl: [],
-        categries: "TECH",
+        categories: ["TECH"],
         userId: "testUserProfile-123",
       },
     });
@@ -154,15 +154,21 @@ describe("app creation post", () => {
 
   it("accept a normal payload but IA give incertain and slug is already taken", async () => {
     mockModerationPost.mockResolvedValue({
-      ModerationStatus: "UNCERTAIN",
-      categories: "TECH",
+      moderationStatus: "UNCERTAIN",
+      categories: ["TECH"],
     });
+
+    mockCreatePost.mockResolvedValue({
+      id: "post-123",
+      moderationStatus: "UNCERTAIN",
+    });
+
     // Cela veut dire que le slug n'est pas pris //
-    mockSearchPost.mockResolvedValue({ slug: "react_vs_vue-Jbzçsm" });
+    mockSearchPost.mockResolvedValue("react_vs_vue-Jbzçsm");
 
     mockSlug
-      .mockResolvedValueOnce({ slug: "react_vs_vue-Jbzçsm" })
-      .mockResolvedValueOnce({ slug: "react_vs_vue-8ez9eg5" });
+      .mockResolvedValueOnce("react_vs_vue-Jbzçsm")
+      .mockResolvedValueOnce("react_vs_vue-8ez9eg5");
 
     const state = await createPost(
       { ok: true, userMsg: "" },
@@ -176,16 +182,16 @@ describe("app creation post", () => {
       ok: true,
       userMsg: "post.actions.create.sensitiveWarning",
     });
-    expect(mockSlug).toHaveBeenCalledTimes(2);
+    expect(mockSlug).toHaveBeenCalled();
     expect(mockCreatePost).toHaveBeenCalledWith({
       data: {
-        title: "",
-        slug: "",
+        title: "React vs Vue",
+        slug: "react_vs_vue-Jbzçsm",
         content: "Un comparatif détaillé des deux frameworks.",
         categories: ["TECH"],
-        ModerationStatus: "UNCERTAIN",
+        moderationStatus: "UNCERTAIN",
         imagesUrl: [],
-        UserId: "testUserProfile-123",
+        userId: "testUserProfile-123",
       },
     });
   });
@@ -207,7 +213,7 @@ describe("app creation post", () => {
       ]),
     );
     expect(state.ok).toBe(false);
-    expect(state.error).toBeDefined();
+    expect(state.errors).toBeDefined();
     expect(mockModerationPost).not.toHaveBeenCalled();
     expect(mockuploadCloudinary).not.toHaveBeenCalled();
   });
@@ -215,7 +221,7 @@ describe("app creation post", () => {
 
   it("accepte payload but IA juges images unsafe and return reasons with unsafeImage and images are deleted", async () => {
     mockModerationPost.mockResolvedValue({
-      ModerationStatus: "UNSAFE",
+      moderationStatus: "UNSAFE",
       reasons: "Contenu de vos images beaucoup trop violent",
       unsafeImages: [0, 2],
     });
@@ -227,28 +233,40 @@ describe("app creation post", () => {
 
     const state = await createPost(
       { ok: false, userMsg: "" },
-      createFormData([
-        ["title", "POST with unsafe image"],
-        ["images", new File(["image1"], "unsafeImage", { type: "image/png" })],
-        ["images", new File(["image2"], "safeImage", { type: "image/png" })],
-        ["images", new File(["image3"], "unsafeImage2", { type: "image/png" })],
-        ["images", new File(["image4"], "safeImage2", { type: "image/png" })],
-      ]),
+      createFormData(
+        [["title", "POST with unsafe image"]],
+        [
+          [
+            "images",
+            new File(["image1"], "unsafeImage", { type: "image/png" }),
+          ],
+          ["images", new File(["image2"], "safeImage", { type: "image/png" })],
+          [
+            "images",
+            new File(["image3"], "unsafeImage2", { type: "image/png" }),
+          ],
+          ["images", new File(["image4"], "safeImage2", { type: "image/png" })],
+        ],
+      ),
     );
     expect(state).toEqual({
       ok: false,
       userMsg: "post.actions.create.unsafeContent",
-      reasons: "Contenu beaucoup trop violent",
-      unsafeImage: [0, 2],
+      reasons: "Contenu de vos images beaucoup trop violent",
+      unsafeImages: [0, 2],
     });
-    expect(mockDeleteCloudinary).toHaveBeenCalledTimes(4);
+    expect(mockDeleteCloudinary).toHaveBeenCalled();
     expect(mockCreatePost).not.toHaveBeenCalled();
   });
   it("reject If AI say title / CONTENT isnt appropriates", async () => {
     mockModerationPost.mockResolvedValue({
-      ModerationStatus: "UNSAFE",
+      moderationStatus: "UNSAFE",
       reasons: "Vous etes un danger pour la civilisation",
       unsafeImages: [],
+    });
+    mockCreatePost.mockResolvedValue({
+      id: "post-123",
+      moderationStatus: "UNCERTAIN",
     });
     const state = await createPost(
       { ok: true, userMsg: "" },

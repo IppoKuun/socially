@@ -1,4 +1,5 @@
 import { myError } from "../myError";
+import { Category } from "@prisma/client";
 import { openai } from "./clients";
 import { classedCategories, moderationPostPrompt } from "./prompt";
 
@@ -10,13 +11,20 @@ type ModerationInput = {
   imageUrl?: string[];
 };
 
+type ModerationResult = {
+  categories: Category[];
+  moderationStatus: "SAFE" | "UNCERTAIN" | "UNSAFE";
+  unsafeImages: number[];
+  reasons: string;
+};
+
 export default async function moderatePostContent({
   language,
   kind,
   title,
   content,
   imageUrl,
-}: ModerationInput) {
+}: ModerationInput): Promise<ModerationResult> {
   if (!title && !content && imageUrl?.length === 0) {
     throw new myError("Aucun contenu a modéré");
   }
@@ -67,7 +75,7 @@ export default async function moderatePostContent({
               type: "array",
               items: { type: "number" },
             },
-            reasons: { type: "array", items: { type: "string" } },
+            reasons: { type: "string" },
           },
           required: [
             "moderationStatus",
@@ -85,5 +93,5 @@ export default async function moderatePostContent({
     throw new myError("Réponse vide ou refus du modèle.");
   }
 
-  return JSON.parse(response.output_text);
+  return JSON.parse(response.output_text) as ModerationResult;
 }

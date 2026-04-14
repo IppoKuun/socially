@@ -5,29 +5,16 @@ import { postSchema, uploadImageSchema } from "@/lib/validations.ts/post";
 import { uploadCloudinary } from "@/lib/cloudinaryConfig";
 import { v2 as cloudinary } from "cloudinary";
 import { getZodErrorMapForRequest } from "@/lib/i18n/zod";
-import { nanoid } from "nanoid";
 import { myPrisma } from "@/lib/prisma";
-import slugify from "slugify";
 import { getSession } from "@/lib/authSession";
 import { rateLimits } from "@/lib/rateLimits";
 import { getTranslations } from "next-intl/server";
+import generateSlug from "@/lib/slug";
 
-export async function generateSlug(title: string) {
-  const slugID = nanoid(6);
-  const baseSlug = slugify(title, {
-    lower: true, // tout en minuscule
-    strict: true, // enlève les caractères spéciaux (!, @, #)
-    trim: true, // enlève les espaces inutiles
-  });
-  const slug = `${baseSlug}-${slugID}`;
-  const verifySlug = await myPrisma.post.findUnique({
-    where: { slug },
-  });
-  if (verifySlug) return await generateSlug(title);
-
-  return slug;
-}
-export async function createPost(_prevstate: FormState, FormData: FormData) {
+export default async function createPost(
+  _prevstate: FormState,
+  FormData: FormData,
+) {
   const t = await getTranslations("post.actions.create");
   const errorMap = await getZodErrorMapForRequest("post");
 
@@ -77,17 +64,18 @@ export async function createPost(_prevstate: FormState, FormData: FormData) {
   // Et enfin, envoyez les images a l'IA moderation qui a besoin de ces URL pour modéré les images//
 
   const images = FormData.getAll("images");
-  images.map((image) => {
-    const result = uploadImageSchema.safeParse(image, { error: errorMap });
+  const imageValidation = uploadImageSchema.safeParse(
+    { image: images },
+    { error: errorMap },
+  );
 
-    if (!result.success) {
-      return {
-        ok: false,
-        userMsg: "Erreur lors de l'envoie de votre image",
-        errors: result.error.flatten().fieldErrors.image,
-      };
-    }
-  });
+  if (!imageValidation.success) {
+    return {
+      ok: false,
+      userMsg: t("invalidFiles"),
+      errors: imageValidation.error.flatten().fieldErrors.image,
+    };
+  }
 
   const results = await Promise.all(
     images.map((image) => uploadCloudinary(image as File)),
@@ -101,6 +89,23 @@ export async function createPost(_prevstate: FormState, FormData: FormData) {
 
   const urls = results.map((r) => r.secure_url);
   const ids = results.map((r) => r.public_id);
+
+  const parsed = postSchema.safeParse(
+    { title: raw.title, content: raw.content, imagesUrl: urls },
+    { error: errorMap },
+  );
+  if (!parsed.success) {
+    const result = await Promise.all(
+      ids.map((id) =>
+        cloudinary.uploader.destroy(id, { resource_type: "image" }),
+      ),
+    );
+
+    if (!result) {
+      console.error("Impossible de supprimé images après rejets d'IA");
+    }
+    return { ok: false, error: parsed.error.flatten().fieldErrors };
+  }
 
   //??//
   let moderation;
@@ -118,13 +123,22 @@ export async function createPost(_prevstate: FormState, FormData: FormData) {
   }
 
   if (!moderation) {
+    const result = await Promise.all(
+      ids.map((id) =>
+        cloudinary.uploader.destroy(id, { resource_type: "image" }),
+      ),
+    );
+
+    if (!result) {
+      console.error("Impossible de supprimé images après rejets d'IA");
+    }
     return {
       ok: false,
       userMsg: t("moderationUnavailable"),
     };
   }
 
-  if (moderation.ModerationStatus === "UNSAFE") {
+  if (moderation.moderationStatus === "UNSAFE") {
     const result = await Promise.all(
       ids.map((id) =>
         cloudinary.uploader.destroy(id, { resource_type: "image" }),
@@ -141,19 +155,11 @@ export async function createPost(_prevstate: FormState, FormData: FormData) {
       ok: false,
       userMsg: t("unsafeContent"),
       reasons: moderation.reasons,
-      unsafeImage: moderation.unsafeImages,
+      unsafeImages: moderation.unsafeImages,
     };
   }
 
   const IAcategories = moderation.categories;
-
-  const parsed = postSchema.safeParse(
-    { title: raw.title, content: raw.content, imagesUrl: urls },
-    { error: errorMap },
-  );
-  if (!parsed.success) {
-    return { ok: false, error: parsed.error.flatten().fieldErrors };
-  }
 
   const postSlug = await generateSlug(parsed.data.title);
 
@@ -161,15 +167,24 @@ export async function createPost(_prevstate: FormState, FormData: FormData) {
     data: {
       title: parsed.data.title,
       moderationStatus: moderation.moderationStatus,
-      slug: postSlug,
+      slug: String(postSlug),
       content: parsed.data?.content,
       imagesUrl: parsed.data.imagesUrl ?? [],
       categories: IAcategories,
-      userId: user!.id,
+      userId: user.id,
     },
   });
 
   if (!created) {
+    const result = await Promise.all(
+      ids.map((id) =>
+        cloudinary.uploader.destroy(id, { resource_type: "image" }),
+      ),
+    );
+
+    if (!result) {
+      console.error("Impossible de supprimé images après rejets d'IA");
+    }
     return { ok: false, userMsg: t("createFailed") };
   }
 
