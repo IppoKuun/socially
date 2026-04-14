@@ -59,7 +59,6 @@ jest.mock("@/lib/rateLimits", () => ({
 }));
 
 import { createPost } from "@/app/actions/post";
-import { ModerationStatus } from "@prisma/client";
 
 function createFormData(
   entries: Array<[string, string | File]>,
@@ -95,7 +94,6 @@ describe("app creation post", () => {
     mockUserProfileFindUnique.mockResolvedValue({
       userId: "testUserProfile-123",
     });
-
     mockRateLimit.mockResolvedValue({ success: true });
 
     mockuploadCloudinary.mockResolvedValue({
@@ -258,5 +256,31 @@ describe("app creation post", () => {
       unsafeImages: [],
     });
     expect(mockCreatePost).not.toHaveBeenCalled();
+  });
+
+  it("reject because user rateLimits", async () => {
+    mockRateLimit.mockResolvedValue({
+      success: false,
+      reset: Date.now() + 5 * 60 * 1000,
+    });
+
+    const state = await createPost(
+      { ok: true, userMsg: "" },
+      createFormData([
+        ["title", "Etre productif en apprennant Next.js"],
+        [
+          "content",
+          "Act sportif, bonne alimentation,  bon sommeil et motivation",
+        ],
+      ]),
+    );
+
+    expect(state).toEqual({
+      ok: false,
+      userMsg:
+        "Vous avez effectué trop de requete, veuilleuez ressayé dans : 5.0 min",
+    });
+    expect(mockCreatePost).not.toHaveBeenCalled();
+    expect(mockModerationPost).not.toHaveBeenCalled();
   });
 });
