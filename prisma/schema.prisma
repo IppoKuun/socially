@@ -165,6 +165,7 @@ model Post {
   content   String?
   slug      String @unique  
   imagesUrl    String[]
+  imagesPublicId String[]
   createdAt DateTime  @default(now())
   deletedAt DateTime?
   categories Category[] @default([]) @map("Category")
