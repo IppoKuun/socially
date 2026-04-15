@@ -153,6 +153,45 @@
         "sensitiveWarning": "Atención: tu publicación ha sido considerada sensible."
       }
     },
+    "compose": {
+      "floatingButton": {
+        "desktop": "Crear una publicación",
+        "mobile": "Crear una publicación"
+      },
+      "dialog": {
+        "title": "Crear una publicación",
+        "description": "Comparte una idea, un proyecto o una actualización rápida con tu comunidad.",
+        "titleLabel": "Título",
+        "titlePlaceholder": "Repensar el futuro del trabajo...",
+        "titleCount": "{count}/100",
+        "contentLabel": "Contenido",
+        "contentPlaceholder": "Comparte algo con la comunidad...",
+        "contentCount": "{count}/500",
+        "imagesLabel": "Imágenes",
+        "imagesHint": "Añade hasta {max} imágenes. Formatos aceptados: JPG, PNG, WEBP. Tamaño máximo: {size} MB por imagen.",
+        "imagesCount": "{count}/{max} imagen(es)",
+        "dropzoneIdle": "Arrastra tus imágenes aquí o abre el selector de archivos.",
+        "dropzoneActive": "Suelta las imágenes para añadirlas.",
+        "dropzoneAction": "Añadir imágenes",
+        "previewAlt": "Imagen seleccionada {index}",
+        "removeImage": "Eliminar la imagen {index}",
+        "unsafeBadge": "Imagen señalada",
+        "footerHint": "El orden de las imágenes se conserva para la moderación. Máximo: {max}.",
+        "submit": "Publicar",
+        "submitting": "Publicando...",
+        "close": "Cerrar"
+      },
+      "errors": {
+        "titleRequired": "Añade un título.",
+        "titleMin": "El título debe contener al menos 3 caracteres.",
+        "titleMax": "El título no debe superar los 100 caracteres.",
+        "contentMax": "El contenido no debe superar los 500 caracteres.",
+        "imagesMax": "Puedes añadir hasta {max} imágenes.",
+        "imageType": "Solo se aceptan los formatos .jpg, .jpeg, .png y .webp.",
+        "imageSize": "Cada imagen debe pesar menos de {max} MB.",
+        "submitFailed": "No es posible enviar esta publicación ahora mismo. Inténtalo de nuevo."
+      }
+    },
     "validation": {
       "required": "Este campo es obligatorio.",
       "tooSmallString": "Este campo debe contener al menos {{minimum}} caracteres.",

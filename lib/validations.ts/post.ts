@@ -1,12 +1,13 @@
 import { z } from "zod";
 
-const postLimitSize = 8000000;
-const ACCEPTED_IMAGE_TYPES = [
+export const POST_IMAGE_MAX_SIZE = 8_000_000;
+export const POST_IMAGE_MAX_COUNT = 10;
+export const POST_ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
   "image/png",
   "image/webp",
-];
+] as const;
 
 export const uploadImageSchema = z.object({
   image: z
@@ -16,18 +17,18 @@ export const uploadImageSchema = z.object({
         // On utilise any car 'File' n'existe pas côté serveur en standard TS pur
 
         // On vérifie que le type et taille sois cohérent //
-        .refine((file) => file?.size <= postLimitSize, {
+        .refine((file) => file?.size <= POST_IMAGE_MAX_SIZE, {
           params: {
             // Obligé de définir les clé pour i18n car c'est une erreur personnalisé et zod n'as pas de code pourça //
             i18n: {
               key: "validation.imageTooLarge",
               values: {
-                maximum: postLimitSize / 1000000,
+                maximum: POST_IMAGE_MAX_SIZE / 1000000,
               },
             },
           },
         })
-        .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file?.type), {
+        .refine((file) => POST_ACCEPTED_IMAGE_TYPES.includes(file?.type), {
           params: {
             i18n: "validation.invalidImageType",
           },

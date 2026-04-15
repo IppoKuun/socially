@@ -153,6 +153,45 @@
         "sensitiveWarning": "Warning: your post has been flagged as sensitive."
       }
     },
+    "compose": {
+      "floatingButton": {
+        "desktop": "Create a post",
+        "mobile": "Create a post"
+      },
+      "dialog": {
+        "title": "Create a post",
+        "description": "Share an idea, project, or quick update with your community.",
+        "titleLabel": "Title",
+        "titlePlaceholder": "Rethinking the future of work...",
+        "titleCount": "{count}/100",
+        "contentLabel": "Content",
+        "contentPlaceholder": "Share something with the community...",
+        "contentCount": "{count}/500",
+        "imagesLabel": "Images",
+        "imagesHint": "Add up to {max} images. Accepted formats: JPG, PNG, WEBP. Maximum size: {size} MB per image.",
+        "imagesCount": "{count}/{max} image(s)",
+        "dropzoneIdle": "Drag your images here or open the file picker.",
+        "dropzoneActive": "Drop the images to add them.",
+        "dropzoneAction": "Add images",
+        "previewAlt": "Selected image {index}",
+        "removeImage": "Remove image {index}",
+        "unsafeBadge": "Flagged image",
+        "footerHint": "Image order is preserved for moderation. Maximum: {max}.",
+        "submit": "Post",
+        "submitting": "Posting...",
+        "close": "Close"
+      },
+      "errors": {
+        "titleRequired": "Please add a title.",
+        "titleMin": "The title must contain at least 3 characters.",
+        "titleMax": "The title must not exceed 100 characters.",
+        "contentMax": "The content must not exceed 500 characters.",
+        "imagesMax": "You can add up to {max} images.",
+        "imageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted.",
+        "imageSize": "Each image must be smaller than {max} MB.",
+        "submitFailed": "Unable to submit this post right now. Please try again."
+      }
+    },
     "validation": {
       "required": "This field is required.",
       "tooSmallString": "This field must contain at least {{minimum}} characters.",

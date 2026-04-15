@@ -86,7 +86,7 @@ export default function CookiesConsentBanner({ refere, language }: Props) {
   return (
     <Dialog open={open}>
       <DialogContent
-        className="w-full max-w-[calc(100%-1.25rem)] overflow-hidden border border-white/10 bg-[linear-gradient(180deg,rgba(18,21,28,0.98)_0%,rgba(11,15,22,0.98)_100%)] p-0 text-foreground shadow-[0_32px_90px_-38px_rgba(0,0,0,0.92)] sm:max-w-2xl lg:max-w-[880px]"
+        className="w-full max-w-[calc(100%-1.25rem)]  overflow-hidden border  border-white/10 bg-[linear-gradient(180deg,rgba(18,21,28,0.98)_0%,rgba(11,15,22,0.98)_100%)] p-0 text-foreground shadow-[0_32px_90px_-38px_rgba(0,0,0,0.92)] sm:max-w-2xl lg:max-w-[880px]"
         showCloseButton={false}
         onEscapeKeyDown={(event) => event.preventDefault()}
         onInteractOutside={(event) => event.preventDefault()}
