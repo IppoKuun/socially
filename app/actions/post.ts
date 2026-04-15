@@ -43,10 +43,10 @@ export default async function createPost(
   // Erreur si limite attente //
   if (!success) {
     const diffMs = reset - Date.now();
-    const min = Math.ceil(diffMs / (1000 * 60));
+    const minutes = Math.ceil(diffMs / (1000 * 60));
     return {
       ok: false,
-      userMsg: t("rateLimited", { min }),
+      userMsg: t("rateLimited", { minutes }),
     };
   }
   const raw = Object.fromEntries(FormData);

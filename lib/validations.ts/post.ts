@@ -34,6 +34,7 @@ export const uploadImageSchema = z.object({
           },
         }),
     )
+    .max(10)
     .optional(),
 });
 
