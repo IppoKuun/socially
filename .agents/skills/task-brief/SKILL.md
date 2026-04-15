@@ -91,6 +91,14 @@ The skill should help the user produce a brief shaped like this:
 Do not force every field to be long.
 A short precise field is better than vague filler.
 
+Unless the user explicitly wants a broader architecture, the brief should implicitly or explicitly reinforce:
+
+- a simple implementation
+- minimal necessary abstraction
+- easy rereading
+- no helper explosion
+- no overkill syntax or file splitting without clear payoff
+
 ---
 
 ## Question strategy
@@ -146,11 +154,16 @@ That final brief should:
 - avoid invented details unless they were clearly marked as assumptions
 - be suitable for a new implementation conversation
 - make it easy for the implementation agent to explain the created files afterward in a logical study order when relevant
+- remind the implementation agent to prefer the simplest understandable solution when the user did not ask for a broader architecture
 
 When assumptions are still necessary:
 
 - label them explicitly
 - keep them minimal
+
+If the user's brief is missing a proportionality constraint and nothing suggests a large design is needed:
+
+- add a concise reminder such as "prefer a simple readable implementation; avoid unnecessary helpers or abstractions"
 
 ---
 

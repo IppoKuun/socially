@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
 import AppPageShell from "../_components/app-page-shell";
+import CreatePostComposer from "./_components/CreatePostComposer";
 
 const previewPosts = [
   {
@@ -58,6 +59,8 @@ export default async function FeedPage() {
           </article>
         ))}
       </section>
+
+      <CreatePostComposer />
     </AppPageShell>
   );
 }

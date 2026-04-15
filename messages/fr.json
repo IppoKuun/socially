@@ -137,6 +137,72 @@
       "invalidImageType": "Seuls les formats .jpg, .jpeg, .png et .webp sont acceptés."
     }
   },
+  "post": {
+    "actions": {
+      "create": {
+        "authRequired": "Veuillez vous connecter pour publier.",
+        "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "missingIdentifier": "Requête rejetée : source introuvable.",
+        "rateLimited": "Vous avez publié trop de contenu récemment. Réessayez dans {minutes} minute(s).",
+        "invalidFiles": "Veuillez envoyer uniquement des images.",
+        "imageValidationFailed": "Impossible de valider cette image. Réessayez.",
+        "uploadFailed": "L'envoi des images a échoué. Réessayez.",
+        "moderationUnavailable": "Impossible de vérifier ce post pour le moment. Réessayez.",
+        "unsafeContent": "Votre contenu enfreint notre politique d'utilisation.",
+        "createFailed": "Impossible de créer le post. Réessayez.",
+        "sensitiveWarning": "Attention, votre post a été jugé sensible."
+      }
+    },
+    "compose": {
+      "floatingButton": {
+        "desktop": "Créer un post",
+        "mobile": "Créer un post"
+      },
+      "dialog": {
+        "title": "Créer un post",
+        "description": "Partage une idée, un projet ou une mise à jour rapide avec ta communauté.",
+        "titleLabel": "Titre",
+        "titlePlaceholder": "Repenser le futur du travail...",
+        "titleCount": "{count}/100",
+        "contentLabel": "Contenu",
+        "contentPlaceholder": "Partage quelque chose avec la communauté...",
+        "contentCount": "{count}/500",
+        "imagesLabel": "Images",
+        "imagesHint": "Ajoute jusqu'à {max} images. Formats acceptés : JPG, PNG, WEBP. Taille max : {size} Mo par image.",
+        "imagesCount": "{count}/{max} image(s)",
+        "dropzoneIdle": "Glisse tes images ici ou ouvre l'explorateur de fichiers.",
+        "dropzoneActive": "Dépose les images pour les ajouter.",
+        "dropzoneAction": "Ajouter des images",
+        "previewAlt": "Image sélectionnée {index}",
+        "removeImage": "Retirer l'image {index}",
+        "unsafeBadge": "Image signalée",
+        "footerHint": "L'ordre des images est conservé pour la modération. Maximum : {max}.",
+        "submit": "Publier",
+        "submitting": "Publication...",
+        "close": "Fermer"
+      },
+      "errors": {
+        "titleRequired": "Ajoute un titre.",
+        "titleMin": "Le titre doit contenir au moins 3 caractères.",
+        "titleMax": "Le titre ne doit pas dépasser 100 caractères.",
+        "contentMax": "Le contenu ne doit pas dépasser 500 caractères.",
+        "imagesMax": "Tu peux ajouter jusqu'à {max} images.",
+        "imageType": "Seuls les formats .jpg, .jpeg, .png et .webp sont acceptés.",
+        "imageSize": "Chaque image doit faire moins de {max} Mo.",
+        "submitFailed": "Impossible d'envoyer ce post pour le moment. Réessaie."
+      }
+    },
+    "validation": {
+      "required": "Ce champ est obligatoire.",
+      "tooSmallString": "Ce champ doit contenir au moins {{minimum}} caractères.",
+      "tooBigString": "Ce champ ne doit pas dépasser {{maximum}} caractères.",
+      "invalidUrl": "Veuillez saisir une URL valide.",
+      "invalidSelection": "Veuillez sélectionner une option valide.",
+      "invalidInput": "La valeur saisie est invalide.",
+      "imageTooLarge": "L'image ne doit pas dépasser {{maximum}} Mo.",
+      "invalidImageType": "Seuls les formats .jpg, .jpeg, .png et .webp sont acceptés."
+    }
+  },
   "appShell": {
     "brandAlt": "Logo Socially",
     "navigation": {

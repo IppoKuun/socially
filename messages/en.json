@@ -137,6 +137,72 @@
       "invalidImageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted."
     }
   },
+  "post": {
+    "actions": {
+      "create": {
+        "authRequired": "Please sign in to publish.",
+        "profileNotFound": "We could not find your profile. Please try again later.",
+        "missingIdentifier": "Request rejected: source could not be identified.",
+        "rateLimited": "You have published too much content recently. Please try again in {minutes} minute(s).",
+        "invalidFiles": "Please upload images only.",
+        "imageValidationFailed": "We could not validate this image. Please try again.",
+        "uploadFailed": "Image upload failed. Please try again.",
+        "moderationUnavailable": "We could not review this post right now. Please try again.",
+        "unsafeContent": "Your content violates our usage policy.",
+        "createFailed": "Unable to create the post. Please try again.",
+        "sensitiveWarning": "Warning: your post has been flagged as sensitive."
+      }
+    },
+    "compose": {
+      "floatingButton": {
+        "desktop": "Create a post",
+        "mobile": "Create a post"
+      },
+      "dialog": {
+        "title": "Create a post",
+        "description": "Share an idea, project, or quick update with your community.",
+        "titleLabel": "Title",
+        "titlePlaceholder": "Rethinking the future of work...",
+        "titleCount": "{count}/100",
+        "contentLabel": "Content",
+        "contentPlaceholder": "Share something with the community...",
+        "contentCount": "{count}/500",
+        "imagesLabel": "Images",
+        "imagesHint": "Add up to {max} images. Accepted formats: JPG, PNG, WEBP. Maximum size: {size} MB per image.",
+        "imagesCount": "{count}/{max} image(s)",
+        "dropzoneIdle": "Drag your images here or open the file picker.",
+        "dropzoneActive": "Drop the images to add them.",
+        "dropzoneAction": "Add images",
+        "previewAlt": "Selected image {index}",
+        "removeImage": "Remove image {index}",
+        "unsafeBadge": "Flagged image",
+        "footerHint": "Image order is preserved for moderation. Maximum: {max}.",
+        "submit": "Post",
+        "submitting": "Posting...",
+        "close": "Close"
+      },
+      "errors": {
+        "titleRequired": "Please add a title.",
+        "titleMin": "The title must contain at least 3 characters.",
+        "titleMax": "The title must not exceed 100 characters.",
+        "contentMax": "The content must not exceed 500 characters.",
+        "imagesMax": "You can add up to {max} images.",
+        "imageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted.",
+        "imageSize": "Each image must be smaller than {max} MB.",
+        "submitFailed": "Unable to submit this post right now. Please try again."
+      }
+    },
+    "validation": {
+      "required": "This field is required.",
+      "tooSmallString": "This field must contain at least {{minimum}} characters.",
+      "tooBigString": "This field must not exceed {{maximum}} characters.",
+      "invalidUrl": "Please enter a valid URL.",
+      "invalidSelection": "Please select a valid option.",
+      "invalidInput": "The provided value is invalid.",
+      "imageTooLarge": "The image must not exceed {{maximum}} MB.",
+      "invalidImageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted."
+    }
+  },
   "appShell": {
     "brandAlt": "Socially logo",
     "navigation": {

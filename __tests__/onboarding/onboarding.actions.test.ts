@@ -48,6 +48,12 @@ import {
   verifyUsername,
 } from "@/app/[locale]/onboarding/_actions/actions";
 
+// Dans les test, cette fonction vas naturellement appelé getTranslations car les message en dépende
+// Quand elle sera appelé elle prendra le nom de la translation définie par :
+// const t = await getTranslations("nom");  //
+// Le nom sera alors le namespace. Et la fonction retournera une autre fonction qui prends en argument une clé
+// Cette clé est juste le nom de la clé translation qui a appelée getTranslation
+// Ex : si serv action tombe sur t("taken") taken devient la clé car le resultat vient de la fonction getTranslations
 function createTranslationMock(namespace = "messages") {
   return (key: string) => `${namespace}.${key}`;
 }
@@ -87,6 +93,9 @@ describe("onboarding server actions", () => {
     mockGetTranslations.mockImplementation(async (namespace?: string) =>
       createTranslationMock(namespace),
     );
+
+    // Undefined car on veut pas vérifié ce que i18n zod renvoie en cas d'erreur
+    // Mais juste si ZOD a bien parsé. //
     mockGetZodErrorMapForRequest.mockResolvedValue(undefined);
     mockUserProfileFindUnique.mockResolvedValue(null);
     mockUserProfileUpdate.mockResolvedValue({});

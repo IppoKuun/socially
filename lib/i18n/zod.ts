@@ -75,6 +75,7 @@ function getCustomI18nConfig(param: unknown): {
 
 export async function getZodErrorMapForLocale(
   locale: string,
+  namespace = "onboarding",
 ): Promise<ZodErrorMap> {
   const i18n = await createZodI18n(resolveLocale(locale));
 
@@ -91,7 +92,7 @@ export async function getZodErrorMapForLocale(
       if (customConfig) {
         return {
           message: t(customConfig.key, {
-            ns: "onboarding",
+            ns: namespace,
             ...customConfig.values,
           }),
         };
@@ -101,13 +102,13 @@ export async function getZodErrorMapForLocale(
     switch (issue.code) {
       case "invalid_type":
         return {
-          message: t("validation.required", { ns: "onboarding" }),
+          message: t("validation.required", { ns: namespace }),
         };
       case "too_small":
         if (issue.origin === "string") {
           return {
             message: t("validation.tooSmallString", {
-              ns: "onboarding",
+              ns: namespace,
               minimum: issue.minimum,
             }),
           };
@@ -117,7 +118,7 @@ export async function getZodErrorMapForLocale(
         if (issue.origin === "string") {
           return {
             message: t("validation.tooBigString", {
-              ns: "onboarding",
+              ns: namespace,
               maximum: issue.maximum,
             }),
           };
@@ -126,25 +127,27 @@ export async function getZodErrorMapForLocale(
       case "invalid_format":
         if (issue.format === "url") {
           return {
-            message: t("validation.invalidUrl", { ns: "onboarding" }),
+            message: t("validation.invalidUrl", { ns: namespace }),
           };
         }
         break;
       case "invalid_value":
         return {
-          message: t("validation.invalidSelection", { ns: "onboarding" }),
+          message: t("validation.invalidSelection", { ns: namespace }),
         };
       default:
         break;
     }
 
     return {
-      message: t("validation.invalidInput", { ns: "onboarding" }),
+      message: t("validation.invalidInput", { ns: namespace }),
     };
   };
 }
 
-export async function getZodErrorMapForRequest(): Promise<ZodErrorMap> {
+export async function getZodErrorMapForRequest(
+  namespace = "onboarding",
+): Promise<ZodErrorMap> {
   const locale = await getLocale();
-  return getZodErrorMapForLocale(locale);
+  return getZodErrorMapForLocale(locale, namespace);
 }

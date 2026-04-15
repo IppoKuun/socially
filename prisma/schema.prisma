@@ -163,7 +163,8 @@ model Post {
   id        String    @id @default(cuid())
   title     String
   content   String?
-  images    String[]
+  slug      String @unique  
+  imagesUrl    String[]
   createdAt DateTime  @default(now())
   deletedAt DateTime?
   categories Category[] @default([]) @map("Category")
