@@ -194,6 +194,7 @@ model Report {
   reporterId  String
   reporter    UserProfile         @relation(fields: [reporterId], references: [id])
 
+  @@unique([reporterId, postId])
   @@schema("app")
 }
 
