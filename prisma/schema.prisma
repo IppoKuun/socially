@@ -127,6 +127,8 @@ model UserProfile {
   blocked Block[] @relation("blocked")
   blocker Block[] @relation("Blocker")
 
+  report Report[]
+
   userMessage         Message[] @relation("Sender")
   userReceivedMessage Message[] @relation("Receiver")
 
@@ -176,8 +178,22 @@ model Post {
   likes            PostLike[]
   notif            Notifications[]
   postShared       Message[]
+  reported         Report[]
   userId           String
   author           UserProfile      @relation(fields: [userId], references: [id])
+
+  @@schema("app")
+}
+
+model Report {
+  id        String    @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  postId      String
+  post        Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  reporterId  String
+  reporter    UserProfile         @relation(fields: [reporterId], references: [id])
 
   @@schema("app")
 }
