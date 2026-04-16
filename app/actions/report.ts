@@ -10,7 +10,7 @@ export default async function report(postId: string) {
   }
 
   const user = await myPrisma.userProfile.findUnique({
-    where: { id: session.user.id },
+    where: { userId: session.user.id },
   });
 
   const post = await myPrisma.post.findUnique({

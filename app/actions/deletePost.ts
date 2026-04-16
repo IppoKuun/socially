@@ -36,7 +36,7 @@ export default async function deletePost(id: string) {
     where: { id },
   });
 
-  if (deletePost) {
+  if (!deletePost) {
     return { ok: false, userMsg: "Votre post n'as pas pu etre supprimé" };
   }
   return { ok: true, userMsg: "" };

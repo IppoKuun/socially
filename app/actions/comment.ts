@@ -62,10 +62,6 @@ export default async function createComment(
     return { ok: true, userMsg: "", parent: false };
   }
 
-  if (!parent.responseToCommentId) {
-    return { ok: false, userMsg: "Le commentaire a été supprimé" };
-  }
-
   const parsed = commentSchema.safeParse(
     { title: raw.title, content: raw.content },
     { error: errorMap },
