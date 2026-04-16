@@ -204,7 +204,7 @@ model Comment {
   deletedAt        DateTime?
   moderationStatus ModerationStatus
 
-  // A quel post/comment le comment est dédiée //
+  // A quel comment le comment est dédiée //
   responseToCommentId String?
   responseToComment   Comment? @relation("CommentReplies", fields: [responseToCommentId], references: [id])
 

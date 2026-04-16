@@ -50,6 +50,22 @@ export default async function createComment(
   const postId = raw.PostId;
   const responseToCommentId = raw.CommentID;
 
+  const parent = await myPrisma.comment.findUnique({
+    where: { id: String(responseToCommentId) },
+    select: { id: true, postId: true, responseToCommentId: true },
+  });
+
+  // Si le post principal du comment est absents, Il est probalblement supprimé
+  //  et dans ce cas la, on ne veut pas faire une err pour chaque commentaires*
+  // Mais avertir l'UI normalement comme ça ont pourra indiqué que le post est supprimé //
+  if (!parent) {
+    return { ok: true, userMsg: "", parent: false };
+  }
+
+  if (!parent.responseToCommentId) {
+    return { ok: false, userMsg: "Le commentaire a été supprimé" };
+  }
+
   const parsed = commentSchema.safeParse(
     { title: raw.title, content: raw.content },
     { error: errorMap },
