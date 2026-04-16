@@ -38,6 +38,11 @@ export const rateLimits = {
     prefix: "ratelimit:post-publish",
     limiter: Ratelimit.slidingWindow(30, "15 m"),
   }),
+  comment: new Ratelimit({
+    redis,
+    prefix: "ratelimit:post-publish",
+    limiter: Ratelimit.slidingWindow(20, "30 m"),
+  }),
 } as const;
 
 export type RateLimitKey = keyof typeof rateLimits;

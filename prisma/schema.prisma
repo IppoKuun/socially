@@ -173,7 +173,6 @@ model Post {
   categories Category[] @default([]) @map("Category")
 
   moderationStatus ModerationStatus
-  isAi             Boolean          @default(false)
   comment          Comment[]
   likes            PostLike[]
   notif            Notifications[]
@@ -204,7 +203,6 @@ model Comment {
   createdAt        DateTime         @default(now())
   deletedAt        DateTime?
   moderationStatus ModerationStatus
-  isAi             Boolean          @default(false)
 
   // A quel post/comment le comment est dédiée //
   responseToCommentId String?
