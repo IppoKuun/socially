@@ -26,7 +26,7 @@ export default async function deletePost(id: string) {
   if (post.imagesUrl) {
     try {
       await deleteCloudinary(post.imagesPublicId);
-    } catch (error: typeof error) {
+    } catch (error) {
       console.error(error);
       return { ok: false, userMsg: "Impossible de supprimez image cloudinary" };
     }
