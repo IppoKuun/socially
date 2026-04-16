@@ -17,12 +17,13 @@ export default async function deletePost(id: string) {
     where: { id },
   });
 
-  if (post?.userId !== user?.id) {
-    return { ok: false, userMsg: "Vous nen pouvez supprimez que vos post" };
-  }
   if (!post) {
     return { ok: false, userMsg: "Votre post n'as pas été trouvée" };
   }
+  if (post?.userId !== user?.id) {
+    return { ok: false, userMsg: "Vous nen pouvez supprimez que vos post" };
+  }
+
   if (post.imagesUrl) {
     try {
       await deleteCloudinary(post.imagesPublicId);

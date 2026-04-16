@@ -1,3 +1,4 @@
+"use server";
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 
@@ -18,7 +19,7 @@ export async function Like(postId: string) {
         // Cette syntaxe fait qu'elle vas ciblé la relation unique //
         user_id_post_id: {
           post_id: postId,
-          user_id: session.user.id,
+          user_id: user!.id,
         },
       },
     });
@@ -29,7 +30,7 @@ export async function Like(postId: string) {
       });
     } else {
       await myPrisma.postLike.create({
-        data: { user_id: session.user.id, post_id: postId },
+        data: { user_id: user!.id, post_id: postId },
       });
     }
   } catch (error) {
@@ -55,7 +56,7 @@ export async function commentLike(commentId: string) {
         // Cette syntaxe fait qu'elle vas ciblé la relation unique //
         user_id_comment_id: {
           comment_id: commentId,
-          user_id: session.user.id,
+          user_id: user!.id,
         },
       },
     });

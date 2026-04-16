@@ -26,7 +26,7 @@ export default async function createComment(
     return { ok: false, userMsg: t("profileNotFound") };
   }
 
-  const limiter = rateLimits.postPublish;
+  const limiter = rateLimits.comment;
 
   const identifier = user?.id ?? session.user.id;
 
@@ -47,23 +47,61 @@ export default async function createComment(
     };
   }
   const raw = Object.fromEntries(FormData);
-  const postId = raw.PostId;
-  const responseToCommentId = raw.CommentID;
+  const postId = raw.PostId ? String(raw.PostId) : "";
+  const responseToCommentId = raw.CommentID ? String(raw.CommentID) : null;
+  // Frontend devra envoyé dans un input hidden : le mode. Si toComment
+  // User répond a un com si toPost user réponds a un Post directement//
+  const mode = String(raw.mode);
 
-  const parent = await myPrisma.comment.findUnique({
-    where: { id: String(responseToCommentId) },
-    select: { id: true, postId: true, responseToCommentId: true },
+  if (!mode) {
+    console.error(" SERV ACTION COMMENT : LE MODE NAS PAS ETE DONNER ");
+    return { ok: false, userMsg: "Une erreur server s'est produit" };
+  }
+
+  const targetPost = await myPrisma.post.findUnique({
+    where: { id: postId },
+    select: { id: true },
   });
 
-  // Si le post principal du comment est absents, Il est probalblement supprimé
-  //  et dans ce cas la, on ne veut pas faire une err pour chaque commentaires*
-  // Mais avertir l'UI normalement comme ça ont pourra indiqué que le post est supprimé //
-  if (!parent) {
-    return { ok: true, userMsg: "", parent: false };
+  // Le post peut avoir été supprimé entre le rendu et la soumission.
+  // Dans ce cas on bloque la création et on renvoie un état clair au front.
+  if (!targetPost) {
+    return {
+      ok: false,
+      userMsg: "Le post principal n'est plus disponible.",
+      postUnavailable: true,
+    };
+  }
+
+  let commentParent = null;
+
+  if (mode === "toComment") {
+    if (!responseToCommentId) {
+      return {
+        ok: false,
+        userMsg: "Le commentaire auquel vous répondez n'existe plus.",
+      };
+    }
+
+    commentParent = await myPrisma.comment.findUnique({
+      where: { id: responseToCommentId },
+      select: { id: true, postId: true },
+    });
+
+    if (!commentParent) {
+      return {
+        ok: false,
+        userMsg: "Le commentaire auquel vous répondez n'existe plus.",
+      };
+    }
+
+    if (commentParent.postId !== postId) {
+      return { ok: false, userMsg: t("createFailed") };
+    }
   }
 
   const parsed = commentSchema.safeParse(
-    { title: raw.title, content: raw.content },
+    { content: raw.content },
     { error: errorMap },
   );
   if (!parsed.success) {
@@ -76,7 +114,7 @@ export default async function createComment(
     moderation = await Moderation({
       language: raw.language ? String(raw.language) : "en",
       kind: "COMMENT",
-      title: String(raw.title),
+
       content: String(raw.content),
     });
   } catch (error) {
@@ -104,8 +142,8 @@ export default async function createComment(
       moderationStatus: moderation.moderationStatus,
       content: parsed.data?.content,
       authorId: user.id,
-      responseToCommentId: String(responseToCommentId),
-      postId: String(postId),
+      responseToCommentId: commentParent?.id,
+      postId,
     },
   });
 

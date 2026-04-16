@@ -21,7 +21,7 @@ export default async function report(postId: string) {
   }
 
   const createReport = await myPrisma.report.create({
-    data: { reporterId: session.user.id, postId },
+    data: { reporterId: user!.id, postId },
   });
 
   if (!createReport) {

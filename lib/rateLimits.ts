@@ -40,7 +40,7 @@ export const rateLimits = {
   }),
   comment: new Ratelimit({
     redis,
-    prefix: "ratelimit:post-publish",
+    prefix: "ratelimit:comment",
     limiter: Ratelimit.slidingWindow(20, "30 m"),
   }),
 } as const;
