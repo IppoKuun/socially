@@ -201,7 +201,6 @@ model Report {
 model Comment {
   id               String           @id @default(cuid())
   content          String
-  images           String[]
   createdAt        DateTime         @default(now())
   deletedAt        DateTime?
   moderationStatus ModerationStatus
