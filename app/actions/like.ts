@@ -1,12 +1,14 @@
 "use server";
 import { getSession } from "@/lib/authSession";
+import { getTranslations } from "next-intl/server";
 import { myPrisma } from "@/lib/prisma";
 
 export async function Like(postId: string) {
+  const t = await getTranslations("post.actions.like");
   const session = await getSession();
 
   if (!session) {
-    return { ok: false, userMsg: "Vous n'etes pas connecté" };
+    return { ok: false, userMsg: t("authRequired") };
   }
 
   const user = await myPrisma.userProfile.findUnique({
@@ -16,7 +18,7 @@ export async function Like(postId: string) {
   if (!user) {
     return {
       ok: false,
-      userMsg: "Nous n'avons pas réussi a trouver votre profile",
+      userMsg: t("profileNotFound"),
     };
   }
   try {
@@ -41,16 +43,17 @@ export async function Like(postId: string) {
     }
   } catch (error) {
     console.error(error);
-    return { ok: false, userMsg: "Impossible de modifié le like" };
+    return { ok: false, userMsg: t("toggleFailed") };
   }
   return { ok: true, userMsg: "" };
 }
 
 export async function commentLike(commentId: string) {
+  const t = await getTranslations("comment.actions.like");
   const session = await getSession();
 
   if (!session) {
-    return { ok: false, userMsg: "Vous n'etes pas connecté" };
+    return { ok: false, userMsg: t("authRequired") };
   }
 
   const user = await myPrisma.userProfile.findUnique({
@@ -60,7 +63,7 @@ export async function commentLike(commentId: string) {
   if (!user) {
     return {
       ok: false,
-      userMsg: "Nous n'avons pas réussi a trouver votre profile",
+      userMsg: t("profileNotFound"),
     };
   }
 
@@ -86,7 +89,7 @@ export async function commentLike(commentId: string) {
     }
   } catch (error) {
     console.error(error);
-    return { ok: false, userMsg: "Impossible de modifié le like" };
+    return { ok: false, userMsg: t("toggleFailed") };
   }
   return { ok: true, userMsg: "" };
 }

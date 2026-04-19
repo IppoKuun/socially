@@ -70,7 +70,6 @@ const mobileItems: NavigationItem[] = [
   { href: "/notifications", icon: Bell, key: "notif" },
   { href: "/messages", icon: MessageCircleMore, key: "message" },
   { href: "/search", icon: Search, key: "search" },
-  { href: "/profile", icon: CircleUserRound, key: "profile" },
   { href: "/feedback", icon: MessageSquarePlus, key: "feedback" },
 ];
 
@@ -122,6 +121,7 @@ export function DesktopAppSidebar({ user }: { user: NavigationUser }) {
   const pathname = usePathname();
   const tNav = useTranslations("appShell.navigation");
   const tShell = useTranslations("appShell");
+  const profileHref = `/profile/${user.username}`;
 
   return (
     <Sidebar className="sticky top-0 border-white/6 bg-[#17181d]">
@@ -169,7 +169,7 @@ export function DesktopAppSidebar({ user }: { user: NavigationUser }) {
       <SidebarFooter className="px-4 pb-5 pt-4">
         <Separator className="bg-white/6" />
         <Link
-          href="/profile"
+          href={profileHref}
           className={cn(
             "mt-4 flex items-center gap-3 rounded-2xl px-3 py-3 transition outline-none hover:bg-white/[0.03] focus-visible:ring-2 focus-visible:ring-sidebar-ring/60",
 
@@ -195,9 +195,10 @@ export function DesktopAppSidebar({ user }: { user: NavigationUser }) {
   );
 }
 
-export function MobileBottomBar() {
+export function MobileBottomBar({ username }: { username: string }) {
   const pathname = usePathname();
   const tNav = useTranslations("appShell.navigation");
+  const profileHref = `/profile/${username}`;
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/8 bg-[rgba(11,12,16,0.96)] px-2 pb-[calc(env(safe-area-inset-bottom)+0.55rem)] pt-2 backdrop-blur-xl md:hidden">
@@ -227,6 +228,20 @@ export function MobileBottomBar() {
             </li>
           );
         })}
+        <li>
+          <Link
+            href={profileHref}
+            className={cn(
+              "flex min-h-15 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[0.66rem] font-medium transition",
+              isActivePath(pathname, "/profile")
+                ? "bg-white/[0.06] text-white"
+                : "text-white/52 hover:bg-white/[0.03] hover:text-white/80",
+            )}
+          >
+            <CircleUserRound className="h-4.5 w-4.5" />
+            <span>{tNav("profile")}</span>
+          </Link>
+        </li>
       </ul>
     </nav>
   );

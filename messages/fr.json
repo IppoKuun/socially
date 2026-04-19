@@ -151,6 +151,25 @@
         "unsafeContent": "Votre contenu enfreint notre politique d'utilisation.",
         "createFailed": "Impossible de créer le post. Réessayez.",
         "sensitiveWarning": "Attention, votre post a été jugé sensible."
+      },
+      "like": {
+        "authRequired": "Veuillez vous connecter pour liker.",
+        "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "toggleFailed": "Impossible de modifier le like."
+      },
+      "report": {
+        "authRequired": "Veuillez vous connecter pour signaler.",
+        "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "postNotFound": "Impossible de retrouver ce post.",
+        "createFailed": "Impossible de signaler ce post.",
+        "alreadyReported": "Vous avez déjà signalé ce post."
+      },
+      "delete": {
+        "authRequired": "Veuillez vous connecter pour supprimer ce post.",
+        "postNotFound": "Impossible de retrouver ce post.",
+        "forbidden": "Vous ne pouvez supprimer que vos propres posts.",
+        "imageDeleteFailed": "Impossible de supprimer les images associées.",
+        "deleteFailed": "Impossible de supprimer ce post."
       }
     },
     "compose": {
@@ -202,6 +221,121 @@
       "imageTooLarge": "L'image ne doit pas dépasser {{maximum}} Mo.",
       "invalidImageType": "Seuls les formats .jpg, .jpeg, .png et .webp sont acceptés."
     }
+  },
+  "comment": {
+    "actions": {
+      "create": {
+        "authRequired": "Veuillez vous connecter pour commenter.",
+        "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "missingIdentifier": "Requête rejetée : source introuvable.",
+        "rateLimited": "Vous avez commenté trop rapidement. Réessayez dans {minutes} minute(s).",
+        "moderationUnavailable": "Impossible de vérifier ce commentaire pour le moment. Réessayez.",
+        "unsafeContent": "Votre commentaire enfreint notre politique d'utilisation.",
+        "createFailed": "Impossible de créer le commentaire. Réessayez.",
+        "sensitiveWarning": "Attention, votre commentaire a été jugé sensible.",
+        "unexpectedError": "Une erreur serveur s'est produite.",
+        "postUnavailable": "Le post principal n'est plus disponible.",
+        "replyTargetUnavailable": "Le commentaire auquel vous répondez n'est plus disponible."
+      },
+      "like": {
+        "authRequired": "Veuillez vous connecter pour liker.",
+        "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "toggleFailed": "Impossible de modifier le like."
+      }
+    },
+    "validation": {
+      "required": "Ce champ est obligatoire.",
+      "tooSmallString": "Ce champ doit contenir au moins {{minimum}} caractères.",
+      "tooBigString": "Ce champ ne doit pas dépasser {{maximum}} caractères.",
+      "invalidUrl": "Veuillez saisir une URL valide.",
+      "invalidSelection": "Veuillez sélectionner une option valide.",
+      "invalidInput": "La valeur saisie est invalide."
+    }
+  },
+  "feed": {
+    "forYou": {
+      "empty": "Aucun post n'est disponible pour le moment.",
+      "loadMore": "Charger plus",
+      "loadingMore": "Chargement...",
+      "newPostsBadge": "Des nouveaux posts sont dispo"
+    },
+    "postCard": {
+      "aiBadge": "IA",
+      "aiTooltip": "Ce contenu a été généré par IA",
+      "uncertainBadge": "Avertissement",
+      "uncertainTooltip": "Ce contenu est probablement faux ou malveillant.",
+      "like": "Like",
+      "comment": "Commentaire",
+      "share": "Partager",
+      "shareDisabled": "Le partage arrivera plus tard.",
+      "delete": "Supprimer",
+      "report": "Signaler",
+      "reported": "Signalé",
+      "cancel": "Annuler",
+      "deleteTitle": "Supprimer ce post ?",
+      "deleteDescription": "Cette action est définitive. Le post et ses images seront retirés.",
+      "confirmDelete": "Supprimer le post",
+      "deleting": "Suppression...",
+      "deleteError": "Impossible de supprimer ce post pour le moment.",
+      "reportTitle": "Signaler ce post ?",
+      "reportDescription": "Le signalement sera envoyé à l'équipe de modération.",
+      "confirmReport": "Envoyer le signalement",
+      "reporting": "Signalement...",
+      "reportError": "Impossible de signaler ce post pour le moment.",
+      "likeError": "Impossible de modifier le like pour le moment.",
+      "seeMore": "Voir plus",
+      "seeLess": "Voir moins",
+      "moreImages": "+{count} image(s)",
+      "imageAlt": "Image du post {index}",
+      "imageCounter": "{current} / {total}",
+      "previousImage": "Image précédente",
+      "nextImage": "Image suivante"
+    }
+  },
+  "comments": {
+    "compose": {
+      "postTitle": "Ajouter un commentaire",
+      "postHint": "Réagis directement au post.",
+      "replyTitle": "Répondre",
+      "replyHint": "La réponse sera ajoutée inline dans le fil.",
+      "postPlaceholder": "Écris ton commentaire...",
+      "replyPlaceholder": "Écris ta réponse...",
+      "submit": "Envoyer",
+      "submitting": "Envoi...",
+      "empty": "Ajoute un message avant d'envoyer.",
+      "submitFailed": "Impossible d'envoyer ce commentaire pour le moment.",
+      "success": "Commentaire envoyé."
+    },
+    "card": {
+      "reply": "Répondre",
+      "replyCount": "{count} réponse(s)",
+      "likeError": "Impossible de modifier le like de ce commentaire."
+    }
+  },
+  "postDetail": {
+    "pageDescription": "Retrouve le post complet et les commentaires associés.",
+    "commentsTitle": "Commentaires",
+    "commentsHint": "Trie les réponses directes selon le signal le plus utile.",
+    "sortRecent": "Plus récents",
+    "sortPopular": "Plus populaires",
+    "commentsEmpty": "Aucun commentaire pour le moment."
+  },
+  "commentThread": {
+    "pageTitle": "Fil de commentaire",
+    "pageDescription": "Contexte complet du post et de la réponse ciblée.",
+    "postLabel": "Post principal",
+    "parentLabel": "Commentaire parent",
+    "currentLabel": "Commentaire actuel",
+    "repliesTitle": "Réponses",
+    "repliesHint": "Réponses directes au commentaire courant.",
+    "repliesEmpty": "Aucune réponse pour le moment."
+  },
+  "profilePublic": {
+    "bioFallback": "Aucune bio n'a encore été ajoutée.",
+    "recentPostsTitle": "Posts récents",
+    "recentPostsEmpty": "Aucun post public pour le moment.",
+    "proBadge": "Pro",
+    "aiBadge": "IA"
   },
   "appShell": {
     "brandAlt": "Logo Socially",

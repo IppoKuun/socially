@@ -2,11 +2,13 @@
 import { myPrisma } from "@/lib/prisma";
 import { getSession } from "@/lib/authSession";
 import deleteCloudinary from "@/lib/cloudinaryConfig";
+import { getTranslations } from "next-intl/server";
 
 export default async function deletePost(id: string) {
+  const t = await getTranslations("post.actions.delete");
   const session = await getSession();
   if (!session) {
-    return { ok: false, userMsg: "Vous n'etes pas connecté" };
+    return { ok: false, userMsg: t("authRequired") };
   }
 
   const user = await myPrisma.userProfile.findUnique({
@@ -18,10 +20,10 @@ export default async function deletePost(id: string) {
   });
 
   if (!post) {
-    return { ok: false, userMsg: "Votre post n'as pas été trouvée" };
+    return { ok: false, userMsg: t("postNotFound") };
   }
   if (post?.userId !== user?.id) {
-    return { ok: false, userMsg: "Vous nen pouvez supprimez que vos post" };
+    return { ok: false, userMsg: t("forbidden") };
   }
 
   if (post.imagesUrl) {
@@ -29,7 +31,7 @@ export default async function deletePost(id: string) {
       await deleteCloudinary(post.imagesPublicId);
     } catch (error) {
       console.error(error);
-      return { ok: false, userMsg: "Impossible de supprimez image cloudinary" };
+      return { ok: false, userMsg: t("imageDeleteFailed") };
     }
   }
 
@@ -38,7 +40,7 @@ export default async function deletePost(id: string) {
   });
 
   if (!deletePost) {
-    return { ok: false, userMsg: "Votre post n'as pas pu etre supprimé" };
+    return { ok: false, userMsg: t("deleteFailed") };
   }
   return { ok: true, userMsg: "" };
 }

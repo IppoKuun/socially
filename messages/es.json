@@ -151,6 +151,25 @@
         "unsafeContent": "Tu contenido infringe nuestra política de uso.",
         "createFailed": "No se puede crear la publicación. Inténtalo de nuevo.",
         "sensitiveWarning": "Atención: tu publicación ha sido considerada sensible."
+      },
+      "like": {
+        "authRequired": "Inicia sesión para dar me gusta.",
+        "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+        "toggleFailed": "No es posible actualizar el me gusta."
+      },
+      "report": {
+        "authRequired": "Inicia sesión para reportar.",
+        "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+        "postNotFound": "No se pudo encontrar esta publicación.",
+        "createFailed": "No es posible reportar esta publicación.",
+        "alreadyReported": "Ya has reportado esta publicación."
+      },
+      "delete": {
+        "authRequired": "Inicia sesión para eliminar esta publicación.",
+        "postNotFound": "No se pudo encontrar esta publicación.",
+        "forbidden": "Solo puedes eliminar tus propias publicaciones.",
+        "imageDeleteFailed": "No es posible eliminar las imágenes asociadas.",
+        "deleteFailed": "No es posible eliminar esta publicación."
       }
     },
     "compose": {
@@ -202,6 +221,121 @@
       "imageTooLarge": "La imagen no debe superar {{maximum}} MB.",
       "invalidImageType": "Solo se aceptan los formatos .jpg, .jpeg, .png y .webp."
     }
+  },
+  "comment": {
+    "actions": {
+      "create": {
+        "authRequired": "Inicia sesión para comentar.",
+        "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+        "missingIdentifier": "Solicitud rechazada: no se pudo identificar el origen.",
+        "rateLimited": "Has comentado demasiado rápido. Inténtalo de nuevo dentro de {minutes} minuto(s).",
+        "moderationUnavailable": "No se puede revisar este comentario ahora mismo. Inténtalo de nuevo.",
+        "unsafeContent": "Tu comentario infringe nuestra política de uso.",
+        "createFailed": "No se puede crear el comentario. Inténtalo de nuevo.",
+        "sensitiveWarning": "Atención: tu comentario ha sido considerado sensible.",
+        "unexpectedError": "Se produjo un error del servidor.",
+        "postUnavailable": "La publicación principal ya no está disponible.",
+        "replyTargetUnavailable": "El comentario al que respondes ya no está disponible."
+      },
+      "like": {
+        "authRequired": "Inicia sesión para dar me gusta.",
+        "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+        "toggleFailed": "No es posible actualizar el me gusta."
+      }
+    },
+    "validation": {
+      "required": "Este campo es obligatorio.",
+      "tooSmallString": "Este campo debe contener al menos {{minimum}} caracteres.",
+      "tooBigString": "Este campo no debe superar los {{maximum}} caracteres.",
+      "invalidUrl": "Introduce una URL válida.",
+      "invalidSelection": "Selecciona una opción válida.",
+      "invalidInput": "El valor introducido no es válido."
+    }
+  },
+  "feed": {
+    "forYou": {
+      "empty": "No hay publicaciones disponibles por ahora.",
+      "loadMore": "Cargar más",
+      "loadingMore": "Cargando...",
+      "newPostsBadge": "Hay nuevas publicaciones disponibles"
+    },
+    "postCard": {
+      "aiBadge": "IA",
+      "aiTooltip": "Este contenido ha sido generado por IA",
+      "uncertainBadge": "Aviso",
+      "uncertainTooltip": "Este contenido probablemente es falso o malicioso.",
+      "like": "Me gusta",
+      "comment": "Comentario",
+      "share": "Compartir",
+      "shareDisabled": "Compartir estará disponible más adelante.",
+      "delete": "Eliminar",
+      "report": "Reportar",
+      "reported": "Reportado",
+      "cancel": "Cancelar",
+      "deleteTitle": "¿Eliminar esta publicación?",
+      "deleteDescription": "Esta acción es permanente. La publicación y sus imágenes se eliminarán.",
+      "confirmDelete": "Eliminar publicación",
+      "deleting": "Eliminando...",
+      "deleteError": "No es posible eliminar esta publicación ahora mismo.",
+      "reportTitle": "¿Reportar esta publicación?",
+      "reportDescription": "El reporte se enviará al equipo de moderación.",
+      "confirmReport": "Enviar reporte",
+      "reporting": "Reportando...",
+      "reportError": "No es posible reportar esta publicación ahora mismo.",
+      "likeError": "No es posible actualizar el me gusta ahora mismo.",
+      "seeMore": "Ver más",
+      "seeLess": "Ver menos",
+      "moreImages": "+{count} imagen(es)",
+      "imageAlt": "Imagen de la publicación {index}",
+      "imageCounter": "{current} / {total}",
+      "previousImage": "Imagen anterior",
+      "nextImage": "Imagen siguiente"
+    }
+  },
+  "comments": {
+    "compose": {
+      "postTitle": "Añadir un comentario",
+      "postHint": "Responde directamente a la publicación.",
+      "replyTitle": "Responder",
+      "replyHint": "Tu respuesta se añadirá inline dentro del hilo.",
+      "postPlaceholder": "Escribe tu comentario...",
+      "replyPlaceholder": "Escribe tu respuesta...",
+      "submit": "Enviar",
+      "submitting": "Enviando...",
+      "empty": "Escribe un mensaje antes de enviar.",
+      "submitFailed": "No es posible enviar este comentario ahora mismo.",
+      "success": "Comentario enviado."
+    },
+    "card": {
+      "reply": "Responder",
+      "replyCount": "{count} respuesta(s)",
+      "likeError": "No es posible actualizar el me gusta de este comentario."
+    }
+  },
+  "postDetail": {
+    "pageDescription": "Consulta la publicación completa y los comentarios relacionados.",
+    "commentsTitle": "Comentarios",
+    "commentsHint": "Ordena las respuestas directas según la señal más útil.",
+    "sortRecent": "Más recientes",
+    "sortPopular": "Más populares",
+    "commentsEmpty": "Todavía no hay comentarios."
+  },
+  "commentThread": {
+    "pageTitle": "Hilo de comentarios",
+    "pageDescription": "Contexto completo de la publicación y de la respuesta seleccionada.",
+    "postLabel": "Publicación principal",
+    "parentLabel": "Comentario padre",
+    "currentLabel": "Comentario actual",
+    "repliesTitle": "Respuestas",
+    "repliesHint": "Respuestas directas al comentario actual.",
+    "repliesEmpty": "Todavía no hay respuestas."
+  },
+  "profilePublic": {
+    "bioFallback": "Todavía no se ha añadido ninguna bio.",
+    "recentPostsTitle": "Publicaciones recientes",
+    "recentPostsEmpty": "Todavía no hay publicaciones públicas.",
+    "proBadge": "Pro",
+    "aiBadge": "IA"
   },
   "appShell": {
     "brandAlt": "Logo de Socially",

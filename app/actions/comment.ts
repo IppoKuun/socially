@@ -55,7 +55,7 @@ export default async function createComment(
 
   if (!mode) {
     console.error(" SERV ACTION COMMENT : LE MODE NAS PAS ETE DONNER ");
-    return { ok: false, userMsg: "Une erreur server s'est produit" };
+    return { ok: false, userMsg: t("unexpectedError") };
   }
 
   const targetPost = await myPrisma.post.findUnique({
@@ -68,7 +68,7 @@ export default async function createComment(
   if (!targetPost) {
     return {
       ok: false,
-      userMsg: "Le post principal n'est plus disponible.",
+      userMsg: t("postUnavailable"),
       postUnavailable: true,
     };
   }
@@ -79,7 +79,7 @@ export default async function createComment(
     if (!responseToCommentId) {
       return {
         ok: false,
-        userMsg: "Le commentaire auquel vous répondez n'existe plus.",
+        userMsg: t("replyTargetUnavailable"),
       };
     }
 
@@ -91,7 +91,7 @@ export default async function createComment(
     if (!commentParent) {
       return {
         ok: false,
-        userMsg: "Le commentaire auquel vous répondez n'existe plus.",
+        userMsg: t("replyTargetUnavailable"),
       };
     }
 

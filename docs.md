@@ -40,7 +40,6 @@ Cette V1 a un objectif d’entraînement à travailler de renforcer mes compéte
 - Fake News
 - Mute
 - Report utilisateur
-- Temps réel pour la messagerie
 - Typing indicator
 - Paiement réel, stripe en mode test.
 - Règles détaillées UI des commentaires imbriqués (prototype à finaliser séparément)
@@ -224,11 +223,11 @@ Objectif :
 - tri par dernier message desc
 - affichage dernier message + état lu/non lu
 - contenu d’une conversation : texte, image, partage de post
-- pas de temps réel
+- temps réel sur la liste des conversations et dans la conversation ouverte
 - pas d’indicateur “en train d’écrire”
 - pas de suppression de conversation en V1
 - pas de suppression de message en V1
-- 1 image max par message
+- Pas d'image par message
 - partage de post affiché sous forme de carte preview
 
 ### 5.5 Notifications `/notifications`
@@ -461,7 +460,6 @@ Quand un utilisateur bloque un autre utilisateur :
 
 - groupes
 - appels
-- temps réel
 - typing indicator
 - suppression de message
 - suppression de conversation

@@ -1,13 +1,15 @@
 "use server";
 import { Prisma } from "@prisma/client";
 import { getSession } from "@/lib/authSession";
+import { getTranslations } from "next-intl/server";
 import { myPrisma } from "@/lib/prisma";
 
 export default async function report(postId: string) {
+  const t = await getTranslations("post.actions.report");
   const session = await getSession();
 
   if (!session) {
-    return { ok: false, userMsg: "Vous n'etes pas connecté" };
+    return { ok: false, userMsg: t("authRequired") };
   }
 
   const user = await myPrisma.userProfile.findUnique({
@@ -17,7 +19,7 @@ export default async function report(postId: string) {
   if (!user) {
     return {
       ok: false,
-      userMsg: "Nous n'avons pas réussi a trouver votre profile",
+      userMsg: t("profileNotFound"),
     };
   }
 
@@ -25,7 +27,7 @@ export default async function report(postId: string) {
     where: { id: postId },
   });
   if (!post) {
-    return { ok: false, userMsg: "Impossible de trouver le post" };
+    return { ok: false, userMsg: t("postNotFound") };
   }
 
   try {
@@ -34,7 +36,7 @@ export default async function report(postId: string) {
     });
 
     if (!createReport) {
-      return { ok: false, userMsg: "Impossible de signaler le post" };
+      return { ok: false, userMsg: t("createFailed") };
     }
 
     return { ok: true, userMsg: "" };
@@ -47,11 +49,11 @@ export default async function report(postId: string) {
     ) {
       return {
         ok: false,
-        userMsg: "Vous avez déjà signalé ce post.",
+        userMsg: t("alreadyReported"),
       };
     }
 
     console.error(error);
-    return { ok: false, userMsg: "Impossible de signaler le post" };
+    return { ok: false, userMsg: t("createFailed") };
   }
 }
