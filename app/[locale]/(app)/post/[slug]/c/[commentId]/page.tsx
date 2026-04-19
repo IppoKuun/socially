@@ -11,6 +11,8 @@ import { makeQueryClient } from "@/lib/query-client";
 export default async function CommentThreadPage({
   params,
 }: PageProps<"/[locale]/post/[slug]/c/[commentId]">) {
+  // Ont type avec l'URL de la page //
+
   const { commentId, slug } = await params;
   const t = await getTranslations("commentThread");
   const queryClient = makeQueryClient();
@@ -20,9 +22,9 @@ export default async function CommentThreadPage({
     queryFn: () => readCommentThread({ slug, commentId }),
   });
 
-  const thread = queryClient.getQueryData<Awaited<ReturnType<typeof readCommentThread>>>(
-    feedQueryKeys.commentThread(slug, commentId),
-  );
+  const thread = queryClient.getQueryData<
+    Awaited<ReturnType<typeof readCommentThread>>
+  >(feedQueryKeys.commentThread(slug, commentId));
 
   if (!thread) {
     notFound();

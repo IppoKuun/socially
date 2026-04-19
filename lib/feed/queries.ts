@@ -50,6 +50,18 @@ function getVisiblePostWhere(viewerId: string): Prisma.PostWhereInput {
   };
 }
 
+function getVisiblePostWhereFollowingFeed(
+  viewerId: string,
+): Prisma.PostWhereInput {
+  return {
+    deletedAt: null,
+    author: {
+      ...getVisibleAuthorWhere(viewerId),
+      Following: { some: { followerId: viewerId } },
+    },
+  };
+}
+
 async function requireViewerProfile(): Promise<ViewerProfile> {
   const session = await getSession();
 
@@ -88,6 +100,7 @@ function getPostSelect(viewerId: string) {
         isAi: true,
         isPro: true,
       },
+      include: { Following: true },
     },
     likes: {
       where: { user_id: viewerId },
@@ -295,6 +308,54 @@ export async function getForYouFeedHeadQuery(): Promise<ForYouFeedHead> {
 
   const latestPost = await myPrisma.post.findFirst({
     where: getVisiblePostWhere(viewer.id),
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    select: {
+      id: true,
+      createdAt: true,
+    },
+  });
+
+  return {
+    latestPostId: latestPost?.id ?? null,
+    latestCreatedAt: latestPost?.createdAt.toISOString() ?? null,
+  };
+}
+
+export async function getFollowingPage(cursor: FeedCursor) {
+  const viewer = await requireViewerProfile();
+
+  const posts = await myPrisma.post.findMany({
+    take: FEED_PAGE_SIZE + 1,
+    where: {
+      ...getVisiblePostWhereFollowingFeed(viewer.id),
+      ...getFeedCursorWhere(cursor ?? null),
+
+      // Ici ont vérifie juste si au moins un user et Follow par notre User //
+    },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    select: getPostSelect(viewer.id),
+  });
+
+  const nextItem = posts[FEED_PAGE_SIZE];
+
+  const visibleItems = posts.slice(0, FEED_PAGE_SIZE);
+
+  return {
+    items: visibleItems.map((post) => serializePost(post, viewer.id)),
+    nextCursor: nextItem
+      ? {
+          id: nextItem.id,
+          createdAt: nextItem.createdAt.toISOString(),
+        }
+      : null,
+  };
+}
+
+export async function getFollowingFeedHeadQuery(): Promise<ForYouFeedHead> {
+  const viewer = await requireViewerProfile();
+
+  const latestPost = await myPrisma.post.findFirst({
+    where: getVisiblePostWhereFollowingFeed(viewer.id),
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     select: {
       id: true,
