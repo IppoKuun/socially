@@ -1,4 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
+import { myError } from "./myError";
+import { consoleLoggingIntegration } from "@sentry/nextjs";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -24,4 +26,16 @@ export async function uploadCloudinary(file: File): Promise<CloudinaryResult> {
       })
       .end(buffer);
   });
+}
+
+export default async function deleteCloudinary(imagesId: string[]) {
+  const result = await Promise.all(
+    imagesId.map((id) =>
+      cloudinary.uploader.destroy(id, { resource_type: "image" }),
+    ),
+  );
+
+  if (!result) {
+    throw new myError("Impossible supprimé cloudinary");
+  }
 }

@@ -1,0 +1,59 @@
+"use server";
+import { Prisma } from "@prisma/client";
+import { getSession } from "@/lib/authSession";
+import { getTranslations } from "next-intl/server";
+import { myPrisma } from "@/lib/prisma";
+
+export default async function report(postId: string) {
+  const t = await getTranslations("post.actions.report");
+  const session = await getSession();
+
+  if (!session) {
+    return { ok: false, userMsg: t("authRequired") };
+  }
+
+  const user = await myPrisma.userProfile.findUnique({
+    where: { userId: session.user.id },
+  });
+
+  if (!user) {
+    return {
+      ok: false,
+      userMsg: t("profileNotFound"),
+    };
+  }
+
+  const post = await myPrisma.post.findUnique({
+    where: { id: postId },
+  });
+  if (!post) {
+    return { ok: false, userMsg: t("postNotFound") };
+  }
+
+  try {
+    const createReport = await myPrisma.report.create({
+      data: { reporterId: user.id, postId },
+    });
+
+    if (!createReport) {
+      return { ok: false, userMsg: t("createFailed") };
+    }
+
+    return { ok: true, userMsg: "" };
+  } catch (error) {
+    if (
+      // Si user essaie de briser le contrat d'unicité
+      // User qui report ne peut pas reporte plusieurs fois le meme post//
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return {
+        ok: false,
+        userMsg: t("alreadyReported"),
+      };
+    }
+
+    console.error(error);
+    return { ok: false, userMsg: t("createFailed") };
+  }
+}

@@ -127,6 +127,8 @@ model UserProfile {
   blocked Block[] @relation("blocked")
   blocker Block[] @relation("Blocker")
 
+  report Report[]
+
   userMessage         Message[] @relation("Sender")
   userReceivedMessage Message[] @relation("Receiver")
 
@@ -165,32 +167,45 @@ model Post {
   content   String?
   slug      String @unique  
   imagesUrl    String[]
+  imagesPublicId String[]
   createdAt DateTime  @default(now())
   deletedAt DateTime?
   categories Category[] @default([]) @map("Category")
 
   moderationStatus ModerationStatus
-  isAi             Boolean          @default(false)
   comment          Comment[]
   likes            PostLike[]
   notif            Notifications[]
   postShared       Message[]
+  reported         Report[]
   userId           String
   author           UserProfile      @relation(fields: [userId], references: [id])
 
   @@schema("app")
 }
 
+model Report {
+  id        String    @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  postId      String
+  post        Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  reporterId  String
+  reporter    UserProfile         @relation(fields: [reporterId], references: [id])
+
+  @@unique([reporterId, postId])
+  @@schema("app")
+}
+
 model Comment {
   id               String           @id @default(cuid())
   content          String
-  images           String[]
   createdAt        DateTime         @default(now())
   deletedAt        DateTime?
   moderationStatus ModerationStatus
-  isAi             Boolean          @default(false)
 
-  // A quel post/comment le comment est dédiée //
+  // A quel comment le comment est dédiée //
   responseToCommentId String?
   responseToComment   Comment? @relation("CommentReplies", fields: [responseToCommentId], references: [id])
 

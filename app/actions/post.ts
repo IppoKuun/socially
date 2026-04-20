@@ -102,7 +102,7 @@ export default async function createPost(
     );
 
     if (!result) {
-      console.error("Impossible de supprimé images après rejets d'IA");
+      console.error("Impossible de supprimé images après ZOD");
     }
     return { ok: false, errors: parsed.error.flatten().fieldErrors };
   }

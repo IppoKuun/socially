@@ -242,6 +242,45 @@
   transform: translateY(-2px);
 }
 
+@keyframes premium-card-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.feed-button {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: full;
+  height: full;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.feed-button:hover {
+  background-color: var(--primary-alpha);
+}
+
+.premium-card-frame {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 213, 107, 0.72) 0%,
+    rgba(255, 255, 255, 0.18) 26%,
+    rgba(97, 163, 255, 0.4) 52%,
+    rgba(255, 213, 107, 0.68) 76%,
+    rgba(255, 255, 255, 0.16) 100%
+  );
+  background-size: 220% 220%;
+  animation: premium-card-shift 10s linear infinite;
+}
+
 /* Champ de formulaire principal.
    Peut servir pour input, textarea, search bar ou faux champ interactif. */
 .input-field {

@@ -1,15 +1,15 @@
 ---
 name: task-brief
-description: Use this skill only when the user explicitly asks for help preparing an implementation brief before starting a coding task. Use it to help the user fill a structured task template by asking targeted questions, proposing options, clarifying scope, and producing a ready-to-copy brief. Do not use it for direct implementation, PR review, or debugging.
+description: Use this skill only when the user explicitly asks for help preparing an implementation brief before starting a coding task with a AI coding agent. Use it to help the user fill a structured task template by asking targeted questions, proposing options, clarifying scope, and producing a ready-to-copy brief. Do not use it for direct implementation, PR review, or debugging.
 ---
 
 # Task Brief
 
 ## Purpose
 
-This skill is for preparing a strong implementation brief before coding starts.
+This skill is for preparing a strong implementation brief before coding starts with a AI coding agents.
 
-The goal is to help the user turn an initial idea into a clear, constrained, ready-to-use task template for a separate implementation conversation.
+The goal is to help the user turn an initial idea into a clear, constrained, ready-to-use task template for a separate implementation conversation where AI will use the template for a big changes.
 
 This skill helps the user think better.
 It does not replace the implementation step.
@@ -64,13 +64,6 @@ Therefore:
 - do not ask endless open-ended questions
 - ask the minimum useful questions to remove ambiguity
 - when helpful, propose 2 or 3 concrete options with tradeoffs
-
-If the user already gave enough information for some fields:
-
-- draft those fields directly
-- only question the missing or risky parts
-
----
 
 ## Brief template target
 
@@ -155,6 +148,9 @@ That final brief should:
 - be suitable for a new implementation conversation
 - make it easy for the implementation agent to explain the created files afterward in a logical study order when relevant
 - remind the implementation agent to prefer the simplest understandable solution when the user did not ask for a broader architecture
+- one the draft/template we should ask to make "npm run build" at the end so IA can see if implementation are all OK or not.
+- If not, if npm run build or other test failed. If its a minor issues, IA should fix its, but otherwise, AI should tel, where it failed,
+  Why, and why can the User do, and propose if AI should do it itself.
 
 When assumptions are still necessary:
 

@@ -55,7 +55,7 @@ export default async function AuthenticatedAppLayout({
           </div>
         </div>
 
-        <MobileBottomBar />
+        <MobileBottomBar username={navigationUser.username} />
       </SidebarInset>
     </SidebarProvider>
   );
