@@ -252,6 +252,22 @@
   }
 }
 
+.feed-button {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: full;
+  height: full;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.feed-button:hover {
+  background-color: var(--primary-alpha);
+}
+
 .premium-card-frame {
   background: linear-gradient(
     135deg,

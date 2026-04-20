@@ -100,7 +100,6 @@ function getPostSelect(viewerId: string) {
         isAi: true,
         isPro: true,
       },
-      include: { Following: true },
     },
     likes: {
       where: { user_id: viewerId },

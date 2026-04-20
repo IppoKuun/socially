@@ -259,6 +259,12 @@
       "loadingMore": "Chargement...",
       "newPostsBadge": "Des nouveaux posts sont dispo"
     },
+    "Following": {
+      "empty": "Aucun post d'abonnement n'est disponible pour le moment.",
+      "loadMore": "Charger plus",
+      "loadingMore": "Chargement...",
+      "newPostsBadge": "De nouveaux posts d'abonnement sont dispo"
+    },
     "postCard": {
       "aiBadge": "IA",
       "aiTooltip": "Ce contenu a été généré par IA",

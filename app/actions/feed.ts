@@ -7,6 +7,8 @@ import {
   getForYouFeedPageQuery,
   getPostCommentsQuery,
   getPostDetailQuery,
+  getFollowingPage,
+  getFollowingFeedHeadQuery,
 } from "@/lib/feed/queries";
 import type { CommentSort, FeedCursor } from "@/lib/feed/shared";
 
@@ -15,6 +17,14 @@ export async function readForYouFeedPage(input?: {
   limit?: number;
 }) {
   return getForYouFeedPageQuery(input);
+}
+
+export async function readForFollowingPage(cursor: FeedCursor) {
+  return getFollowingPage(cursor);
+}
+
+export async function readFollowingHead() {
+  return getFollowingFeedHeadQuery();
 }
 
 export async function readForYouFeedHead() {

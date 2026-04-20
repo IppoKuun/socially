@@ -1,9 +1,7 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getTranslations } from "next-intl/server";
-//app/locale/(app)/post./layouts.tsx//
 
-import { readForYouFeedHead, readForYouFeedPage } from "@/app/actions/feed";
-import ForYouFeedClient from "@/components/feed/for-you-feed-client";
+import { readForYouFeedPage } from "@/app/actions/feed";
 import QueryProvider from "@/components/providers/query-provider";
 import { feedQueryKeys } from "@/lib/feed/query-keys";
 import {
@@ -14,6 +12,7 @@ import {
 import { makeQueryClient } from "@/lib/query-client";
 import AppPageShell from "../_components/app-page-shell";
 import CreatePostComposer from "./_components/CreatePostComposer";
+import FeedTabClient from "./_components/feedTabClient";
 
 export default async function FeedPage() {
   const t = await getTranslations("appShell.pages.feed");
@@ -48,8 +47,8 @@ export default async function FeedPage() {
          le convertis de cette maniere en JSON
          */}
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <div className="space-y-6">
-            <ForYouFeedClient />
+          <div className="flex flex-col items-center justify-center">
+            <FeedTabClient />
             <CreatePostComposer />
           </div>
         </HydrationBoundary>

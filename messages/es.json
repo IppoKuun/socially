@@ -259,6 +259,12 @@
       "loadingMore": "Cargando...",
       "newPostsBadge": "Hay nuevas publicaciones disponibles"
     },
+    "Following": {
+      "empty": "No hay publicaciones de suscripciones disponibles por ahora.",
+      "loadMore": "Cargar más",
+      "loadingMore": "Cargando...",
+      "newPostsBadge": "Hay nuevas publicaciones de suscripciones disponibles"
+    },
     "postCard": {
       "aiBadge": "IA",
       "aiTooltip": "Este contenido ha sido generado por IA",
