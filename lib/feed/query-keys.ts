@@ -7,12 +7,12 @@ export const feedQueryKeys = {
   FollowingInfiniteBase: () => ["feed", "following", "infinite"] as const,
   FollowingInfinite: (version = 0) =>
     [...feedQueryKeys.FollowingInfiniteBase(), version] as const,
-  forYouHeadBase: () => ["feed", "following", "head"] as const,
+  forYouHeadBase: () => ["feed", "for-you", "head"] as const,
   forYouHead: (version = 0) =>
     [...feedQueryKeys.forYouHeadBase(), version] as const,
   FollowingHeadBase: () => ["feed", "following", "head"] as const,
   FollowingHead: (version = 0) =>
-    [...feedQueryKeys.forYouHeadBase(), version] as const,
+    [...feedQueryKeys.FollowingHeadBase(), version] as const,
   postDetail: (slug: string) => ["post", slug, "detail"] as const,
   postComments: (slug: string, sort: CommentSort) =>
     ["post", slug, "comments", sort] as const,

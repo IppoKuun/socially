@@ -74,7 +74,13 @@ export default function PostActions({
         queryKey: feedQueryKeys.forYouInfiniteBase(),
       }),
       queryClient.invalidateQueries({
+        queryKey: feedQueryKeys.FollowingInfiniteBase(),
+      }),
+      queryClient.invalidateQueries({
         queryKey: feedQueryKeys.forYouHeadBase(),
+      }),
+      queryClient.invalidateQueries({
+        queryKey: feedQueryKeys.FollowingHeadBase(),
       }),
       queryClient.invalidateQueries({
         queryKey: ["post", post.slug],
