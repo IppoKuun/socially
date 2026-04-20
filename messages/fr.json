@@ -358,8 +358,8 @@
     },
     "pages": {
       "feed": {
-        "title": "Home Feed",
-        "description": "Discover what's happening in your network."
+        "title": "Feed Acceuil",
+        "description": "Découvre ce qui se passe dans ton Feed."
       },
       "discover": {
         "title": "Discover",
