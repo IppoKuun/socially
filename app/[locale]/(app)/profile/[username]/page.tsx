@@ -46,6 +46,7 @@ export default async function PublicProfilePage({
       },
     },
     select: {
+      id: true,
       avatarUrl: true,
       bio: true,
       displayname: true,
@@ -74,13 +75,15 @@ export default async function PublicProfilePage({
 
   return (
     <>
-      <Link
-        href="/settings"
-        aria-label={tNav("settings")}
-        className="fixed right-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[rgba(18,21,28,0.88)] text-white/78 shadow-[0_18px_40px_-22px_rgba(0,0,0,0.95)] backdrop-blur-xl transition hover:bg-white/[0.08] hover:text-white md:hidden"
-      >
-        <Settings className="h-5 w-5" />
-      </Link>
+      {viewer.id === profile.id && (
+        <Link
+          href="/settings"
+          aria-label={tNav("settings")}
+          className="fixed right-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[rgba(18,21,28,0.88)] text-white/78 shadow-[0_18px_40px_-22px_rgba(0,0,0,0.95)] backdrop-blur-xl transition hover:bg-white/[0.08] hover:text-white md:hidden"
+        >
+          <Settings className="h-5 w-5" />
+        </Link>
+      )}
 
       <AppPageShell
         title={profile.displayname}
@@ -124,7 +127,9 @@ export default async function PublicProfilePage({
                 ) : null}
               </div>
 
-              <p className="truncate text-sm text-white/45">@{profile.username}</p>
+              <p className="truncate text-sm text-white/45">
+                @{profile.username}
+              </p>
               <p className="max-w-2xl text-sm leading-7 text-white/58">
                 {profile.bio?.trim() || t("bioFallback")}
               </p>

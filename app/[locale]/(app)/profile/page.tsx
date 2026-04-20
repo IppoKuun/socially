@@ -7,7 +7,7 @@ export default async function ProfilePage() {
   const locale = await getLocale();
   const session = await getSession();
   const userProfile = session;
-  await myPrisma.userProfile.findUnique({
+  const username = await myPrisma.userProfile.findUnique({
     where: { userId: session?.user.id },
     select: {
       username: true,
@@ -22,7 +22,7 @@ export default async function ProfilePage() {
   }
 
   redirect({
-    href: `/profile/${userProfile}`,
+    href: `/profile/${username?.username}`,
     locale,
   });
 }
