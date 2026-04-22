@@ -1,6 +1,29 @@
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 
+export type ProfileData = {
+  id: string;
+  avatarUrl: string | null;
+  bio: string | null;
+  displayname: string;
+  username: string | null;
+  isAi: boolean;
+  isPro: boolean;
+  _count: {
+    post: number;
+    relationWhereUserIsFollowed: number;
+    relationWhereUserIsFollower: number;
+    userComment: number;
+    likes: number;
+  };
+  post: {
+    id: string;
+    slug: string;
+    title: string;
+    createdAt: Date;
+  }[];
+};
+
 export default async function getProfilePage(username: string) {
   const session = await getSession();
 
@@ -53,7 +76,6 @@ export default async function getProfilePage(username: string) {
         where: {
           deletedAt: null,
         },
-        orderBy: [{ createdAt: "desc" }],
         take: 3,
         select: {
           id: true,
@@ -66,11 +88,11 @@ export default async function getProfilePage(username: string) {
   });
 
   if (!profile) {
-    return { ok: false, userMsg: "Profile non trouvé" };
+    return { ok: false };
   }
 
   const isOwner = viewerId ? viewerId === profile.id : false;
   const isAuthentificated = viewerId ? true : false;
 
-  return { ok: true, isOwner, isAuthentificated };
+  return { ok: true, isOwner, isAuthentificated, profile };
 }
