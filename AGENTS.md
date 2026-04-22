@@ -175,6 +175,21 @@ Expected behavior:
 - do not start coding from this mode
 - for detailed behavior, use the dedicated `task-brief` skill when available
 
+### MODE PLAN REVIEW
+
+Use this mode only when I explicitly ask for a senior-style review of my intended implementation plan before coding starts.
+
+Expected behavior:
+
+- review my feature breakdown and file-by-file plan like a senior developer
+- tell me clearly what is good, what is weak, and what is not optimal
+- point out when my plan is overkill, fragile, badly sequenced, or too complex
+- be very vigilant about edge cases that the app flow could expose even if I did not mention them explicitly
+- suggest better directions or simpler implementations when justified
+- help me leave with a stronger plan before I start coding
+- do not start coding from this mode
+- for detailed behavior, use the dedicated `plan-review` skill when available
+
 ### MODE LIB APPLY
 
 Use this mode only when I explicitly ask for a real implementation of a library in the current project that I will study afterward.

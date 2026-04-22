@@ -121,8 +121,10 @@ model UserProfile {
   TriggeredNotifications Notifications[] @relation("TriggeredNotifications")
   ReceiverNotifications  Notifications[] @relation("ReceiverNotifications")
 
-  Following Follow[] @relation("Following")
-  followers Follow[] @relation("Follower")
+  relationWhereUserIsFollowed  Follow[] @relation("FollowedProfile") // Profils des utilisateurs qui suivent User //
+  relationWhereUserIsFollower Follow[] @relation("FollowerProfile") // Profils des utilisateurs suivie par User //
+
+
 
   blocked Block[] @relation("blocked")
   blocker Block[] @relation("Blocker")
@@ -258,15 +260,15 @@ model Follow {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
-  // Following et Follower pour bien faire la difference entre les 2//
 
-  FollowingId String
-  Following   UserProfile @relation("Following", fields: [FollowingId], references: [id])
+  followedProfileId String
+  followedProfile   UserProfile @relation("FollowedProfile", fields: [followedProfileId], references: [id])
 
-  followerId String
-  follower   UserProfile @relation("Follower", fields: [followerId], references: [id])
+  followerProfileId String
+  followerProfile   UserProfile @relation("FollowerProfile", fields: [followerProfileId], references: [id])
 
-  @@unique([FollowingId, followerId])
+  @@unique([followedProfileId, followerProfileId])
+
   @@schema("app")
 }
 
