@@ -265,17 +265,72 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
                 <Button
                   type="button"
                   onClick={() => avatarInputRef.current?.click()}
+                  disabled={isPending}
+                  className={cn(
+                    "",
+                    avatarError
+                      ? "border-destructive/70 focus:border-destructive/70"
+                      : "border-white/10 focus:border-primary/60",
+                  )}
                 >
                   Changez votre photo de profil
                 </Button>
                 <input
                   ref={avatarInputRef}
+                  name="avatar"
                   type="file"
                   accept={PROFILE_ACCEPTED_IMAGE_TYPES.join(",")}
-                  onChange={handleChangeImage}
+                  onChange={(e) => {
+                    handleChangeImage(e);
+                    clearServerState();
+
+                    setLocalError((current) => ({
+                      ...current,
+                      avatar: undefined,
+                    }));
+                  }}
                   className="hidden"
+                  disabled={isPending}
+                ></input>
+                {avatarError && (
+                  <p className="text-sm text-destructive">{avatarError}</p>
+                )}
+              </div>
+              <div className="">
+                <label htmlFor="displayname">Nom dutilsateur</label>
+                <input
+                  id="displayname"
+                  name="displayname"
+                  onChange={(e) => {
+                    setDisplayName(e.target.value);
+                    clearServerState();
+                    setLocalError((current) => ({
+                      ...current,
+                      displayname: undefined,
+                    }));
+                  }}
+                  className=""
                 ></input>
               </div>
+              <div className="">
+                <label htmlFor="bio">Biographie</label>
+                <input
+                  id="bio"
+                  name="bio"
+                  onChange={(e) => {
+                    setBio(e.target.value);
+                    clearServerState();
+                    setLocalError((current) => ({
+                      ...current,
+                      bio: undefined,
+                    }));
+                  }}
+                  className="" // CLASSNAME A CHANGER POUR QUE SI ERR, CLASSNAME DIFF //
+                ></input>
+              </div>
+              <Button type="submit" size="lg" disabled={isPending}>
+                {isPending ? "Enregistrement en cours" : "Enregistré"}
+              </Button>
             </div>
           </form>
         </DialogContent>
