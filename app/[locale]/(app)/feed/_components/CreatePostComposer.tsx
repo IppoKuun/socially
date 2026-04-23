@@ -57,9 +57,9 @@ type LocalErrors = {
   images?: string;
 };
 
-const INITIAL_ACTION_STATE = {
+export const INITIAL_ACTION_STATE = {
   ok: false,
-  userMsg: null,
+  userMsg: "",
 };
 
 const EMPTY_SERVER_STATE: CreatePostResult = {

@@ -4,13 +4,15 @@ import { Settings } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ProfileProps } from "../[username]/page";
 
-export default function ProfileHeader({ isOwner }: ProfileProps) {
+import ModifyProfilDialog from "./ModifyProfilDialog";
+
+export default function ProfileHeader({ isOwner, profile }: ProfileProps) {
   const t = useTranslations("profilePublic");
 
   const tNav = useTranslations("appShell.navigation");
 
   return (
-    <>
+    <main className="relative">
       {isOwner && (
         <Link
           href="/settings"
@@ -20,6 +22,7 @@ export default function ProfileHeader({ isOwner }: ProfileProps) {
           <Settings className="h-5 w-5" />
         </Link>
       )}
-    </>
+      <ModifyProfilDialog profile={profile} />
+    </main>
   );
 }
