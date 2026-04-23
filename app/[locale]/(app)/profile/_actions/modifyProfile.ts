@@ -25,7 +25,7 @@ export default async function modifyProfil(
   }
   const user = await myPrisma.userProfile.findUnique({
     where: { userId: session.user.id },
-    select: { id: true },
+    select: { id: true, avatarPublicId: true },
   });
   if (!user) {
     return { ok: false, userMsg: t("profileNotFound") };
@@ -54,12 +54,15 @@ export default async function modifyProfil(
     };
   }
   const raw = Object.fromEntries(FormData);
+  const avatar = FormData.get("avatar");
+  const hasNewAvatar = avatar instanceof File && avatar.size > 0;
 
   let finalAvatarUrl: string | null = null;
   let finalAvatarPublicId: string | null = null;
 
-  if (raw.avatar) {
-    const avatar = FormData.get("avatar") as File;
+  const previousAvatarPublicId = user.avatarPublicId;
+
+  if (hasNewAvatar) {
     const avatarValidation = uploadProfilImage.safeParse(
       { image: avatar },
       { error: errorMap },
@@ -106,13 +109,27 @@ export default async function modifyProfil(
         where: { id: session.user.id },
         data: {
           name: parsed.data.displayname || undefined,
-          image: raw.avatar ? parsed.data.avatarUrl : undefined,
+          image: hasNewAvatar ? parsed.data.avatarUrl : undefined,
         },
       });
     });
+
+    if (
+      hasNewAvatar &&
+      previousAvatarPublicId &&
+      previousAvatarPublicId !== finalAvatarPublicId
+    ) {
+      const deletePreviousAvatar = await deleteCloudinary([
+        previousAvatarPublicId,
+      ]);
+
+      if (!deletePreviousAvatar) {
+        console.error("Impossible de supprimé l'ancien avatar Cloudinary");
+      }
+    }
   } catch (error) {
     console.error(`Impossible de modifié profile : ${error}`);
-    if (raw.avatar) {
+    if (hasNewAvatar) {
       const deleteAvatar = await deleteCloudinary([finalAvatarPublicId!]);
 
       if (!deleteAvatar) {

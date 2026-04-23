@@ -1,27 +1,23 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Dialog } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import {
-  POST_ACCEPTED_IMAGE_TYPES,
-  POST_IMAGE_MAX_SIZE,
-} from "@/lib/validations.ts/post";
+
 import {
   PROFILE_ACCEPTED_IMAGE_TYPES,
   PROFILE_AVATAR_MAX_SIZE,
   PROFILE_BIO_MAX,
+  PROFILE_DISPLAYNAME_MAX,
   PROFILE_DISPLAYNAME_MIN,
-  PROFILE_USERNAME_MAX,
 } from "@/lib/validations.ts/profile";
 import { errors } from "@upstash/redis";
 import { useTranslations } from "next-intl";
-import { useState, useTransition, useMemo, useRef, useEffect } from "react";
+import { useState, useTransition, useMemo, useRef } from "react";
 import z from "zod";
 import modifyProfil from "../_actions/modifyProfile";
-import { INITIAL_ACTION_STATE } from "../../feed/_components/CreatePostComposer";
 import { useRouter } from "next/navigation";
 import { ProfileData } from "../_actions/getProfile";
-import { FieldError } from "@/components/ui/field";
 import Image from "next/image";
 import { User2Icon } from "lucide-react";
 
@@ -31,15 +27,21 @@ type LocalErrors = {
   avatar?: string;
 };
 
+const EMPTY_SERVER_STATE = {
+  ok: false,
+  userMsg: "",
+  errors: undefined,
+};
+
 type ServerFieldErrors = {
   displayname?: string[];
   bio?: string[];
-  avatarUrl?: string[];
+  image?: string[];
 };
 type ServerState = {
   ok?: boolean;
   userMsg?: string;
-  errors?: ServerFieldErrors;
+  errors?: string[] | ServerFieldErrors;
 };
 
 type ProfilProps = {
@@ -47,7 +49,7 @@ type ProfilProps = {
 };
 
 export default function ModifyProfilDialog({ profile }: ProfilProps) {
-  const t = useTranslations("post.compose");
+  const t = useTranslations("modifyProfile.compose");
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -70,7 +72,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
           .string()
           .trim()
           .min(PROFILE_DISPLAYNAME_MIN)
-          .max(PROFILE_USERNAME_MAX),
+          .max(PROFILE_DISPLAYNAME_MAX),
 
         bio: z.string().trim().max(PROFILE_BIO_MAX),
 
@@ -79,16 +81,17 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
           .refine(
             (file) =>
               PROFILE_ACCEPTED_IMAGE_TYPES.includes(
-                file.type as (typeof POST_ACCEPTED_IMAGE_TYPES)[number],
+                file.type as (typeof PROFILE_ACCEPTED_IMAGE_TYPES)[number],
               ),
             "Mauvais image type",
           )
           .refine(
-            (file) => file.size <= POST_IMAGE_MAX_SIZE,
+            (file) => file.size <= PROFILE_AVATAR_MAX_SIZE,
             t("Votre fichier est trop gros", {
               max: PROFILE_AVATAR_MAX_SIZE / 1000000,
             }),
-          ),
+          )
+          .optional(),
       }),
     [t],
   );
@@ -100,14 +103,14 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
     setBio("");
     setAvatarPreviewUrl("");
     setLocalError({});
-    setServerState(INITIAL_ACTION_STATE);
+    setServerState(EMPTY_SERVER_STATE);
   };
 
   const validateDraft = () => {
     const payload = profileValidationSchema.safeParse({
       displayname,
       bio,
-      avatarFile,
+      avatar: avatarFile,
     });
 
     if (payload.success) {
@@ -123,7 +126,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
     };
   };
   const clearServerState = () => {
-    setServerState(INITIAL_ACTION_STATE);
+    setServerState(EMPTY_SERVER_STATE);
   };
 
   const handleDialogOpenChange = (open: boolean) => {
@@ -161,16 +164,16 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
     const localError = validateDraft();
     setLocalError(localError);
 
-    if (localError) {
+    if (Object.values(localError).some(Boolean)) {
       return;
     }
 
     const formData = new FormData();
 
     formData.append("displayname", displayname.trim());
-    if (bio) {
-      formData.append("bio", bio.trim());
-    }
+    
+      formData.append("bio", bio?.trim() ?? "");
+    
 
     if (avatarFile) {
       formData.append("avatar", avatarFile);
@@ -178,7 +181,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
 
     startTransition(async () => {
       try {
-        const result = await modifyProfil(INITIAL_ACTION_STATE, formData);
+        const result = await modifyProfil(EMPTY_SERVER_STATE, formData);
         if (result.ok) {
           resetComposer();
           setOpen(false);
@@ -186,7 +189,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
           return;
         }
 
-        setServerState(INITIAL_ACTION_STATE);
+        setServerState(result);
       } catch {
         setServerState({
           ok: false,
@@ -195,13 +198,21 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
       }
     });
   }
+  //??//
+  const rawErrors = serverState.errors || serverState.ok === false;
 
-  const fieldErrors = serverState.errors;
+  const fieldErrors =
+    rawErrors && !Array.isArray(rawErrors) ? rawErrors : undefined;
 
-  const haveError = localError || fieldErrors;
-  const displaynameError = localError.displayname ?? fieldErrors?.displayname;
-  const bioError = localError.bio ?? fieldErrors?.bio;
-  const avatarError = localError.avatar ?? fieldErrors?.avatarUrl;
+  const avatarServerError =
+    rawErrors && Array.isArray(rawErrors)
+      ? rawErrors[0]
+      : rawErrors?.image?.[0];
+
+  const displaynameError =
+    localError.displayname ?? fieldErrors?.displayname?.[0];
+  const bioError = localError.bio ?? fieldErrors?.bio?.[0];
+  const avatarError = localError.avatar ?? avatarServerError;
 
   return (
     <>
@@ -218,7 +229,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
         <DialogContent
           className={cn(
             "w-full max-h-min overflow-hidden ",
-            haveError && "border-destructive/70 ring-2 ring-destructive/35",
+            rawErrors && "border-destructive/70 ring-2 ring-destructive/35",
           )}
           onEscapeKeyDown={(event) => {
             if (isPending) {
@@ -243,7 +254,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
             onSubmit={(e) => handleSubmit(e)}
             className="flex flex-col overflow-hidden"
           >
-            {haveError && (
+            {rawErrors ||  && (
               <div className="rounded-2xl border px-4 py-3 text-sm border-destructive/40 bg-destructive/10 text-destructive">
                 <p className="">{serverState.userMsg || "Erreur serveur"}</p>
               </div>
@@ -299,6 +310,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
               <div className="">
                 <label htmlFor="displayname">Nom dutilsateur</label>
                 <input
+                  defaultValue={displayname}
                   id="displayname"
                   name="displayname"
                   onChange={(e) => {
@@ -315,6 +327,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
               <div className="">
                 <label htmlFor="bio">Biographie</label>
                 <input
+                  defaultValue={bio ?? ""}
                   id="bio"
                   name="bio"
                   onChange={(e) => {
