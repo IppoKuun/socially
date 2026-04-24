@@ -341,7 +341,30 @@
     "recentPostsTitle": "Recent posts",
     "recentPostsEmpty": "No public posts yet.",
     "proBadge": "Pro",
-    "aiBadge": "AI"
+    "aiBadge": "AI",
+    "ownerLabel": "Your profile",
+    "profileLabel": "Public profile",
+    "avatarAlt": "{name}'s profile photo",
+    "avatarFallback": "Profile avatar",
+    "actions": {
+      "follow": "Follow",
+      "following": "Following",
+      "message": "Message",
+      "followError": "Unable to update the follow state."
+    },
+    "stats": {
+      "posts": "Posts",
+      "followers": "Followers",
+      "following": "Following"
+    }
+  },
+  "modifyProfile": {
+    "compose": {
+      "Votre fichier est trop gros": "Your file is too large. Maximum size: {max} MB.",
+      "errors": {
+        "submitFailed": "Unable to update your profile. Please try again."
+      }
+    }
   },
   "appShell": {
     "brandAlt": "Socially logo",

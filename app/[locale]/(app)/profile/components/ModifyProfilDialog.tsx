@@ -11,7 +11,6 @@ import {
   PROFILE_DISPLAYNAME_MAX,
   PROFILE_DISPLAYNAME_MIN,
 } from "@/lib/validations.ts/profile";
-import { errors } from "@upstash/redis";
 import { useTranslations } from "next-intl";
 import { useState, useTransition, useMemo, useRef } from "react";
 import z from "zod";
@@ -37,6 +36,7 @@ type ServerFieldErrors = {
   displayname?: string[];
   bio?: string[];
   image?: string[];
+  avatarUrl?: string[];
 };
 type ServerState = {
   ok?: boolean;
@@ -98,12 +98,17 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
   const resetComposer = () => {
     if (objectUrlRef.current) {
       URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
     }
-    setDisplayName("");
-    setBio("");
-    setAvatarPreviewUrl("");
+    setDisplayName(profile.displayname);
+    setBio(profile.bio);
+    setAvatarPreviewUrl(profile.avatarUrl);
     setLocalError({});
     setServerState(EMPTY_SERVER_STATE);
+    setAvatarFile(null);
+    if (avatarInputRef.current) {
+      avatarInputRef.current.value = "";
+    }
   };
 
   const validateDraft = () => {
@@ -171,9 +176,8 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
     const formData = new FormData();
 
     formData.append("displayname", displayname.trim());
-    
-      formData.append("bio", bio?.trim() ?? "");
-    
+
+    formData.append("bio", bio?.trim() ?? "");
 
     if (avatarFile) {
       formData.append("avatar", avatarFile);
@@ -199,7 +203,8 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
     });
   }
   //??//
-  const rawErrors = serverState.errors || serverState.ok === false;
+  const rawErrors = serverState.errors;
+  const hasServerError = Boolean(serverState.userMsg || rawErrors);
 
   const fieldErrors =
     rawErrors && !Array.isArray(rawErrors) ? rawErrors : undefined;
@@ -207,7 +212,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
   const avatarServerError =
     rawErrors && Array.isArray(rawErrors)
       ? rawErrors[0]
-      : rawErrors?.image?.[0];
+      : (rawErrors?.image?.[0] ?? rawErrors?.avatarUrl?.[0]);
 
   const displaynameError =
     localError.displayname ?? fieldErrors?.displayname?.[0];
@@ -254,7 +259,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
             onSubmit={(e) => handleSubmit(e)}
             className="flex flex-col overflow-hidden"
           >
-            {rawErrors ||  && (
+            {hasServerError && (
               <div className="rounded-2xl border px-4 py-3 text-sm border-destructive/40 bg-destructive/10 text-destructive">
                 <p className="">{serverState.userMsg || "Erreur serveur"}</p>
               </div>
@@ -310,7 +315,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
               <div className="">
                 <label htmlFor="displayname">Nom dutilsateur</label>
                 <input
-                  defaultValue={displayname}
+                  value={displayname}
                   id="displayname"
                   name="displayname"
                   onChange={(e) => {
@@ -323,11 +328,16 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
                   }}
                   className=""
                 ></input>
+                {displaynameError && (
+                  <p className="text-sm text-destructive">
+                    {displaynameError}
+                  </p>
+                )}
               </div>
               <div className="">
                 <label htmlFor="bio">Biographie</label>
                 <input
-                  defaultValue={bio ?? ""}
+                  value={bio ?? ""}
                   id="bio"
                   name="bio"
                   onChange={(e) => {
@@ -340,6 +350,9 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
                   }}
                   className="" // CLASSNAME A CHANGER POUR QUE SI ERR, CLASSNAME DIFF //
                 ></input>
+                {bioError && (
+                  <p className="text-sm text-destructive">{bioError}</p>
+                )}
               </div>
               <Button type="submit" size="lg" disabled={isPending}>
                 {isPending ? "Enregistrement en cours" : "Enregistré"}

@@ -6,6 +6,7 @@ import ProfileHeader from "../components/ProfilHeader";
 import ProfileFooter from "../components/ProfileFooter";
 import QueryProvider from "@/components/providers/query-provider";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { Separator } from "@/components/ui/separator";
 
 export type ProfileProps = {
   isOwner: boolean;
@@ -41,11 +42,12 @@ export default async function PublicProfilePage({
       <QueryProvider>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <ProfileHeader
+            key={profile.id}
             isOwner={Boolean(isOwner)}
             profile={profile}
             isAuthentificated={isAuthentificated}
           />
-          <ProfileFooter />
+          <ProfileFooter profile={profile} />
         </HydrationBoundary>
       </QueryProvider>
     </>

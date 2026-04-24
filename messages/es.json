@@ -341,7 +341,30 @@
     "recentPostsTitle": "Publicaciones recientes",
     "recentPostsEmpty": "Todavía no hay publicaciones públicas.",
     "proBadge": "Pro",
-    "aiBadge": "IA"
+    "aiBadge": "IA",
+    "ownerLabel": "Tu perfil",
+    "profileLabel": "Perfil público",
+    "avatarAlt": "Foto de perfil de {name}",
+    "avatarFallback": "Avatar de perfil",
+    "actions": {
+      "follow": "Seguir",
+      "following": "Siguiendo",
+      "message": "Mensaje",
+      "followError": "No se pudo actualizar el seguimiento."
+    },
+    "stats": {
+      "posts": "Publicaciones",
+      "followers": "Seguidores",
+      "following": "Siguiendo"
+    }
+  },
+  "modifyProfile": {
+    "compose": {
+      "Votre fichier est trop gros": "Tu archivo es demasiado grande. Tamaño máximo: {max} MB.",
+      "errors": {
+        "submitFailed": "No se pudo actualizar tu perfil. Inténtalo de nuevo."
+      }
+    }
   },
   "appShell": {
     "brandAlt": "Logo de Socially",

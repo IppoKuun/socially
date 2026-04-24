@@ -57,6 +57,15 @@ export default async function modifyProfil(
   const avatar = FormData.get("avatar");
   const hasNewAvatar = avatar instanceof File && avatar.size > 0;
 
+  const parsedDraft = modifyProfileSchema.safeParse(
+    { displayname: raw.displayname, bio: raw.bio, avatarUrl: undefined },
+    { error: errorMap },
+  );
+
+  if (!parsedDraft.success) {
+    return { ok: false, errors: parsedDraft.error.flatten().fieldErrors };
+  }
+
   let finalAvatarUrl: string | null = null;
   let finalAvatarPublicId: string | null = null;
 
@@ -76,7 +85,12 @@ export default async function modifyProfil(
       };
     }
 
-    const uploadAvatar = await uploadCloudinary(avatar);
+    let uploadAvatar;
+    try {
+      uploadAvatar = await uploadCloudinary(avatar);
+    } catch {
+      return { ok: false, userMsg: t("uploadFailed") };
+    }
 
     if (!uploadAvatar) {
       return { ok: false, userMsg: t("uploadFailed") };
@@ -91,6 +105,16 @@ export default async function modifyProfil(
   );
 
   if (!parsed.success) {
+    if (finalAvatarPublicId) {
+      const deleteUploadedAvatar = await deleteCloudinary([
+        finalAvatarPublicId,
+      ]);
+
+      if (!deleteUploadedAvatar) {
+        console.error("Impossible de supprimé image Cloudinary invalide");
+      }
+    }
+
     return { ok: false, errors: parsed.error.flatten().fieldErrors };
   }
 
@@ -100,7 +124,7 @@ export default async function modifyProfil(
         where: { userId: session.user.id },
         data: {
           displayname: parsed.data.displayname || undefined,
-          bio: parsed.data.bio || undefined,
+          bio: parsed.data.bio,
           avatarUrl: parsed.data.avatarUrl || undefined,
           avatarPublicId: finalAvatarPublicId || undefined,
         },
@@ -129,8 +153,8 @@ export default async function modifyProfil(
     }
   } catch (error) {
     console.error(`Impossible de modifié profile : ${error}`);
-    if (hasNewAvatar) {
-      const deleteAvatar = await deleteCloudinary([finalAvatarPublicId!]);
+    if (finalAvatarPublicId) {
+      const deleteAvatar = await deleteCloudinary([finalAvatarPublicId]);
 
       if (!deleteAvatar) {
         console.error("Impossible de supprimé image Cloudinary");

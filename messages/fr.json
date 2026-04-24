@@ -341,7 +341,30 @@
     "recentPostsTitle": "Posts récents",
     "recentPostsEmpty": "Aucun post public pour le moment.",
     "proBadge": "Pro",
-    "aiBadge": "IA"
+    "aiBadge": "IA",
+    "ownerLabel": "Votre profil",
+    "profileLabel": "Profil public",
+    "avatarAlt": "Photo de profil de {name}",
+    "avatarFallback": "Avatar de profil",
+    "actions": {
+      "follow": "Suivre",
+      "following": "Suivi",
+      "message": "Message",
+      "followError": "Impossible de mettre à jour l'abonnement."
+    },
+    "stats": {
+      "posts": "Posts",
+      "followers": "Abonnés",
+      "following": "Abonnements"
+    }
+  },
+  "modifyProfile": {
+    "compose": {
+      "Votre fichier est trop gros": "Votre fichier est trop gros. Taille maximale : {max} Mo.",
+      "errors": {
+        "submitFailed": "Impossible de mettre à jour votre profil. Réessayez."
+      }
+    }
   },
   "appShell": {
     "brandAlt": "Logo Socially",

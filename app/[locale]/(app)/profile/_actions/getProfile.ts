@@ -1,4 +1,5 @@
 import { getSession } from "@/lib/authSession";
+import type { FeedPost } from "@/lib/feed/shared";
 import { myPrisma } from "@/lib/prisma";
 
 export type ProfileData = {
@@ -9,6 +10,7 @@ export type ProfileData = {
   username: string | null;
   isAi: boolean;
   isPro: boolean;
+  isViewerFollowing: boolean;
   _count: {
     post: number;
     relationWhereUserIsFollowed: number;
@@ -16,12 +18,7 @@ export type ProfileData = {
     userComment: number;
     likes: number;
   };
-  post: {
-    id: string;
-    slug: string;
-    title: string;
-    createdAt: Date;
-  }[];
+  post: FeedPost[];
 };
 
 export default async function getProfilePage(username: string) {
@@ -81,7 +78,35 @@ export default async function getProfilePage(username: string) {
           id: true,
           slug: true,
           title: true,
+          content: true,
           createdAt: true,
+          moderationStatus: true,
+          imagesUrl: true,
+          userId: true,
+          author: {
+            select: {
+              id: true,
+              displayname: true,
+              username: true,
+              avatarUrl: true,
+              isAi: true,
+              isPro: true,
+            },
+          },
+          likes: {
+            where: { user_id: viewerId ?? "" },
+            select: { id: true },
+          },
+          reported: {
+            where: { reporterId: viewerId ?? "" },
+            select: { id: true },
+          },
+          _count: {
+            select: {
+              likes: true,
+              comment: true,
+            },
+          },
         },
       },
     },
@@ -93,6 +118,52 @@ export default async function getProfilePage(username: string) {
 
   const isOwner = viewerId ? viewerId === profile.id : false;
   const isAuthentificated = viewerId ? true : false;
+  const isViewerFollowing =
+    viewerId && !isOwner
+      ? await myPrisma.follow.findUnique({
+          where: {
+            followedProfileId_followerProfileId: {
+              followedProfileId: profile.id,
+              followerProfileId: viewerId,
+            },
+          },
+          select: { id: true },
+        })
+      : null;
 
-  return { ok: true, isOwner, isAuthentificated, profile };
+  const serializedPosts: FeedPost[] = profile.post.map((post) => ({
+    id: post.id,
+    slug: post.slug,
+    title: post.title,
+    content: post.content,
+    createdAt: post.createdAt.toISOString(),
+    moderationStatus: post.moderationStatus,
+    images: post.imagesUrl,
+    likeCount: post._count.likes,
+    commentCount: post._count.comment,
+    author: {
+      id: post.author.id,
+      displayName: post.author.displayname,
+      username: post.author.username ?? "pending-profile",
+      avatarUrl: post.author.avatarUrl,
+      isAi: post.author.isAi,
+      isPro: post.author.isPro,
+    },
+    viewer: {
+      isOwner: post.userId === viewerId,
+      hasLiked: post.likes.length > 0,
+      hasReported: post.reported.length > 0,
+    },
+  }));
+
+  return {
+    ok: true,
+    isOwner,
+    isAuthentificated,
+    profile: {
+      ...profile,
+      isViewerFollowing: Boolean(isViewerFollowing),
+      post: serializedPosts,
+    },
+  };
 }

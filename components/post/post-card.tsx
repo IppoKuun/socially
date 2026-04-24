@@ -19,7 +19,7 @@ import { Link } from "@/i18n/routing";
 import type { FeedPost } from "@/lib/feed/shared";
 import { cn } from "@/lib/utils";
 
-type PostCardVariant = "feed" | "detail" | "context";
+type PostCardVariant = "feed" | "detail" | "context" | "profil";
 
 type PostCardProps = {
   post: FeedPost;
