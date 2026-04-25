@@ -115,7 +115,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
     const payload = profileValidationSchema.safeParse({
       displayname,
       bio,
-      avatar: avatarFile,
+      avatar: avatarFile ?? undefined,
     });
 
     if (payload.success) {
@@ -224,7 +224,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
       <Button
         type="button"
         size="lg"
-        className="fixed"
+        className="rounded-full border border-white/14 bg-white/[0.08] px-5 text-sm font-semibold text-white shadow-[0_18px_40px_-28px_rgba(0,0,0,0.95)] backdrop-blur-xl hover:bg-white/[0.13]"
         onClick={() => setOpen(true)}
       >
         Editez votre profile
@@ -233,7 +233,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
       <Dialog open={open} onOpenChange={handleDialogOpenChange}>
         <DialogContent
           className={cn(
-            "w-full max-h-min overflow-hidden ",
+            "w-full max-w-[min(94vw,30rem)] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#11151d]/95 p-0 text-white shadow-[0_30px_90px_-45px_rgba(0,0,0,0.95)] backdrop-blur-2xl",
             rawErrors && "border-destructive/70 ring-2 ring-destructive/35",
           )}
           onEscapeKeyDown={(event) => {
@@ -247,50 +247,72 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
             }
           }}
         >
-          <DialogHeader className="shrink-0 border-b p-5">
-            <p className="tracking-[0.22em] text-primary-glow font-bold uppercase text-xl">
+          <DialogHeader className="shrink-0 border-b border-white/10 bg-white/[0.03] px-6 py-5">
+            <p className="text-lg font-semibold tracking-[-0.02em] text-white">
               Editez votre profile
             </p>
-            <p className="">
+            <p className="text-sm leading-6 text-white/58">
               Modifié votre profil et comment les gens vous voient
             </p>
           </DialogHeader>
           <form
             onSubmit={(e) => handleSubmit(e)}
-            className="flex flex-col overflow-hidden"
+            className="flex flex-col overflow-hidden px-6 py-5"
           >
             {hasServerError && (
-              <div className="rounded-2xl border px-4 py-3 text-sm border-destructive/40 bg-destructive/10 text-destructive">
-                <p className="">{serverState.userMsg || "Erreur serveur"}</p>
+              <div className="mb-5 rounded-2xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                <p>{serverState.userMsg || "Erreur serveur"}</p>
               </div>
             )}
-            <div className="space-y-2">
-              <div className="">
-                <label htmlFor="avatar">Photo de profil</label>
-                {avatarPreviewUrl ? (
-                  <Image
-                    src={avatarPreviewUrl}
-                    height={30}
-                    width={30}
-                    alt="profil_photo"
-                  />
-                ) : (
-                  <User2Icon />
-                )}
-
-                <Button
-                  type="button"
-                  onClick={() => avatarInputRef.current?.click()}
-                  disabled={isPending}
-                  className={cn(
-                    "",
-                    avatarError
-                      ? "border-destructive/70 focus:border-destructive/70"
-                      : "border-white/10 focus:border-primary/60",
-                  )}
+            <div className="space-y-5">
+              <div className="space-y-3">
+                <label
+                  htmlFor="avatar"
+                  className="text-sm font-medium text-white/82"
                 >
-                  Changez votre photo de profil
-                </Button>
+                  Photo de profil
+                </label>
+                <div className="flex items-center gap-4">
+                  <div
+                    className={cn(
+                      "flex h-18 w-18 shrink-0 items-center justify-center overflow-hidden rounded-2xl border bg-white/[0.04]",
+                      avatarError ? "border-destructive/50" : "border-white/10",
+                    )}
+                  >
+                    {avatarPreviewUrl ? (
+                      <Image
+                        src={avatarPreviewUrl}
+                        height={72}
+                        width={72}
+                        alt="profil_photo"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <User2Icon className="h-7 w-7 text-white/45" />
+                    )}
+                  </div>
+
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => avatarInputRef.current?.click()}
+                      disabled={isPending}
+                      className={cn(
+                        "h-9 rounded-full border bg-white/[0.04] px-4 text-white/78 hover:bg-white/[0.09] hover:text-white",
+                        avatarError
+                          ? "border-destructive/70 focus:border-destructive/70"
+                          : "border-white/10 focus:border-primary/60",
+                      )}
+                    >
+                      Changez votre photo de profil
+                    </Button>
+                    <p className="text-xs leading-5 text-white/42">
+                      JPG, PNG ou WebP. Taille max :{" "}
+                      {PROFILE_AVATAR_MAX_SIZE / 1000000} Mo.
+                    </p>
+                  </div>
+                </div>
                 <input
                   ref={avatarInputRef}
                   name="avatar"
@@ -312,8 +334,13 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
                   <p className="text-sm text-destructive">{avatarError}</p>
                 )}
               </div>
-              <div className="">
-                <label htmlFor="displayname">Nom dutilsateur</label>
+              <div className="space-y-2">
+                <label
+                  htmlFor="displayname"
+                  className="text-sm font-medium text-white/82"
+                >
+                  Nom dutilsateur
+                </label>
                 <input
                   value={displayname}
                   id="displayname"
@@ -326,7 +353,12 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
                       displayname: undefined,
                     }));
                   }}
-                  className=""
+                  className={cn(
+                    "h-11 w-full rounded-2xl border bg-white/[0.04] px-4 text-sm text-white outline-none transition placeholder:text-white/32 focus:border-primary/60 focus:bg-white/[0.06] focus:ring-2 focus:ring-primary/20",
+                    displaynameError
+                      ? "border-destructive/60 focus:border-destructive/70 focus:ring-destructive/20"
+                      : "border-white/10",
+                  )}
                 ></input>
                 {displaynameError && (
                   <p className="text-sm text-destructive">
@@ -334,8 +366,13 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
                   </p>
                 )}
               </div>
-              <div className="">
-                <label htmlFor="bio">Biographie</label>
+              <div className="space-y-2">
+                <label
+                  htmlFor="bio"
+                  className="text-sm font-medium text-white/82"
+                >
+                  Biographie
+                </label>
                 <input
                   value={bio ?? ""}
                   id="bio"
@@ -348,13 +385,23 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
                       bio: undefined,
                     }));
                   }}
-                  className="" // CLASSNAME A CHANGER POUR QUE SI ERR, CLASSNAME DIFF //
+                  className={cn(
+                    "h-11 w-full rounded-2xl border bg-white/[0.04] px-4 text-sm text-white outline-none transition placeholder:text-white/32 focus:border-primary/60 focus:bg-white/[0.06] focus:ring-2 focus:ring-primary/20",
+                    bioError
+                      ? "border-destructive/60 focus:border-destructive/70 focus:ring-destructive/20"
+                      : "border-white/10",
+                  )}
                 ></input>
                 {bioError && (
                   <p className="text-sm text-destructive">{bioError}</p>
                 )}
               </div>
-              <Button type="submit" size="lg" disabled={isPending}>
+              <Button
+                type="submit"
+                size="lg"
+                disabled={isPending}
+                className="mt-1 h-10 rounded-full bg-primary px-5 font-semibold text-white shadow-[0_18px_42px_-24px_rgba(47,124,255,0.9)] hover:bg-primary-glow"
+              >
                 {isPending ? "Enregistrement en cours" : "Enregistré"}
               </Button>
             </div>

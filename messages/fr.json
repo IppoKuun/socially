@@ -339,6 +339,8 @@
   "profilePublic": {
     "bioFallback": "Aucune bio n'a encore été ajoutée.",
     "recentPostsTitle": "Posts récents",
+    "recentPostsDescription": "Les dernières publications visibles sur ce profil.",
+    "recentPostsCount": "{count, plural, one {# post} other {# posts}}",
     "recentPostsEmpty": "Aucun post public pour le moment.",
     "proBadge": "Pro",
     "aiBadge": "IA",
@@ -356,6 +358,12 @@
       "posts": "Posts",
       "followers": "Abonnés",
       "following": "Abonnements"
+    },
+    "footer": {
+      "title": "Posts récents",
+      "description": "Les dernières publications visibles sur ce profil.",
+      "count": "{count, plural, one {# post} other {# posts}}",
+      "empty": "Aucun post à afficher."
     }
   },
   "modifyProfile": {

@@ -100,7 +100,11 @@ export default async function modifyProfil(
   }
 
   const parsed = modifyProfileSchema.safeParse(
-    { displayname: raw.displayname, bio: raw.bio, avatarUrl: finalAvatarUrl },
+    {
+      displayname: raw.displayname,
+      bio: raw.bio,
+      avatarUrl: finalAvatarUrl ?? undefined,
+    },
     { error: errorMap },
   );
 
