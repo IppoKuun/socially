@@ -421,8 +421,16 @@
       },
       "trending": {
         "title": "Trending",
-        "description": "Suis les posts et discussions qui attirent le plus d'attention en ce moment.",
-        "placeholder": "La logique Trending n'est pas encore branchée. Cette route existe déjà pour valider le shell de navigation."
+        "description": "Suis les posts publiés récemment qui attirent le plus de likes.",
+        "windowLabel": "Fenêtre",
+        "windowValue": "{days} derniers jours",
+        "rankingLabel": "Classement",
+        "rankingValue": "Top {count} par likes",
+        "cacheLabel": "Cache",
+        "cacheValue": "Revalidation toutes les {seconds}s",
+        "emptyTitle": "Aucun post tendance pour le moment.",
+        "emptyDescription": "Les posts récents avec au moins un like apparaîtront ici dès que l'activité le permettra.",
+        "rankLabel": "Rang {rank}"
       },
       "notifications": {
         "title": "Notif",

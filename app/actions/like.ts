@@ -1,7 +1,34 @@
 "use server";
 import { getSession } from "@/lib/authSession";
 import { getTranslations } from "next-intl/server";
+import { revalidateTag } from "next/cache";
+
 import { myPrisma } from "@/lib/prisma";
+import {
+  getTrendingWindowStart,
+  TRENDING_POSTS_CACHE_TAG,
+} from "@/lib/trending/queries";
+
+async function revalidateTrendingPostsIfEligible(postId: string) {
+  const post = await myPrisma.post.findUnique({
+    where: {
+      id: postId,
+    },
+    select: {
+      createdAt: true,
+      deletedAt: true,
+    },
+  });
+
+  if (!post || post.deletedAt || post.createdAt < getTrendingWindowStart()) {
+    return;
+  }
+
+  // Si post est récent pas supprimé et est inférieur a 7j//
+  // Ont revalide le tag, max est présent pour forcé une invlidations sur
+  // tout les serveurs //
+  revalidateTag(TRENDING_POSTS_CACHE_TAG, "max");
+}
 
 export async function Like(postId: string) {
   const t = await getTranslations("post.actions.like");
@@ -41,6 +68,8 @@ export async function Like(postId: string) {
         data: { user_id: user.id, post_id: postId },
       });
     }
+
+    await revalidateTrendingPostsIfEligible(postId);
   } catch (error) {
     console.error(error);
     return { ok: false, userMsg: t("toggleFailed") };

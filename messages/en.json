@@ -421,8 +421,16 @@
       },
       "trending": {
         "title": "Trending",
-        "description": "Track the posts and discussions getting the most attention right now.",
-        "placeholder": "Trending logic is still pending. This route exists now so the new shell can navigate to a stable page."
+        "description": "Track recent posts getting the most likes.",
+        "windowLabel": "Window",
+        "windowValue": "Last {days} days",
+        "rankingLabel": "Ranking",
+        "rankingValue": "Top {count} by likes",
+        "cacheLabel": "Cache",
+        "cacheValue": "Revalidates every {seconds}s",
+        "emptyTitle": "No trending posts yet.",
+        "emptyDescription": "Recent posts with at least one like will appear here as activity grows.",
+        "rankLabel": "Rank {rank}"
       },
       "notifications": {
         "title": "Notif",
