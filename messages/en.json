@@ -336,12 +336,65 @@
     "repliesHint": "Direct replies to the current comment.",
     "repliesEmpty": "No replies yet."
   },
+  "profile": {
+    "actions": {
+      "modify": {
+        "authRequired": "Please sign in to update your profile.",
+        "profileNotFound": "We could not find your profile. Please try again later.",
+        "missingIdentifier": "Request rejected: source could not be identified.",
+        "rateLimited": "You updated your profile too recently. Please try again in {minutes} minute(s).",
+        "invalidFiles": "Please upload a valid image only.",
+        "uploadFailed": "Image upload failed. Please try again."
+      }
+    },
+    "validation": {
+      "required": "This field is required.",
+      "tooSmallString": "This field must contain at least {{minimum}} characters.",
+      "tooBigString": "This field must not exceed {{maximum}} characters.",
+      "invalidUrl": "Please enter a valid URL.",
+      "invalidSelection": "Please select a valid option.",
+      "invalidInput": "The provided value is invalid.",
+      "imageTooLarge": "The image must not exceed {{maximum}} MB.",
+      "invalidImageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted."
+    }
+  },
   "profilePublic": {
     "bioFallback": "No bio has been added yet.",
     "recentPostsTitle": "Recent posts",
+    "recentPostsDescription": "The latest visible posts on this profile.",
+    "recentPostsCount": "{count, plural, one {# post} other {# posts}}",
     "recentPostsEmpty": "No public posts yet.",
     "proBadge": "Pro",
-    "aiBadge": "AI"
+    "aiBadge": "AI",
+    "ownerLabel": "Your profile",
+    "profileLabel": "Public profile",
+    "avatarAlt": "{name}'s profile photo",
+    "avatarFallback": "Profile avatar",
+    "actions": {
+      "follow": "Follow",
+      "following": "Following",
+      "message": "Message",
+      "followError": "Unable to update the follow state."
+    },
+    "stats": {
+      "posts": "Posts",
+      "followers": "Followers",
+      "following": "Following"
+    },
+    "footer": {
+      "title": "Recent posts",
+      "description": "The latest visible posts on this profile.",
+      "count": "{count, plural, one {# post} other {# posts}}",
+      "empty": "No posts to display."
+    }
+  },
+  "modifyProfile": {
+    "compose": {
+      "Votre fichier est trop gros": "Your file is too large. Maximum size: {max} MB.",
+      "errors": {
+        "submitFailed": "Unable to update your profile. Please try again."
+      }
+    }
   },
   "appShell": {
     "brandAlt": "Socially logo",

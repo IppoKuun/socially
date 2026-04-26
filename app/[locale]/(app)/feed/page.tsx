@@ -42,9 +42,11 @@ export default async function FeedPage() {
   return (
     <AppPageShell title={t("title")} description={t("description")}>
       <QueryProvider>
-        {/** HydratationBoundary est uniquement pour désydraté tout ce que tanSack mets en cache.
+        {/** HydratationBoundary est l'hydratation du cache, au lieu de reprendre le cache coté serveur.
+         * TanSack pourra reprendre ce qu'il a déjà.
+         * Et dehydrate est uniquement pour désydraté tout ce que tanSack mets en cache.
          Car il renvoie plein de fonctions/Objets qu'on ne peut pas envoyé au client ducoup ont
-         le convertis de cette maniere en JSON
+         le convertis de cette maniere en JSON.
          */}
         <HydrationBoundary state={dehydrate(queryClient)}>
           <div className="flex flex-col items-center justify-center">

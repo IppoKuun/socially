@@ -336,12 +336,65 @@
     "repliesHint": "Respuestas directas al comentario actual.",
     "repliesEmpty": "Todavía no hay respuestas."
   },
+  "profile": {
+    "actions": {
+      "modify": {
+        "authRequired": "Inicia sesión para actualizar tu perfil.",
+        "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+        "missingIdentifier": "Solicitud rechazada: no se pudo identificar el origen.",
+        "rateLimited": "Has actualizado tu perfil demasiado recientemente. Inténtalo de nuevo dentro de {minutes} minuto(s).",
+        "invalidFiles": "Sube solo una imagen válida.",
+        "uploadFailed": "La subida de la imagen ha fallado. Inténtalo de nuevo."
+      }
+    },
+    "validation": {
+      "required": "Este campo es obligatorio.",
+      "tooSmallString": "Este campo debe contener al menos {{minimum}} caracteres.",
+      "tooBigString": "Este campo no debe superar los {{maximum}} caracteres.",
+      "invalidUrl": "Introduce una URL válida.",
+      "invalidSelection": "Selecciona una opción válida.",
+      "invalidInput": "El valor introducido no es válido.",
+      "imageTooLarge": "La imagen no debe superar {{maximum}} MB.",
+      "invalidImageType": "Solo se aceptan los formatos .jpg, .jpeg, .png y .webp."
+    }
+  },
   "profilePublic": {
     "bioFallback": "Todavía no se ha añadido ninguna bio.",
     "recentPostsTitle": "Publicaciones recientes",
+    "recentPostsDescription": "Las últimas publicaciones visibles en este perfil.",
+    "recentPostsCount": "{count, plural, one {# publicación} other {# publicaciones}}",
     "recentPostsEmpty": "Todavía no hay publicaciones públicas.",
     "proBadge": "Pro",
-    "aiBadge": "IA"
+    "aiBadge": "IA",
+    "ownerLabel": "Tu perfil",
+    "profileLabel": "Perfil público",
+    "avatarAlt": "Foto de perfil de {name}",
+    "avatarFallback": "Avatar de perfil",
+    "actions": {
+      "follow": "Seguir",
+      "following": "Siguiendo",
+      "message": "Mensaje",
+      "followError": "No se pudo actualizar el seguimiento."
+    },
+    "stats": {
+      "posts": "Publicaciones",
+      "followers": "Seguidores",
+      "following": "Siguiendo"
+    },
+    "footer": {
+      "title": "Publicaciones recientes",
+      "description": "Las últimas publicaciones visibles en este perfil.",
+      "count": "{count, plural, one {# publicación} other {# publicaciones}}",
+      "empty": "No hay publicaciones para mostrar."
+    }
+  },
+  "modifyProfile": {
+    "compose": {
+      "Votre fichier est trop gros": "Tu archivo es demasiado grande. Tamaño máximo: {max} MB.",
+      "errors": {
+        "submitFailed": "No se pudo actualizar tu perfil. Inténtalo de nuevo."
+      }
+    }
   },
   "appShell": {
     "brandAlt": "Logo de Socially",

@@ -38,4 +38,6 @@ export default async function deleteCloudinary(imagesId: string[]) {
   if (!result) {
     throw new myError("Impossible supprimé cloudinary");
   }
+
+  return true;
 }

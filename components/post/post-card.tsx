@@ -19,7 +19,7 @@ import { Link } from "@/i18n/routing";
 import type { FeedPost } from "@/lib/feed/shared";
 import { cn } from "@/lib/utils";
 
-type PostCardVariant = "feed" | "detail" | "context";
+type PostCardVariant = "feed" | "detail" | "context" | "profile";
 
 type PostCardProps = {
   post: FeedPost;
@@ -84,6 +84,7 @@ export default function PostCard({
   const router = useRouter();
 
   const compact = variant === "context";
+  const isProfile = variant === "profile";
   const isDetail = variant === "detail";
   const isNavigable = !isDetail;
   const postHref = `/post/${post.slug}`;
@@ -95,7 +96,9 @@ export default function PostCard({
       : "line-clamp-[10] whitespace-pre-wrap text-[0.98rem] leading-8 text-white/78"
     : compact
       ? "line-clamp-3 whitespace-pre-wrap text-sm leading-6 text-white/58"
-      : "line-clamp-4 whitespace-pre-wrap text-[0.95rem] leading-7 text-white/62";
+      : isProfile
+        ? "line-clamp-3 whitespace-pre-wrap text-sm leading-6 text-white/58"
+        : "line-clamp-4 whitespace-pre-wrap text-[0.95rem] leading-7 text-white/62";
 
   function shouldIgnorePostNavigation(target: EventTarget | null) {
     if (!(target instanceof HTMLElement)) {
@@ -131,8 +134,12 @@ export default function PostCard({
       role={isNavigable ? "link" : undefined}
       tabIndex={isNavigable ? 0 : undefined}
       className={cn(
-        "relative overflow-hidden rounded-[10px] bg-[#12151c] 12151c shadow-[0_28px_80px_-54px_rgba(0,0,0,0.98)]",
-        compact ? "px-4 py-4" : "px-5 py-5 sm:px-6 sm:py-6",
+        "relative overflow-hidden rounded-[24px] bg-[#12151c] shadow-[0_28px_80px_-54px_rgba(0,0,0,0.98)]",
+        compact
+          ? "px-4 py-4"
+          : isProfile
+            ? "px-4 py-4 sm:px-5 sm:py-5"
+            : "px-5 py-5 sm:px-6 sm:py-6",
         post.author.isPro &&
           "bg-[linear-gradient(180deg,rgba(29,33,44,0.98),rgba(20,24,34,0.98))]",
         isNavigable &&
@@ -144,73 +151,102 @@ export default function PostCard({
     >
       <div className="space-y-5">
         <div className="flex items-start justify-between gap-4">
-          <Link
-            data-no-post-nav
-            href={`/profile/${post.author.username}`}
-            className="flex min-w-0 items-start gap-3 transition hover:opacity-90"
-          >
-            <AuthorAvatar
-              avatarUrl={post.author.avatarUrl}
-              displayName={post.author.displayName}
-              compact={compact}
-            />
-
-            <div className="min-w-0 space-y-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="truncate text-sm font-semibold text-white">
-                  {post.author.displayName}
-                </span>
-                {post.author.isPro ? (
-                  <Sparkles className="size-4 text-[#ffd56b]" />
-                ) : null}
-                {post.author.isAi ? (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Badge
-                          variant="outline"
-                          className="border-sky-400/30 bg-sky-400/10 text-sky-200"
-                        >
-                          <Bot className="size-3" />
-                          {t("aiBadge")}
-                        </Badge>
-                      </TooltipTrigger>
-                      <TooltipContent>{t("aiTooltip")}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ) : null}
-                {post.moderationStatus === "UNCERTAIN" ? (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Badge
-                          variant="outline"
-                          className="border-amber-400/30 bg-amber-400/10 text-amber-200"
-                        >
-                          <TriangleAlert className="size-3" />
-                          {t("uncertainBadge")}
-                        </Badge>
-                      </TooltipTrigger>
-                      <TooltipContent>{t("uncertainTooltip")}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ) : null}
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2 text-xs text-white/42">
-                <span>@{post.author.username}</span>
-                <span aria-hidden="true">•</span>
-                <span>
-                  {formatter.dateTime(new Date(post.createdAt), {
-                    day: "numeric",
-                    month: "short",
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}
-                </span>
-              </div>
+          {isProfile ? (
+            <div className="flex min-w-0 flex-wrap items-center gap-2 text-xs text-white/42">
+              <span>
+                {formatter.dateTime(new Date(post.createdAt), {
+                  day: "numeric",
+                  month: "short",
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
+              </span>
+              {post.moderationStatus === "UNCERTAIN" ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge
+                        variant="outline"
+                        className="border-amber-400/30 bg-amber-400/10 text-amber-200"
+                      >
+                        <TriangleAlert className="size-3" />
+                        {t("uncertainBadge")}
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>{t("uncertainTooltip")}</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : null}
             </div>
-          </Link>
+          ) : (
+            <Link
+              data-no-post-nav
+              href={`/profile/${post.author.username}`}
+              className="flex min-w-0 items-start gap-3 transition hover:opacity-90"
+            >
+              <AuthorAvatar
+                avatarUrl={post.author.avatarUrl}
+                displayName={post.author.displayName}
+                compact={compact}
+              />
+
+              <div className="min-w-0 space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="truncate text-sm font-semibold text-white">
+                    {post.author.displayName}
+                  </span>
+                  {post.author.isPro ? (
+                    <Sparkles className="size-4 text-[#ffd56b]" />
+                  ) : null}
+                  {post.author.isAi ? (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Badge
+                            variant="outline"
+                            className="border-sky-400/30 bg-sky-400/10 text-sky-200"
+                          >
+                            <Bot className="size-3" />
+                            {t("aiBadge")}
+                          </Badge>
+                        </TooltipTrigger>
+                        <TooltipContent>{t("aiTooltip")}</TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : null}
+                  {post.moderationStatus === "UNCERTAIN" ? (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Badge
+                            variant="outline"
+                            className="border-amber-400/30 bg-amber-400/10 text-amber-200"
+                          >
+                            <TriangleAlert className="size-3" />
+                            {t("uncertainBadge")}
+                          </Badge>
+                        </TooltipTrigger>
+                        <TooltipContent>{t("uncertainTooltip")}</TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : null}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 text-xs text-white/42">
+                  <span>@{post.author.username}</span>
+                  <span aria-hidden="true">•</span>
+                  <span>
+                    {formatter.dateTime(new Date(post.createdAt), {
+                      day: "numeric",
+                      month: "short",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          )}
         </div>
 
         <div
@@ -230,7 +266,9 @@ export default function PostCard({
                   ? "text-[1.15rem]"
                   : isDetail
                     ? "text-[1.75rem] sm:text-[2rem]"
-                    : "line-clamp-2 text-[1.35rem]",
+                    : isProfile
+                      ? "line-clamp-2 text-[1.25rem]"
+                      : "line-clamp-2 text-[1.35rem]",
               )}
             >
               {post.title}
@@ -266,7 +304,9 @@ export default function PostCard({
                   alt={t("imageAlt", { index: 1 })}
                   fill
                   className="object-cover transition duration-300 group-hover:scale-[1.015]"
-                  sizes={compact ? "190px" : "(max-width: 1024px) 100vw, 240px"}
+                  sizes={
+                    compact ? "190px" : "(max-width: 1024px) 100vw, 240px"
+                  }
                 />
               </div>
 
