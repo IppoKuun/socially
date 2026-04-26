@@ -11,7 +11,6 @@ import {
   getTrendingFeedPostsForViewer,
 } from "@/lib/trending/queries";
 import AppPageShell from "../_components/app-page-shell";
-import { revalidateTag } from "next/cache";
 
 async function requireViewerProfile() {
   const session = await getSession();

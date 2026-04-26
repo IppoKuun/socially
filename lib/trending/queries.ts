@@ -8,7 +8,7 @@ import { myPrisma } from "@/lib/prisma";
 export const TRENDING_POSTS_CACHE_TAG = "trending-posts";
 export const TRENDING_POST_LIMIT = 10;
 export const TRENDING_WINDOW_DAYS = 7;
-export const TRENDING_REVALIDATE_SECONDS = 60;
+export const TRENDING_REVALIDATE_SECONDS = 600;
 
 const TRENDING_CANDIDATE_LIMIT = 30;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
