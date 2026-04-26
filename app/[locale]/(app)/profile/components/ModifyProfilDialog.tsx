@@ -57,7 +57,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
   const [serverState, setServerState] = useState<ServerState>({});
   const [isPending, startTransition] = useTransition();
   const [displayname, setDisplayName] = useState<string>(profile.displayname);
-  const [bio, setBio] = useState<string | null>(profile.bio);
+  const [bio, setBio] = useState<string | null>(profile.bio ?? "");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreviewUrl, setAvatarPreviewUrl] = useState<string | null>(
     profile.avatarUrl,
@@ -101,7 +101,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
       objectUrlRef.current = null;
     }
     setDisplayName(profile.displayname);
-    setBio(profile.bio);
+    setBio(profile.bio ?? "");
     setAvatarPreviewUrl(profile.avatarUrl);
     setLocalError({});
     setServerState(EMPTY_SERVER_STATE);
@@ -187,7 +187,6 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
       try {
         const result = await modifyProfil(EMPTY_SERVER_STATE, formData);
         if (result.ok) {
-          resetComposer();
           setOpen(false);
           router.refresh();
           return;
@@ -361,9 +360,7 @@ export default function ModifyProfilDialog({ profile }: ProfilProps) {
                   )}
                 ></input>
                 {displaynameError && (
-                  <p className="text-sm text-destructive">
-                    {displaynameError}
-                  </p>
+                  <p className="text-sm text-destructive">{displaynameError}</p>
                 )}
               </div>
               <div className="space-y-2">

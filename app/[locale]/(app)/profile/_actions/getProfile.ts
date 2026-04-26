@@ -15,8 +15,6 @@ export type ProfileData = {
     post: number;
     relationWhereUserIsFollowed: number;
     relationWhereUserIsFollower: number;
-    userComment: number;
-    likes: number;
   };
   post: FeedPost[];
 };
@@ -62,14 +60,17 @@ export default async function getProfilePage(username: string) {
       isPro: true,
       _count: {
         select: {
-          post: true,
+          post: {
+            where: {
+              deletedAt: null,
+            },
+          },
           relationWhereUserIsFollowed: true,
           relationWhereUserIsFollower: true,
-          userComment: true,
-          likes: true,
         },
       },
       post: {
+        orderBy: { createdAt: "desc" },
         where: {
           deletedAt: null,
         },

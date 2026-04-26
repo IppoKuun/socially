@@ -336,6 +336,28 @@
     "repliesHint": "Direct replies to the current comment.",
     "repliesEmpty": "No replies yet."
   },
+  "profile": {
+    "actions": {
+      "modify": {
+        "authRequired": "Please sign in to update your profile.",
+        "profileNotFound": "We could not find your profile. Please try again later.",
+        "missingIdentifier": "Request rejected: source could not be identified.",
+        "rateLimited": "You updated your profile too recently. Please try again in {minutes} minute(s).",
+        "invalidFiles": "Please upload a valid image only.",
+        "uploadFailed": "Image upload failed. Please try again."
+      }
+    },
+    "validation": {
+      "required": "This field is required.",
+      "tooSmallString": "This field must contain at least {{minimum}} characters.",
+      "tooBigString": "This field must not exceed {{maximum}} characters.",
+      "invalidUrl": "Please enter a valid URL.",
+      "invalidSelection": "Please select a valid option.",
+      "invalidInput": "The provided value is invalid.",
+      "imageTooLarge": "The image must not exceed {{maximum}} MB.",
+      "invalidImageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted."
+    }
+  },
   "profilePublic": {
     "bioFallback": "No bio has been added yet.",
     "recentPostsTitle": "Recent posts",

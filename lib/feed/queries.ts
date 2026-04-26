@@ -57,7 +57,7 @@ function getVisiblePostWhereFollowingFeed(
     deletedAt: null,
     author: {
       ...getVisibleAuthorWhere(viewerId),
-      relationWhereUserIsFollower: { some: { followedProfileId: viewerId } },
+      relationWhereUserIsFollower: { some: { followerProfileId: viewerId } },
     },
   };
 }

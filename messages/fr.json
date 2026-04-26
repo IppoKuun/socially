@@ -336,6 +336,28 @@
     "repliesHint": "Réponses directes au commentaire courant.",
     "repliesEmpty": "Aucune réponse pour le moment."
   },
+  "profile": {
+    "actions": {
+      "modify": {
+        "authRequired": "Veuillez vous connecter pour modifier votre profil.",
+        "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "missingIdentifier": "Requête rejetée : source introuvable.",
+        "rateLimited": "Vous avez modifié votre profil trop récemment. Réessayez dans {minutes} minute(s).",
+        "invalidFiles": "Veuillez envoyer uniquement une image valide.",
+        "uploadFailed": "L'envoi de l'image a échoué. Réessayez."
+      }
+    },
+    "validation": {
+      "required": "Ce champ est obligatoire.",
+      "tooSmallString": "Ce champ doit contenir au moins {{minimum}} caractères.",
+      "tooBigString": "Ce champ ne doit pas dépasser {{maximum}} caractères.",
+      "invalidUrl": "Veuillez saisir une URL valide.",
+      "invalidSelection": "Veuillez sélectionner une option valide.",
+      "invalidInput": "La valeur saisie est invalide.",
+      "imageTooLarge": "L'image ne doit pas dépasser {{maximum}} Mo.",
+      "invalidImageType": "Seuls les formats .jpg, .jpeg, .png et .webp sont acceptés."
+    }
+  },
   "profilePublic": {
     "bioFallback": "Aucune bio n'a encore été ajoutée.",
     "recentPostsTitle": "Posts récents",
