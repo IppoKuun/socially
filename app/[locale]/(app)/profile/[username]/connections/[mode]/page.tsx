@@ -81,6 +81,8 @@ export default async function connectionMode({ params }: PageProps) {
         <FollowList
           items={itemsMode}
           isViewerAuthentificated={Boolean(session)}
+          mode={mode}
+          username={username}
         />
       </>
     );
@@ -133,6 +135,8 @@ export default async function connectionMode({ params }: PageProps) {
       <FollowList
         items={itemsMode}
         isViewerAuthentificated={Boolean(session)}
+        mode={mode}
+        username={username}
       />
     </>
   );
