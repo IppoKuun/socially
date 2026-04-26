@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import FollowList from "../../../components/FollowList";
 import { myPrisma } from "@/lib/prisma";
 import { getSession } from "@/lib/authSession";
+import type { Prisma } from "@prisma/client";
 
 interface PageProps {
   params: Promise<{ locale: string; username: string; mode: string }>;
@@ -20,8 +21,33 @@ export default async function connectionMode({ params }: PageProps) {
     notFound();
   }
 
-  const target = await myPrisma.userProfile.findUnique({
-    where: { username },
+  const visibleProfileWhere = {
+    deletedAt: null,
+    ...(viewer?.id
+      ? {
+          blocked: {
+            none: {
+              blockerId: viewer.id,
+            },
+          },
+          blocker: {
+            none: {
+              blockedById: viewer.id,
+            },
+          },
+        }
+      : {}),
+  } satisfies Prisma.UserProfileWhereInput;
+
+  const viewerFollowSelect = {
+    where: viewer?.id ? { followerProfileId: viewer.id } : undefined,
+    select: {
+      followerProfileId: true,
+    },
+  } satisfies Prisma.FollowFindManyArgs;
+
+  const target = await myPrisma.userProfile.findFirst({
+    where: { username, ...visibleProfileWhere },
     select: { id: true },
   });
 
@@ -35,6 +61,7 @@ export default async function connectionMode({ params }: PageProps) {
     const relations = await myPrisma.follow.findMany({
       where: {
         followedProfileId: target.id,
+        followerProfile: visibleProfileWhere,
       },
       select: {
         followerProfile: {
@@ -46,11 +73,7 @@ export default async function connectionMode({ params }: PageProps) {
             bio: true,
             isAi: true,
             isPro: true,
-            relationWhereUserIsFollowed: {
-              select: {
-                followerProfileId: true,
-              },
-            },
+            relationWhereUserIsFollowed: viewerFollowSelect,
           },
         },
       },
@@ -91,6 +114,7 @@ export default async function connectionMode({ params }: PageProps) {
   const relations = await myPrisma.follow.findMany({
     where: {
       followerProfileId: target.id,
+      followedProfile: visibleProfileWhere,
     },
     select: {
       followedProfile: {
@@ -102,11 +126,7 @@ export default async function connectionMode({ params }: PageProps) {
           bio: true,
           isAi: true,
           isPro: true,
-          relationWhereUserIsFollowed: {
-            select: {
-              followerProfileId: true,
-            },
-          },
+          relationWhereUserIsFollowed: viewerFollowSelect,
         },
       },
     },
