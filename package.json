@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
+    "clean": "rm -rf .next .turbo node_modules/.cache",
     "build": "next build",
     "typecheck": "next typegen && tsc --noEmit",
+    "seed:discover": "node scripts/seed-discover-dev.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "jest",

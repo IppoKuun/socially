@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
 import AppPageShell from "../_components/app-page-shell";
-import PagePlaceholderCard from "../_components/page-placeholder-card";
 import { myPrisma } from "@/lib/prisma";
 import { getSession } from "@/lib/authSession";
 import {
@@ -14,6 +13,9 @@ import MainPostCard from "./_components/MainPostCard";
 import CategoryCard from "./_components/CategoryCard";
 import DiscussionPostCard from "./_components/DiscussionPostCard";
 import ProfilCard from "./_components/ProfileCard";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 async function requireViewerProfile() {
   const session = await getSession();
@@ -52,16 +54,19 @@ export default async function DiscoverPage() {
   ]);
 
   const mainPost = posts[0] ?? null;
-  const discussionPost = posts.slice(1, 4);
+  const discussionPost = posts.slice(1, 5);
 
   return (
     <AppPageShell title={t("title")} description={t("description")}>
-      <PagePlaceholderCard message={t("placeholder")} />
-      <section className="grid grid-cols-2">
-        <MainPostCard mainPost={mainPost} />
-        <CategoryCard />
-        <DiscussionPostCard discussionPost={discussionPost} />
-        <ProfilCard profiles={profiles} />
+      <section className="space-y-8 ">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
+          <MainPostCard mainPost={mainPost} />
+          <CategoryCard />
+        </div>
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(260px,0.4fr)]">
+          <DiscussionPostCard discussionPost={discussionPost} />
+          <ProfilCard profiles={profiles} />
+        </div>
       </section>
     </AppPageShell>
   );

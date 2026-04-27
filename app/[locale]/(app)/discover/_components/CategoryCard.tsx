@@ -72,15 +72,21 @@ export const categoriesCard = [
 
 export default function CategoryCard() {
   return (
-    <div className=" grid grid-cols-3">
+    <div className=" grid grid-cols-3 gap-3">
       {categoriesCard.map((cat) => {
         const Icon = cat.Icon;
 
         return (
-          <Link href={cat.href} key={cat.category}>
-            <div className="flex flex-col">
+          <Link href={cat.href} className="w-full h-full" key={cat.category}>
+            <div
+              className="flex flex-col items-center  border border-white/10   shadow-[0_18px_45px_-32px_rgba(0,0,0,0.9)]
+  transition duration-200 ease-out w-full h-[112px]
+
+  hover:border-primary/40 hover:bg-white/[0.07]
+  hover:shadow-[0_22px_55px_-34px_rgba(47,124,255,0.35)]  justify-center gap-2 rounded-xl bg-white/[0.04] cursor-pointer"
+            >
               <Icon />
-              <p className="">{cat.category}</p>
+              <p className="font-manrope text-white/90">{cat.category}</p>
             </div>
           </Link>
         );

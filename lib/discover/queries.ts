@@ -26,6 +26,9 @@ export type DiscoverProfileCandidate = {
   bio: string | null;
   isAi: boolean;
   isPro: boolean;
+  _count: {
+    relationWhereUserIsFollowed: number;
+  };
 };
 
 async function getPostDiscoverCandidate() {
@@ -60,7 +63,7 @@ async function getPostDiscoverCandidate() {
 
 export const getCachedDiscoveryPost = unstable_cache(
   getPostDiscoverCandidate,
-  ["discover-posts", "v1"],
+  ["discover-posts", "v3"],
   { tags: [DISCOVER_POST_CACHE_TAG], revalidate: DISCOVER_REVALIDATE_SECONDS },
 );
 
@@ -74,6 +77,9 @@ async function getProfileDiscoverCandidate() {
       bio: true,
       isAi: true,
       isPro: true,
+      _count: {
+        select: { relationWhereUserIsFollowed: true },
+      },
     },
     where: {
       deletedAt: null,
@@ -81,6 +87,7 @@ async function getProfileDiscoverCandidate() {
         not: null,
       },
     },
+
     take: PROFILE_CANDIDATE_NUMBER,
     orderBy: {
       relationWhereUserIsFollowed: {
@@ -92,7 +99,7 @@ async function getProfileDiscoverCandidate() {
 
 export const getCachedDiscoveryProfile = unstable_cache(
   getProfileDiscoverCandidate,
-  ["discover-profiles", "v1"],
+  ["discover-profiles", "v3"],
   {
     tags: [DISCOVER_PROFILE_CACHE_TAG],
     revalidate: DISCOVER_REVALIDATE_SECONDS,
