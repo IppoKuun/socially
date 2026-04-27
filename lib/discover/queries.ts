@@ -4,7 +4,9 @@
 
 import { unstable_cache } from "next/cache";
 import { myPrisma } from "../prisma";
-import { Category } from "@prisma/client";
+import type { Category } from "@prisma/client";
+import type { FeedPost } from "../feed/shared";
+import { getSession } from "@/lib/authSession";
 
 export const POST_CANDIDATE_NUMBER = 20;
 export const PROFILE_CANDIDATE_NUMBER = 7;
@@ -183,21 +185,100 @@ export async function getDiscoveryProfileForViewer(
   return finalProfile;
 }
 
+async function requireCategoryViewerProfile() {
+  const session = await getSession();
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  const profile = await myPrisma.userProfile.findUnique({
+    where: {
+      userId: session.user.id,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!profile) {
+    throw new Error("Profile not found");
+  }
+
+  return profile;
+}
+
 //!! Il n'ya pas de filtres pour les bloquées, c'est fait exprès  //
-export async function getPostForCategory(category: Category) {
+
+export async function getPostForCategory(
+  category: Category,
+): Promise<FeedPost[]> {
+  const viewer = await requireCategoryViewerProfile();
+
   const posts = await myPrisma.post.findMany({
     where: { categories: { has: category } },
     select: {
       id: true,
+      slug: true,
       title: true,
       content: true,
-      slug: true,
+      createdAt: true,
+      moderationStatus: true,
       imagesUrl: true,
-      _count: { select: { likes: true, comment: true } },
+      userId: true,
+      author: {
+        select: {
+          id: true,
+          displayname: true,
+          username: true,
+          avatarUrl: true,
+          isAi: true,
+          isPro: true,
+        },
+      },
+      likes: {
+        where: { user_id: viewer.id },
+        select: { id: true },
+      },
+      reported: {
+        where: { reporterId: viewer.id },
+        select: { id: true },
+      },
+      _count: {
+        select: {
+          likes: true,
+          comment: true,
+        },
+      },
     },
     take: 20,
     orderBy: { likes: { _count: "desc" } },
   });
 
-  return posts;
+  return posts.map(
+    (post): FeedPost => ({
+      id: post.id,
+      slug: post.slug,
+      title: post.title,
+      content: post.content,
+      createdAt: post.createdAt.toISOString(),
+      moderationStatus: post.moderationStatus,
+      images: post.imagesUrl,
+      likeCount: post._count.likes,
+      commentCount: post._count.comment,
+      author: {
+        id: post.author.id,
+        displayName: post.author.displayname,
+        username: post.author.username ?? "pending-profile",
+        avatarUrl: post.author.avatarUrl,
+        isAi: post.author.isAi,
+        isPro: post.author.isPro,
+      },
+      viewer: {
+        isOwner: post.userId === viewer.id,
+        hasLiked: post.likes.length > 0,
+        hasReported: post.reported.length > 0,
+      },
+    }),
+  );
 }

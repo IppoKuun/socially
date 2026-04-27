@@ -6,7 +6,6 @@ import ProfileHeader from "../components/ProfilHeader";
 import ProfileFooter from "../components/ProfileFooter";
 import QueryProvider from "@/components/providers/query-provider";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { Separator } from "@/components/ui/separator";
 
 export type ProfileProps = {
   isOwner: boolean;

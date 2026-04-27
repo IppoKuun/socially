@@ -57,15 +57,11 @@ export default async function DiscoverPage() {
   return (
     <AppPageShell title={t("title")} description={t("description")}>
       <PagePlaceholderCard message={t("placeholder")} />
-      <section className="flex flex-col">
-        <div className="flex flex-row">
-          <MainPostCard mainPost={mainPost} />
-          <CategoryCard />
-        </div>
-        <div className="flex flex-col">
-          <DiscussionPostCard discussionPost={discussionPost} />
-          <ProfilCard profiles={profiles} />
-        </div>
+      <section className="grid grid-cols-2">
+        <MainPostCard mainPost={mainPost} />
+        <CategoryCard />
+        <DiscussionPostCard discussionPost={discussionPost} />
+        <ProfilCard profiles={profiles} />
       </section>
     </AppPageShell>
   );
