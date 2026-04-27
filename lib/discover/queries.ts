@@ -4,7 +4,7 @@
 
 import { unstable_cache } from "next/cache";
 import { myPrisma } from "../prisma";
-import type { FeedPost } from "../feed/shared";
+import { Category } from "@prisma/client";
 
 export const POST_CANDIDATE_NUMBER = 20;
 export const PROFILE_CANDIDATE_NUMBER = 7;
@@ -12,7 +12,9 @@ export const DISCOVER_REVALIDATE_SECONDS = 600;
 export const DISCOVER_POST_CACHE_TAG = "discover-posts";
 export const DISCOVER_PROFILE_CACHE_TAG = "discover-profiles";
 
-type DiscoverPostCandidate = Omit<FeedPost, "viewer">;
+export type DiscoverPostCandidate = Awaited<
+  ReturnType<typeof getPostDiscoverCandidate>
+>[number];
 
 type DiscoverProfileCandidate = {
   id: string;
@@ -38,6 +40,8 @@ async function getPostDiscoverCandidate() {
         },
       },
       title: true,
+      slug: true,
+      moderationStatus: true,
       content: true,
       imagesUrl: true,
       id: true,
@@ -177,4 +181,23 @@ export async function getDiscoveryProfileForViewer(
   }));
 
   return finalProfile;
+}
+
+//!! Il n'ya pas de filtres pour les bloquées, c'est fait exprès  //
+export async function getPostForCategory(category: Category) {
+  const posts = await myPrisma.post.findMany({
+    where: { categories: { has: category } },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      slug: true,
+      imagesUrl: true,
+      _count: { select: { likes: true, comment: true } },
+    },
+    take: 20,
+    orderBy: { likes: { _count: "desc" } },
+  });
+
+  return posts;
 }
