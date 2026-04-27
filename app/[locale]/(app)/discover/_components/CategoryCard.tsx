@@ -85,8 +85,8 @@ export default function CategoryCard() {
   hover:border-primary/40 hover:bg-white/[0.07]
   hover:shadow-[0_22px_55px_-34px_rgba(47,124,255,0.35)]  justify-center gap-2 rounded-xl bg-white/[0.04] cursor-pointer"
             >
-              <Icon />
-              <p className="font-manrope text-white/90">{cat.category}</p>
+              <Icon size={35} />
+              <p className="font-manrope text-white/60">{cat.category}</p>
             </div>
           </Link>
         );

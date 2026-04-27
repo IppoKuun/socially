@@ -11,20 +11,18 @@ type discussionProps = {
 export default function DiscussionPostCard({
   discussionPost,
 }: discussionProps) {
-  const router = useRouter();
-
   return (
-    <section className="flex flex-col w-full">
+    <section className="flex flex-col w-full  ">
       <h1 className="font-manrope text-2xl mb-5">Discussion intéréssantes</h1>
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         {discussionPost.map((post) => (
           <Link key={post.id} href={`post/${post.slug}`}>
             <article
-              className="flex flex-col bg-white/8  justify-center rounded-lg p-4"
+              className="flex flex-col bg-white/8 max-h-[150px]  justify-center rounded-lg p-4"
               key={post.id}
             >
               <h2 className="font-sora mb-2">{post.title}</h2>
-              <p className="line-clamp-3 text-white/70 text-xs">
+              <p className="line-clamp-2 text-white/70 text-xs">
                 {post.content}
               </p>
               <div className="flex flex-row gap-2 mt-2">
