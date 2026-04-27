@@ -210,7 +210,7 @@ async function getTrendingViewerState(input: {
     reportedPostIds: new Set(reports.map((report) => report.postId)),
   };
 }
-////
+
 export async function getTrendingFeedPostsForViewer(input: {
   candidates: TrendingPostCandidate[];
   viewerId: string;
