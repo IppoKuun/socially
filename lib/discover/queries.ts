@@ -16,7 +16,7 @@ export type DiscoverPostCandidate = Awaited<
   ReturnType<typeof getPostDiscoverCandidate>
 >[number];
 
-type DiscoverProfileCandidate = {
+export type DiscoverProfileCandidate = {
   id: string;
   username: string | null;
   displayname: string;
@@ -117,7 +117,7 @@ export async function getDiscoveryPostForViewer(
   );
 
   const safePosts = postCandidat.filter((post) => !blockId.has(post.author.id));
-  const returnPost = safePosts.slice(0, 4);
+  const returnPost = safePosts.slice(0, 5);
   const returnPostId = returnPost.map((post) => post.id);
 
   const liked = await myPrisma.postLike.findMany({

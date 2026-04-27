@@ -52,7 +52,7 @@ export default async function DiscoverPage() {
   ]);
 
   const mainPost = posts[0] ?? null;
-  const discussionPost = posts.slice(1, 3);
+  const discussionPost = posts.slice(1, 4);
 
   return (
     <AppPageShell title={t("title")} description={t("description")}>
@@ -64,7 +64,7 @@ export default async function DiscoverPage() {
         </div>
         <div className="flex flex-col">
           <DiscussionPostCard discussionPost={discussionPost} />
-          <ProfilCard />
+          <ProfilCard profiles={profiles} />
         </div>
       </section>
     </AppPageShell>
