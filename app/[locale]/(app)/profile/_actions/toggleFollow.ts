@@ -2,8 +2,6 @@
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 
-// Ajoutez après succes un revalidateTag a chaque follow qui vas invalidé cache follow de discover //
-
 export default async function toggleFollow(username: string) {
   const session = await getSession();
   if (!session) {

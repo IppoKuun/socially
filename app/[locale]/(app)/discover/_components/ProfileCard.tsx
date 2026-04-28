@@ -1,7 +1,7 @@
+import { Link } from "@/i18n/routing";
 import { DiscoverProfileCandidate } from "@/lib/discover/queries";
 import { User2Icon } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
 type ProfilCardProps = {
   profiles: DiscoverProfileCandidate[];
@@ -12,7 +12,7 @@ export default function ProfilCard({ profiles }: ProfilCardProps) {
       <h1 className=" font-manrope text-2xl">Meuilleur Créateur</h1>
       <section className="flex flex-col space-y-3 p-4 mb-5">
         {profiles.map((p) => (
-          <Link key={p.id} href={`profile/${p.username}`}>
+          <Link key={p.id} href={`/profile/${p.username}`}>
             <article className="w-full flex flex-row  bg-white/10 p-4 rounded-xl overflow-hidden">
               <div className="w-[50px] h-[50px] flex-shrink-0">
                 {p.avatarUrl ? (

@@ -33,6 +33,7 @@ export type DiscoverProfileCandidate = {
 
 async function getPostDiscoverCandidate() {
   return await myPrisma.post.findMany({
+    where: { deletedAt: null },
     select: {
       author: {
         select: {
@@ -215,15 +216,13 @@ async function requireCategoryViewerProfile() {
   return profile;
 }
 
-//!! Il n'ya pas de filtres pour les bloquées, c'est fait exprès  //
-
 export async function getPostForCategory(
   category: Category,
 ): Promise<FeedPost[]> {
   const viewer = await requireCategoryViewerProfile();
 
   const posts = await myPrisma.post.findMany({
-    where: { categories: { has: category } },
+    where: { deletedAt: null, categories: { has: category } },
     select: {
       id: true,
       slug: true,

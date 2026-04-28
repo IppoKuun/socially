@@ -4,10 +4,14 @@ import { User2Icon } from "lucide-react";
 import Image from "next/image";
 
 type MainPostCardProps = {
-  mainPost: DiscoverPostCandidate;
+  mainPost: DiscoverPostCandidate | null;
 };
 
 export default function MainPostCard({ mainPost }: MainPostCardProps) {
+  if (!mainPost) {
+    return <p className="">Aucun post trouvé</p>;
+  }
+
   const hasImage = Boolean(mainPost.imagesUrl[0]);
 
   const backgroundImage = mainPost.imagesUrl[0]
@@ -15,7 +19,7 @@ export default function MainPostCard({ mainPost }: MainPostCardProps) {
     : "linear-gradient(135deg, #1f2937, #111827)";
 
   return (
-    <Link href={`post/${mainPost.slug}`} className="block">
+    <Link href={`/post/${mainPost.slug}`} className="block">
       <section
         className="flex relative flex-col rounded-lg justify-end min-h-[340px] p-4 h-[45svh] overflow-hidden"
         style={

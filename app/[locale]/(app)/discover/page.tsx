@@ -14,9 +14,6 @@ import CategoryCard from "./_components/CategoryCard";
 import DiscussionPostCard from "./_components/DiscussionPostCard";
 import ProfilCard from "./_components/ProfileCard";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 async function requireViewerProfile() {
   const session = await getSession();
 

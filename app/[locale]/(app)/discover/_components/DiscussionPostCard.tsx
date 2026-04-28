@@ -16,7 +16,7 @@ export default function DiscussionPostCard({
       <h1 className="font-manrope text-2xl mb-5">Discussion intéréssantes</h1>
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         {discussionPost.map((post) => (
-          <Link key={post.id} href={`post/${post.slug}`}>
+          <Link key={post.id} href={`/post/${post.slug}`}>
             <article
               className="flex flex-col bg-white/8 max-h-[150px]  justify-center rounded-lg p-4"
               key={post.id}

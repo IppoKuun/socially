@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import AppPageShell from "../../_components/app-page-shell";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import PostCard from "@/components/post/post-card";
+import QueryProvider from "@/components/providers/query-provider";
 
 interface CategoryParams {
   locale: string;
@@ -18,18 +19,18 @@ interface PageProps {
 }
 export default async function DiscoverCategoryPage({ params }: PageProps) {
   const { locale, category } = await params;
-  if (!Object.values(Category).includes(category as Category)) {
+  const categoryValue = category.toUpperCase().replaceAll("-", "_") as Category;
+
+  if (!Object.values(Category).includes(categoryValue)) {
     notFound();
   }
 
   const queryClient = makeQueryClient();
 
-  const categoryValue = category;
-
   const posts = await queryClient.fetchQuery({
     queryKey: ["category", categoryValue],
     queryFn: () => {
-      return getPostForCategory(categoryValue as Category);
+      return getPostForCategory(categoryValue);
     },
   });
 
@@ -39,22 +40,25 @@ export default async function DiscoverCategoryPage({ params }: PageProps) {
         title={category}
         description={"Les meuilleurs post de la category"}
         className="max-w-[880px]"
-      ></AppPageShell>
-      {posts.length === 0 ? (
-        <p className="">Aucun post pour cette catégories trouvé</p>
-      ) : (
-        <section className="flex flex-col space-y-2">
-          {posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              commentHref={`/post/${post.slug}#post-comment-compose`}
-            />
-          ))}
-        </section>
-      )}
-
-      <HydrationBoundary state={dehydrate(queryClient)}></HydrationBoundary>
+      >
+        <QueryProvider>
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            {posts.length === 0 ? (
+              <p className="">Aucun post pour cette catégories trouvé</p>
+            ) : (
+              <section className="flex flex-col space-y-2">
+                {posts.map((post) => (
+                  <PostCard
+                    key={post.id}
+                    post={post}
+                    commentHref={`/post/${post.slug}#post-comment-compose`}
+                  />
+                ))}
+              </section>
+            )}
+          </HydrationBoundary>
+        </QueryProvider>
+      </AppPageShell>
     </>
   );
 }
