@@ -2,7 +2,6 @@
 import { Link } from "@/i18n/routing";
 import { DiscoverPostCandidate } from "@/lib/discover/queries";
 import { Heart, MessageSquare } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 type discussionProps = {
   discussionPost: DiscoverPostCandidate[];
@@ -12,13 +11,13 @@ export default function DiscussionPostCard({
   discussionPost,
 }: discussionProps) {
   return (
-    <section className="flex flex-col w-full  ">
+    <section className="flex flex-col w-full ">
       <h1 className="font-manrope text-2xl mb-5">Discussion intéréssantes</h1>
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+      <section className="grid grid-cols-1  lg:grid-cols-2 gap-3">
         {discussionPost.map((post) => (
-          <Link key={post.id} href={`/post/${post.slug}`}>
+          <Link key={post.id} className="min-w-0" href={`/post/${post.slug}`}>
             <article
-              className="flex flex-col bg-white/8 max-h-[150px]  justify-center rounded-lg p-4"
+              className="flex flex-col min-w-0 bg-white/8 max-h-[150px] justify-center rounded-lg p-4"
               key={post.id}
             >
               <h2 className="font-sora mb-2">{post.title}</h2>

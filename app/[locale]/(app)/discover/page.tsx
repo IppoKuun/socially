@@ -60,7 +60,7 @@ export default async function DiscoverPage() {
           <MainPostCard mainPost={mainPost} />
           <CategoryCard />
         </div>
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,1fr)]  overflow-hidden">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,1fr)]  min-w-0">
           <DiscussionPostCard discussionPost={discussionPost} />
           <ProfilCard profiles={profiles} />
         </div>
