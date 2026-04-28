@@ -1,3 +1,5 @@
+// Page SSR qui orchestra tout les composant, prendre la query en params
+// Et mettre composant result//
 import { getTranslations } from "next-intl/server";
 
 import AppPageShell from "../_components/app-page-shell";
