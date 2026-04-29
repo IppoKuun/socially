@@ -7,7 +7,7 @@ export default function SearchHistory({ history }: SearchHistoryProps) {
   return (
     <main className="flex flex-col">
       {history.length === 0 ? (
-        <p className="">
+        <p className="font-manrope text-xs text-center text-white/70 font-extralight px-8">
           Aucun historique de sauvergardez faitent votes premiere recherche
         </p>
       ) : (

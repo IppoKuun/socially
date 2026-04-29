@@ -12,7 +12,7 @@ export default function SearchForm({ query = "" }: SearchFormProps) {
   return (
     <form
       action={submitSearch}
-      className="flex w-full flex-col gap-3 rounded-lg border border-white/10 bg-white/[0.03] p-3 sm:flex-row"
+      className="flex w-full flex-col gap-3 rounded-lg border border-white/10 bg-white/[0.03] p-3 sm:flex-row mb-5 "
     >
       <label className="sr-only" htmlFor="search-query">
         Search

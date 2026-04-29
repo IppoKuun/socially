@@ -46,7 +46,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         {user ? (
           <SearchHistory history={history} />
         ) : (
-          <p className="">Veuillez vous connetcez pour avoir un historique</p>
+          <p className="font-manrope text-xs text-center text-white/70 font-extralight px-8">
+            Veuillez vous connetcez pour avoir un historique
+          </p>
         )}
       </section>
     </AppPageShell>
