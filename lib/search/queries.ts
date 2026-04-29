@@ -155,9 +155,7 @@ export async function getQueriesResult(queries: string): Promise<SearchResult> {
     where: { userId: session.user.id },
     select: {
       id: true,
-      relationWhereUserIsFollower: {
-        select: { followedProfileId: true },
-      },
+
       blocked: { select: { blockerId: true } },
       blocker: { select: { blockedById: true } },
     },
@@ -204,6 +202,18 @@ export async function getQueriesResult(queries: string): Promise<SearchResult> {
     }),
   ]);
 
+  const followedProfiles = await myPrisma.follow.findMany({
+    where: {
+      followerProfileId: user.id,
+      followedProfileId: {
+        in: profiles.map((profile) => profile.id),
+      },
+    },
+    select: {
+      followedProfileId: true,
+    },
+  });
+
   const profilesThatBlockedViewer = new Set(
     user.blocked.map((block) => block.blockerId),
   );
@@ -212,9 +222,7 @@ export async function getQueriesResult(queries: string): Promise<SearchResult> {
   );
 
   const viewerFollowId = new Set(
-    user?.relationWhereUserIsFollower.map(
-      (profile) => profile.followedProfileId,
-    ),
+    followedProfiles.map((profile) => profile.followedProfileId),
   );
 
   return {

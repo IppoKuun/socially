@@ -222,7 +222,13 @@ export async function getPostForCategory(
   const viewer = await requireCategoryViewerProfile();
 
   const posts = await myPrisma.post.findMany({
-    where: { deletedAt: null, categories: { has: category } },
+    where: {
+      author: {
+        deletedAt: null,
+      },
+      deletedAt: null,
+      categories: { has: category },
+    },
     select: {
       id: true,
       slug: true,
