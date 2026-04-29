@@ -24,7 +24,7 @@ export async function getQueriesResult(queries: string) {
   if (!user) {
     throw new myError("User not found");
   }
-  const [profiles, posts] = await Promise.all([
+  const [profiles, posts, history] = await Promise.all([
     myPrisma.userProfile.findMany({
       where: {
         OR: [
@@ -73,6 +73,12 @@ export async function getQueriesResult(queries: string) {
       },
       take: 20,
     }),
+    myPrisma.searchHistory.findMany({
+      where: { userId: user.id }, // On utilise l'ID qu'on a déjà !
+      select: { query: true },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+    }),
   ]);
 
   const profilesThatBlockedViewer = new Set(
@@ -112,17 +118,7 @@ export async function getQueriesResult(queries: string) {
           ),
         },
       })),
+      history: history,
     },
   };
-}
-
-export async function searchHistory(viewerId: string) {
-  const history = await myPrisma.searchHistory.findMany({
-    where: { userId: viewerId },
-    select: { query: true },
-    orderBy: { createdAt: "desc" },
-    take: 10,
-  });
-
-  return history;
 }

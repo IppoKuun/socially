@@ -1,1 +1,9 @@
-// Page qui prends en props les 5 profile et 10 post qui corresponde aux query //
+import { FeedPost } from "@/lib/feed/shared";
+
+type SearchResultProps = {
+  profiles: string[];
+  posts: FeedPost[];
+};
+export default function SearchResult({ profiles, posts }: SearchResultProps) {
+  return <main className=""></main>;
+}
