@@ -6,7 +6,9 @@ import AppPageShell from "../_components/app-page-shell";
 import SearchForm from "./_components/SearchForm";
 import SearchResult from "./_components/SearchResult";
 import SearchHistory from "./_components/SearchHistory";
-import { getQueriesResult } from "@/lib/search/queries";
+import { getSession } from "@/lib/authSession";
+import { getQueriesResult, getViewerHistory } from "@/lib/search/queries";
+import { myPrisma } from "@/lib/prisma";
 
 type SearchPageProps = {
   searchParams: Promise<{
@@ -19,17 +21,32 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   const { q } = await searchParams;
   const query = typeof q === "string" ? q : "";
+  if (query) {
+    const { data } = await getQueriesResult(query);
+    return (
+      <main className="">
+        <SearchForm query={query} />
+        <SearchResult profiles={data.profiles} posts={data.posts} />
+      </main>
+    );
+  }
+  const session = await getSession();
 
-  const { data } = await getQueriesResult(query);
+  const user = await myPrisma.userProfile.findUnique({
+    where: { userId: session?.user.id },
+    select: { id: true },
+  });
+
+  const history = user ? await getViewerHistory(user.id) : [];
 
   return (
     <AppPageShell title={t("title")} description={t("description")}>
       <section className="flex flex-col">
         <SearchForm query={query} />
-        {data ? (
-          <SearchResult profiles={data.profiles} posts={data.posts} />
+        {user ? (
+          <SearchHistory history={history} />
         ) : (
-          <SearchHistory history={data.history} />
+          <p className="">Veuillez vous connetcez pour avoir un historique</p>
         )}
       </section>
     </AppPageShell>
