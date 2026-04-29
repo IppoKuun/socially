@@ -16,6 +16,9 @@
 - Do not accept weak reasoning, vague implementations, or fragile shortcuts without explicitly pointing them out.
 - Stay proportional. Do not introduce unnecessary architecture, abstraction, or complexity for a small feature.
 - If a feature is being implemented too early, depends on unfinished work, or I am jumping to another topic before finishing the current ticket, say it clearly.
+- When I describe a bug, error, failing behavior, or confusing runtime issue, treat it as a request for diagnosis and explanation by default, not as permission to modify files.
+- Do not fix or edit code for a bug unless I explicitly ask you to implement the fix with wording such as "corrige", "fix", "modifie", "implémente la correction", or equivalent.
+- In bug discussions, explain why the bug exists, where the reasoning breaks, and what change would fix it before making any code change.
 
 ---
 
@@ -239,6 +242,7 @@ Expected behavior:
 
 - help me reason about the bug
 - help me read and understand the error
+- explain the root cause and the fix direction without editing files unless I explicitly ask for the fix to be implemented
 - do not switch to debug mode during normal feature implementation
 - for detailed behavior, use the dedicated `debug-mode` skill when available
 

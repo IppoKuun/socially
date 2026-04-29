@@ -148,8 +148,7 @@ That final brief should:
 - be suitable for a new implementation conversation
 - make it easy for the implementation agent to explain the created files afterward in a logical study order when relevant
 - remind the implementation agent to prefer the simplest understandable solution when the user did not ask for a broader architecture
-- one the draft/template we should ask to make "npm run build" at the end so IA can see if implementation are all OK or not.
-- If not, if npm run build or other test failed. If its a minor issues, IA should fix its, but otherwise, AI should tel, where it failed,
+
   Why, and why can the User do, and propose if AI should do it itself.
 
 When assumptions are still necessary:

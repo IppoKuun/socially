@@ -421,8 +421,16 @@
       },
       "trending": {
         "title": "Trending",
-        "description": "Track the posts and discussions getting the most attention right now.",
-        "placeholder": "Trending logic is still pending. This route exists now so the new shell can navigate to a stable page."
+        "description": "Track recent posts getting the most likes.",
+        "windowLabel": "Window",
+        "windowValue": "Last {days} days",
+        "rankingLabel": "Ranking",
+        "rankingValue": "Top {count} by likes",
+        "cacheLabel": "Cache",
+        "cacheValue": "Revalidates every {seconds}s",
+        "emptyTitle": "No trending posts yet.",
+        "emptyDescription": "Recent posts with at least one like will appear here as activity grows.",
+        "rankLabel": "Rank {rank}"
       },
       "notifications": {
         "title": "Notif",
@@ -437,7 +445,31 @@
       "search": {
         "title": "Search",
         "description": "Prepare the future search surface for users and posts inside the authenticated shell.",
-        "placeholder": "Search is not implemented yet. This route exists now so the expanded mobile navigation stays fully usable."
+        "placeholder": "Search is not implemented yet. This route exists now so the expanded mobile navigation stays fully usable.",
+        "form": {
+          "label": "Search",
+          "placeholder": "Search profiles and posts"
+        },
+        "results": {
+          "empty": "No results found.",
+          "profilesTitle": "Profiles",
+          "postsTitle": "Posts",
+          "count": "{count, plural, one {# result} other {# results}}",
+          "blocked": "Blocked",
+          "profileAvatarAlt": "{name}'s profile photo",
+          "unknownUsername": "unknown",
+          "bioFallback": "No bio yet."
+        },
+        "history": {
+          "title": "Recent searches",
+          "empty": "No recent searches yet. Start your first search to build your history."
+        },
+        "follow": {
+          "follow": "Follow",
+          "following": "Following",
+          "error": "Unable to update the follow status."
+        },
+        "authRequiredHistory": "Sign in to access your search history."
       },
       "feedback": {
         "title": "Feedback",

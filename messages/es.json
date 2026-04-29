@@ -421,8 +421,16 @@
       },
       "trending": {
         "title": "Trending",
-        "description": "Sigue las publicaciones y conversaciones que están recibiendo más atención ahora mismo.",
-        "placeholder": "La lógica Trending todavía no está conectada. Esta ruta ya existe para validar el shell de navegación."
+        "description": "Sigue las publicaciones recientes que reciben más likes.",
+        "windowLabel": "Ventana",
+        "windowValue": "Últimos {days} días",
+        "rankingLabel": "Ranking",
+        "rankingValue": "Top {count} por likes",
+        "cacheLabel": "Caché",
+        "cacheValue": "Revalidación cada {seconds}s",
+        "emptyTitle": "Aún no hay publicaciones en tendencia.",
+        "emptyDescription": "Las publicaciones recientes con al menos un like aparecerán aquí cuando haya actividad.",
+        "rankLabel": "Rango {rank}"
       },
       "notifications": {
         "title": "Notif",
@@ -435,9 +443,33 @@
         "placeholder": "La mensajería privada aún no está conectada. Esta ruta está disponible a propósito para validar la navegación de extremo a extremo."
       },
       "search": {
-        "title": "Search",
+        "title": "Búsqueda",
         "description": "Prepara la futura superficie de búsqueda para usuarios y publicaciones dentro del shell autenticado.",
-        "placeholder": "La búsqueda aún no está implementada. Esta ruta ya existe para que la navegación móvil ampliada siga siendo totalmente utilizable."
+        "placeholder": "La búsqueda aún no está implementada. Esta ruta ya existe para que la navegación móvil ampliada siga siendo totalmente utilizable.",
+        "form": {
+          "label": "Buscar",
+          "placeholder": "Buscar perfiles y publicaciones"
+        },
+        "results": {
+          "empty": "No se encontraron resultados.",
+          "profilesTitle": "Perfiles",
+          "postsTitle": "Publicaciones",
+          "count": "{count, plural, one {# resultado} other {# resultados}}",
+          "blocked": "Bloqueado",
+          "profileAvatarAlt": "Foto de perfil de {name}",
+          "unknownUsername": "unknown",
+          "bioFallback": "Aún no hay biografía."
+        },
+        "history": {
+          "title": "Búsquedas recientes",
+          "empty": "Aún no hay búsquedas recientes. Haz tu primera búsqueda para crear tu historial."
+        },
+        "follow": {
+          "follow": "Seguir",
+          "following": "Siguiendo",
+          "error": "No se pudo actualizar el seguimiento."
+        },
+        "authRequiredHistory": "Inicia sesión para acceder a tu historial de búsqueda."
       },
       "feedback": {
         "title": "Feedback",

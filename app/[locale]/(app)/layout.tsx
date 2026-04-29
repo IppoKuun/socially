@@ -50,7 +50,7 @@ export default async function AuthenticatedAppLayout({
         <div className="flex min-h-screen flex-1 flex-col pb-[calc(9.5rem+env(safe-area-inset-bottom))] md:pb-0">
           {/* padding bas pour la bottom bar mobile sur 2 lignes + safe area iPhone / flex-1 : le conteneur grandit pour prendre l'espace vertical disponible */}
 
-          <div className="mx-auto flex w-full max-w-[960px] flex-1 flex-col px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
+          <div className="mx-auto flex w-full lg:max-w-[1100px]   flex-1 flex-col px-4 py-6 sm:px-8 lg:px-6 lg:py-8">
             {children}
           </div>
         </div>
