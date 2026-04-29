@@ -27,6 +27,9 @@ export default async function DiscoverCategoryPage({ params }: PageProps) {
 
   const queryClient = makeQueryClient();
 
+  // Decision produit assumee: une page de categorie Discover est une surface publique
+  // de decouverte. Elle affiche les posts de la categorie meme si une relation de
+  // blocage existe, contrairement aux feeds personnalises.
   const posts = await queryClient.fetchQuery({
     queryKey: ["category", categoryValue],
     queryFn: () => {

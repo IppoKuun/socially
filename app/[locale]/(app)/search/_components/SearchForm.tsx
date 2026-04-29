@@ -15,6 +15,9 @@ export default async function SearchForm({ query = "" }: SearchFormProps) {
       action={submitSearch}
       className="flex w-full flex-col gap-3  max-w-4xl mx-auto p-5 sm:flex-row mb-5 "
     >
+      {/* Decision UI: pas de bouton submit visible ici.
+          La recherche se valide avec Entree pour garder une barre plus simple,
+          au prix d'une affordance un peu moins explicite. */}
       <label className="sr-only" htmlFor="search-query">
         {t("label")}
       </label>

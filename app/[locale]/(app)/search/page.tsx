@@ -24,6 +24,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   if (query) {
     const { data } = await getQueriesResult(query);
     return (
+      // Decision UI: les resultats de recherche avec query sont volontairement
+      // exclus de AppPageShell pour avoir une surface plus directe et dediee.
       <main className="">
         <SearchForm query={query} />
         <SearchResult profiles={data.profiles} posts={data.posts} />

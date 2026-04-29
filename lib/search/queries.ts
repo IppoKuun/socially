@@ -5,6 +5,9 @@ import type { FeedAuthor, FeedPost } from "../feed/shared";
 import { myError } from "../myError";
 import { myPrisma } from "../prisma";
 
+const SEARCH_MIN_LENGTH = 2;
+const SEARCH_MAX_LENGTH = 50;
+
 export type SearchProfile = {
   id: string;
   username: string | null;
@@ -19,6 +22,19 @@ export type SearchProfile = {
     isBlocked: boolean;
   };
 };
+
+function getEmptySearchResult(): SearchResult {
+  return {
+    data: {
+      profiles: [],
+      posts: [],
+    },
+  };
+}
+
+function normalizeSearchQuery(query: string) {
+  return query.trim().replace(/\s+/g, " ").slice(0, SEARCH_MAX_LENGTH);
+}
 
 export type SearchResult = {
   data: {
@@ -124,6 +140,12 @@ function serializeSearchPost(
 }
 
 export async function getQueriesResult(queries: string): Promise<SearchResult> {
+  const normalizedQuery = normalizeSearchQuery(queries);
+
+  if (normalizedQuery.length < SEARCH_MIN_LENGTH) {
+    return getEmptySearchResult();
+  }
+
   const session = await getSession();
 
   if (!session) {
@@ -145,12 +167,15 @@ export async function getQueriesResult(queries: string): Promise<SearchResult> {
     throw new myError("User not found");
   }
   const [profiles, posts] = await Promise.all([
+    // Decision produit: les profils bloques restent visibles en recherche.
+    // Le frontend les marque comme bloques pour expliquer a l'utilisateur
+    // pourquoi les actions de suivi/navigation peuvent etre limitees.
     myPrisma.userProfile.findMany({
       where: {
         deletedAt: null,
         OR: [
-          { username: { contains: queries, mode: "insensitive" } },
-          { displayname: { contains: queries, mode: "insensitive" } },
+          { username: { contains: normalizedQuery, mode: "insensitive" } },
+          { displayname: { contains: normalizedQuery, mode: "insensitive" } },
         ],
       },
       select: {
@@ -170,8 +195,8 @@ export async function getQueriesResult(queries: string): Promise<SearchResult> {
         deletedAt: null,
         author: getVisibleAuthorWhere(user.id),
         OR: [
-          { title: { contains: queries, mode: "insensitive" } },
-          { content: { contains: queries, mode: "insensitive" } },
+          { title: { contains: normalizedQuery, mode: "insensitive" } },
+          { content: { contains: normalizedQuery, mode: "insensitive" } },
         ],
       },
       select: getSearchPostSelect(user.id),
