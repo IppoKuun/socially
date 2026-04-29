@@ -443,9 +443,33 @@
         "placeholder": "La messagerie privée n'est pas encore câblée. Cette route est volontairement disponible pour valider la navigation de bout en bout."
       },
       "search": {
-        "title": "Search",
+        "title": "Recherche",
         "description": "Prépare la future surface de recherche pour les utilisateurs et les posts dans le shell authentifié.",
-        "placeholder": "La recherche n'est pas encore implémentée. Cette route existe déjà pour que la navigation mobile étendue reste pleinement utilisable."
+        "placeholder": "La recherche n'est pas encore implémentée. Cette route existe déjà pour que la navigation mobile étendue reste pleinement utilisable.",
+        "form": {
+          "label": "Rechercher",
+          "placeholder": "Rechercher des profils et des posts"
+        },
+        "results": {
+          "empty": "Aucun résultat trouvé.",
+          "profilesTitle": "Profils",
+          "postsTitle": "Posts",
+          "count": "{count, plural, one {# résultat} other {# résultats}}",
+          "blocked": "Bloqué",
+          "profileAvatarAlt": "Photo de profil de {name}",
+          "unknownUsername": "unknown",
+          "bioFallback": "Aucune bio pour le moment."
+        },
+        "history": {
+          "title": "Recherches récentes",
+          "empty": "Aucune recherche récente. Lance ta première recherche pour construire ton historique."
+        },
+        "follow": {
+          "follow": "Suivre",
+          "following": "Abonné",
+          "error": "Impossible de mettre à jour l'abonnement."
+        },
+        "authRequiredHistory": "Connecte-toi pour accéder à ton historique de recherche."
       },
       "feedback": {
         "title": "Feedback",

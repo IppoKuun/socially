@@ -445,7 +445,31 @@
       "search": {
         "title": "Search",
         "description": "Prepare the future search surface for users and posts inside the authenticated shell.",
-        "placeholder": "Search is not implemented yet. This route exists now so the expanded mobile navigation stays fully usable."
+        "placeholder": "Search is not implemented yet. This route exists now so the expanded mobile navigation stays fully usable.",
+        "form": {
+          "label": "Search",
+          "placeholder": "Search profiles and posts"
+        },
+        "results": {
+          "empty": "No results found.",
+          "profilesTitle": "Profiles",
+          "postsTitle": "Posts",
+          "count": "{count, plural, one {# result} other {# results}}",
+          "blocked": "Blocked",
+          "profileAvatarAlt": "{name}'s profile photo",
+          "unknownUsername": "unknown",
+          "bioFallback": "No bio yet."
+        },
+        "history": {
+          "title": "Recent searches",
+          "empty": "No recent searches yet. Start your first search to build your history."
+        },
+        "follow": {
+          "follow": "Follow",
+          "following": "Following",
+          "error": "Unable to update the follow status."
+        },
+        "authRequiredHistory": "Sign in to access your search history."
       },
       "feedback": {
         "title": "Feedback",

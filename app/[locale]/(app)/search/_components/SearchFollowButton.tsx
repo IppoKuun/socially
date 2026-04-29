@@ -1,6 +1,7 @@
 "use client";
 
 import { LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 
 import toggleFollow from "../../profile/_actions/toggleFollow";
@@ -20,6 +21,7 @@ export default function SearchFollowButton({
   disabled = false,
   className,
 }: SearchFollowButtonProps) {
+  const t = useTranslations("appShell.pages.search.follow");
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -41,7 +43,7 @@ export default function SearchFollowButton({
 
       if (!result.ok) {
         setIsFollowing(previousFollowing);
-        setMessage(result.userMsg || "Impossible de mettre a jour l'abonnement.");
+        setMessage(result.userMsg || t("error"));
       }
     });
   }
@@ -63,7 +65,7 @@ export default function SearchFollowButton({
         disabled={!canToggleFollow || isPending}
       >
         {isPending ? <LoaderCircle className="size-4 animate-spin" /> : null}
-        {isFollowing ? "Abonné" : "Suivre"}
+        {isFollowing ? t("following") : t("follow")}
       </Button>
 
       {message ? (

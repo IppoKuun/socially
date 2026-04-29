@@ -1,8 +1,12 @@
+import { getTranslations } from "next-intl/server";
+
 import AppPageShell from "../_components/app-page-shell";
 
-export default function SearchLoading() {
+export default async function SearchLoading() {
+  const t = await getTranslations("appShell.pages.search");
+
   return (
-    <AppPageShell title="Search" description="Search profiles and posts.">
+    <AppPageShell title={t("title")} description={t("description")}>
       <section className="space-y-5">
         <div className="h-16 rounded-lg border border-white/10 bg-white/[0.03]" />
 
