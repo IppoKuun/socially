@@ -92,9 +92,10 @@ export default function PostActions({
     setStatusMessage("");
 
     const nextHasLiked = !optimisticLikeState.hasLiked;
-    updateOptimisticLikeState(nextHasLiked);
 
     startLikeTransition(async () => {
+      updateOptimisticLikeState(nextHasLiked);
+
       const result = await Like(post.id);
 
       if (!result.ok) {

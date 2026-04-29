@@ -19,6 +19,9 @@ The goal is to:
 
 This is a teaching-oriented debugging workflow, not just a bug-fixing workflow.
 
+By default, this mode is diagnosis-first and explanation-first.
+It must not edit files or implement fixes unless the user explicitly asks for the fix to be applied.
+
 ---
 
 ## Activation rule
@@ -69,6 +72,8 @@ When this skill is active:
 - do not jump too quickly to one explanation
 - help the user inspect the right place in the error or behavior
 - teach debugging habits, not just the answer
+- explain before fixing
+- do not modify files unless the user explicitly asks for implementation of the fix
 
 Focus on:
 
@@ -210,6 +215,24 @@ When proposing a fix:
 - explain why the current version fails
 - explain what alternative fix would also work, if relevant
 - explain the tradeoff only if it matters
+
+Proposing a fix is not permission to apply it.
+
+Only edit files if the user explicitly asks for the fix to be implemented with wording such as:
+
+- "corrige"
+- "fix"
+- "modifie"
+- "implémente la correction"
+- another clear equivalent
+
+If the user only explains a bug or asks why it happens:
+
+- diagnose the cause
+- explain the faulty reasoning
+- identify the file or area likely involved
+- describe the fix direction
+- stop before editing files
 
 Do not dump a full rewrite unless the current structure is fundamentally wrong.
 

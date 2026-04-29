@@ -1,7 +1,4 @@
-import { Search } from "lucide-react";
-
 import submitSearch from "../_actions/submitSearch";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 type SearchFormProps = {
@@ -12,7 +9,7 @@ export default function SearchForm({ query = "" }: SearchFormProps) {
   return (
     <form
       action={submitSearch}
-      className="flex w-full flex-col gap-3 rounded-lg border border-white/10 bg-white/[0.03] p-3 sm:flex-row mb-5 "
+      className="flex w-full flex-col gap-3  max-w-4xl mx-auto p-5 sm:flex-row mb-5 "
     >
       <label className="sr-only" htmlFor="search-query">
         Search
@@ -27,15 +24,8 @@ export default function SearchForm({ query = "" }: SearchFormProps) {
         autoComplete="off"
         defaultValue={query}
         placeholder="Search profiles and posts"
-        className="h-10 border-white/10 bg-white/[0.04] text-white placeholder:text-white/38"
+        className="h-16 px-4 border-white/10 bg-white/[0.04] rounded-2xl text-white placeholder:text-white/38"
       />
-      <Button
-        type="submit"
-        className="h-10 shrink-0 rounded-lg bg-white text-[#111318] hover:bg-white/90"
-      >
-        <Search className="size-4" />
-        <span>Search</span>
-      </Button>
     </form>
   );
 }

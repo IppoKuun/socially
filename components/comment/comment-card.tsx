@@ -4,7 +4,12 @@ import { useOptimistic, useState, useTransition } from "react";
 import Image from "next/image";
 import { useFormatter, useTranslations } from "next-intl";
 import { useQueryClient } from "@tanstack/react-query";
-import { CircleUserRound, Heart, LoaderCircle, MessageSquare } from "lucide-react";
+import {
+  CircleUserRound,
+  Heart,
+  LoaderCircle,
+  MessageSquare,
+} from "lucide-react";
 
 import { commentLike } from "@/app/actions/like";
 import { Button } from "@/components/ui/button";
@@ -76,10 +81,7 @@ export default function CommentCard({
     },
     (currentState, nextHasLiked: boolean) => ({
       hasLiked: nextHasLiked,
-      likeCount: Math.max(
-        0,
-        currentState.likeCount + (nextHasLiked ? 1 : -1),
-      ),
+      likeCount: Math.max(0, currentState.likeCount + (nextHasLiked ? 1 : -1)),
     }),
   );
 
@@ -87,9 +89,10 @@ export default function CommentCard({
     setStatusMessage("");
 
     const nextHasLiked = !optimisticLikeState.hasLiked;
-    updateOptimisticLikeState(nextHasLiked);
 
     startLikeTransition(async () => {
+      updateOptimisticLikeState(nextHasLiked);
+
       const result = await commentLike(comment.id);
 
       if (!result.ok) {
@@ -107,7 +110,8 @@ export default function CommentCard({
       className={cn(
         "rounded-[26px] border border-white/8 bg-[linear-gradient(180deg,rgba(18,21,28,0.98),rgba(14,17,24,0.98))] shadow-[0_22px_70px_-48px_rgba(0,0,0,0.96)]",
         compact ? "px-4 py-4" : "px-5 py-5",
-        highlighted && "border-primary/30 shadow-[0_28px_80px_-52px_rgba(47,124,255,0.28)]",
+        highlighted &&
+          "border-primary/30 shadow-[0_28px_80px_-52px_rgba(47,124,255,0.28)]",
       )}
     >
       <div className="space-y-4">
@@ -144,7 +148,10 @@ export default function CommentCard({
             </div>
 
             {threadHref ? (
-              <Link href={threadHref} className="block rounded-2xl transition hover:bg-white/[0.03]">
+              <Link
+                href={threadHref}
+                className="block rounded-2xl transition hover:bg-white/[0.03]"
+              >
                 <p
                   className={cn(
                     "whitespace-pre-wrap text-white/78",

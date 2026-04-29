@@ -41,7 +41,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   return (
     <AppPageShell title={t("title")} description={t("description")}>
-      <section className="flex flex-col">
+      <section className="flex flex-col  ">
         <SearchForm query={query} />
         {user ? (
           <SearchHistory history={history} />

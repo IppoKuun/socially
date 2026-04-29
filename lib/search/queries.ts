@@ -147,6 +147,7 @@ export async function getQueriesResult(queries: string): Promise<SearchResult> {
   const [profiles, posts] = await Promise.all([
     myPrisma.userProfile.findMany({
       where: {
+        deletedAt: null,
         OR: [
           { username: { contains: queries, mode: "insensitive" } },
           { displayname: { contains: queries, mode: "insensitive" } },
@@ -161,7 +162,7 @@ export async function getQueriesResult(queries: string): Promise<SearchResult> {
         isAi: true,
         isPro: true,
       },
-      take: 4,
+      take: 5,
     }),
 
     myPrisma.post.findMany({
