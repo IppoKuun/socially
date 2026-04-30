@@ -354,8 +354,8 @@ model Notifications {
   actorId String
   actor   UserProfile @relation("TriggeredNotifications", fields: [actorId], references: [id], onDelete: Cascade)
 
-  type   NotificationsTypes
-  isRead Boolean?
+  type   NotificationsTypes 
+  isRead Boolean @default(false)
 
   userId    String
   userNotif UserProfile @relation("ReceiverNotifications", fields: [userId], references: [id])

@@ -5,6 +5,7 @@ import { commentSchema } from "@/lib/validations.ts/validationComment";
 import { getZodErrorMapForRequest } from "@/lib/i18n/zod";
 import { myPrisma } from "@/lib/prisma";
 import { getSession } from "@/lib/authSession";
+import { createNotificationIfMissing } from "@/lib/notifications";
 import { rateLimits } from "@/lib/rateLimits";
 import { getTranslations } from "next-intl/server";
 
@@ -60,7 +61,7 @@ export default async function createComment(
 
   const targetPost = await myPrisma.post.findUnique({
     where: { id: postId },
-    select: { id: true },
+    select: { id: true, userId: true },
   });
 
   // Le post peut avoir été supprimé entre le rendu et la soumission.
@@ -149,6 +150,17 @@ export default async function createComment(
 
   if (!created) {
     return { ok: false, userMsg: t("createFailed") };
+  }
+
+  try {
+    await createNotificationIfMissing({
+      actorId: user.id,
+      userId: targetPost.userId,
+      postId: targetPost.id,
+      type: "COMMENT",
+    });
+  } catch (error) {
+    console.error("Unable to create comment notification", error);
   }
 
   if (created.moderationStatus === "UNCERTAIN") {

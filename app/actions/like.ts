@@ -3,6 +3,7 @@ import { getSession } from "@/lib/authSession";
 import { getTranslations } from "next-intl/server";
 
 import { myPrisma } from "@/lib/prisma";
+import { createNotificationIfMissing } from "@/lib/notifications";
 
 export async function Like(postId: string) {
   const t = await getTranslations("post.actions.like");
@@ -38,9 +39,29 @@ export async function Like(postId: string) {
         where: { id: isLiked.id },
       });
     } else {
+      const targetPost = await myPrisma.post.findUnique({
+        where: { id: postId },
+        select: { id: true, userId: true },
+      });
+
+      if (!targetPost) {
+        return { ok: false, userMsg: t("toggleFailed") };
+      }
+
       await myPrisma.postLike.create({
         data: { user_id: user.id, post_id: postId },
       });
+
+      try {
+        await createNotificationIfMissing({
+          actorId: user.id,
+          userId: targetPost.userId,
+          postId: targetPost.id,
+          type: "LIKE",
+        });
+      } catch (error) {
+        console.error("Unable to create like notification", error);
+      }
     }
   } catch (error) {
     console.error(error);

@@ -1,5 +1,6 @@
 "use server";
 import { getSession } from "@/lib/authSession";
+import { createNotificationIfMissing } from "@/lib/notifications";
 import { myPrisma } from "@/lib/prisma";
 
 export default async function toggleFollow(username: string) {
@@ -80,6 +81,16 @@ export default async function toggleFollow(username: string) {
           followerProfileId: viewer.id,
         },
       });
+
+      try {
+        await createNotificationIfMissing({
+          actorId: viewer.id,
+          userId: usernameTarget.id,
+          type: "FOLLOW",
+        });
+      } catch (error) {
+        console.error("Unable to create follow notification", error);
+      }
     }
   } catch {
     return {
