@@ -1,11 +1,13 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { useState, useTransition } from "react";
 import { markAllNotificationsAsRead } from "../_actions/readNotifs";
-import { Result } from "pg";
+import { CheckCheck } from "lucide-react";
+import { useRouter } from "@/i18n/routing";
 
 export default function MarkAllAsRead() {
   const [isPending, startTransition] = useTransition();
-  const [servMsg, setServMsg] = useState<string>("");
+  const router = useRouter();
 
   function handleButtonClick() {
     if (isPending) return;
@@ -14,17 +16,24 @@ export default function MarkAllAsRead() {
         const result = await markAllNotificationsAsRead();
 
         if (!result.ok) {
-          setServMsg("Impossible d'effectuez l'actions veuillez réessayé");
+          console.error("Impossible d'effectuez l'action");
           return;
         }
       } catch {
-        setServMsg("Impossible d'effectuez l'actions veuillez réessayé");
+        console.error("Impossible d'effectuez l'action");
       }
     });
+
+    router.refresh();
   }
 
   return (
-    <Button type="submit" onClick={handleButtonClick} className="">
+    <Button
+      type="submit"
+      onClick={() => handleButtonClick}
+      className="flex flex-row p-4"
+    >
+      <CheckCheck />
       Marqué tout comme lu
     </Button>
   );
