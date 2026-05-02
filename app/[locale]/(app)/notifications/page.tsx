@@ -3,6 +3,12 @@ import { getTranslations } from "next-intl/server";
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 import AppPageShell from "../_components/app-page-shell";
+import { redirect } from "next/navigation";
+
+import AllPostNotifs from "./_components/AllPostNotifs";
+import CurrentPostNotifs from "./_components/CurrentPostNotifs";
+import MarkAllAsRead from "./_components/MarkAllAsRead";
+import FollowNotifCard from "./_components/FollowNotifCard";
 
 async function getNotificationsForUser(userId: string) {
   return myPrisma.notifications.findMany({
@@ -28,6 +34,8 @@ async function getNotificationsForUser(userId: string) {
           id: true,
           title: true,
           slug: true,
+          content: true,
+          imagesUrl: true,
         },
       },
     },
@@ -44,7 +52,11 @@ type PostNotification = UserNotification & {
   post: NonNullable<UserNotification["post"]>;
 };
 
-type PostNotificationGroup = {
+export type FollowNotificationType = UserNotification & {
+  type: "FOLLOW";
+};
+
+export type PostNotificationGroup = {
   postId: string;
   post: PostNotification["post"];
   likeActors: PostNotification["actor"][];
@@ -104,7 +116,11 @@ function groupPostNotifications(notifications: PostNotification[]) {
   );
 }
 
-export default async function NotificationsPage() {
+export default async function NotificationsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ followView: string }>;
+}) {
   const t = await getTranslations("appShell.pages.notifications");
   const session = await getSession();
 
@@ -118,19 +134,40 @@ export default async function NotificationsPage() {
   });
 
   if (!userProfile) {
-    return <AppPageShell title={t("title")} description={t("description")} />;
+    redirect("/login");
   }
 
+  const isFollow = (await searchParams).followView;
+
   const notifications = await getNotificationsForUser(userProfile.id);
+
   const followNotifications = notifications.filter(
     (notification) => notification.type === "FOLLOW",
+  ) as FollowNotificationType[];
+
+  const unreadFollowNotifications = followNotifications.filter(
+    (notification) => !notification.isRead,
   );
+  const unreadFollowCount = unreadFollowNotifications.length;
+
   const postNotificationGroups = groupPostNotifications(
     notifications.filter(hasPost),
+  ) as PostNotificationGroup[];
+
+  return (
+    <AppPageShell title={t("title")} description={t("description")}>
+      <section className="flex flex-col relative">
+        <MarkAllAsRead />
+        <FollowNotifCard
+          unreadFollowCount={unreadFollowCount}
+          followList={followNotifications}
+          isActive={Boolean(isFollow)}
+        />
+        <section className="flex flex-row">
+          <AllPostNotifs postNotificationGroups={postNotificationGroups} />
+          <CurrentPostNotifs />
+        </section>
+      </section>
+    </AppPageShell>
   );
-
-  void followNotifications;
-  void postNotificationGroups;
-
-  return <AppPageShell title={t("title")} description={t("description")} />;
 }
