@@ -9,7 +9,6 @@ import AllPostNotifs from "./_components/AllPostNotifs";
 import CurrentPostNotifs from "./_components/CurrentPostNotifs";
 import MarkAllAsRead from "./_components/MarkAllAsRead";
 import FollowNotifCard from "./_components/FollowNotifCard";
-import { Separator } from "@/components/ui/separator";
 
 async function getNotificationsForUser(userId: string) {
   return myPrisma.notifications.findMany({
@@ -28,6 +27,10 @@ async function getNotificationsForUser(userId: string) {
           username: true,
           displayname: true,
           avatarUrl: true,
+          relationWhereUserIsFollowed: {
+            where: { followerProfileId: userId },
+            select: { id: true },
+          },
         },
       },
       post: {

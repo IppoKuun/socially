@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import { useTransition } from "react";
 import { markAllNotificationsAsRead } from "../_actions/readNotifs";
-import { CheckCheck } from "lucide-react";
 import { useRouter } from "@/i18n/routing";
 
 export default function MarkAllAsRead() {
