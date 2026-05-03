@@ -26,11 +26,21 @@ export default async function AuthenticatedAppLayout({
   const userProfile = await myPrisma.userProfile.findUnique({
     where: { userId: currentSession.user.id },
     select: {
+      id: true,
       avatarUrl: true,
       displayname: true,
       username: true,
     },
   });
+
+  const unreadNotificationCount = userProfile
+    ? await myPrisma.notifications.count({
+        where: {
+          userId: userProfile.id,
+          isRead: false,
+        },
+      })
+    : 0;
 
   const navigationUser = {
     avatarUrl: userProfile?.avatarUrl ?? currentSession.user.image ?? null,
@@ -44,7 +54,10 @@ export default async function AuthenticatedAppLayout({
       style={{ "--sidebar-width": "16rem" } as React.CSSProperties}
       className="bg-[#050608] text-white"
     >
-      <DesktopAppSidebar user={navigationUser} />
+      <DesktopAppSidebar
+        user={navigationUser}
+        unreadNotificationCount={unreadNotificationCount}
+      />
 
       <SidebarInset className="app-shell-background">
         <div className="flex min-h-screen flex-1 flex-col pb-[calc(9.5rem+env(safe-area-inset-bottom))] md:pb-0">
@@ -55,7 +68,10 @@ export default async function AuthenticatedAppLayout({
           </div>
         </div>
 
-        <MobileBottomBar username={navigationUser.username} />
+        <MobileBottomBar
+          username={navigationUser.username}
+          unreadNotificationCount={unreadNotificationCount}
+        />
       </SidebarInset>
     </SidebarProvider>
   );

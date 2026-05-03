@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import sociallyWhiteLogo from "@/public/socially_white.png";
+import NotificationBadge from "./NotificationBadge";
 
 type NavigationUser = {
   avatarUrl: string | null;
@@ -117,7 +118,13 @@ function UserAvatar({
   );
 }
 
-export function DesktopAppSidebar({ user }: { user: NavigationUser }) {
+export function DesktopAppSidebar({
+  user,
+  unreadNotificationCount,
+}: {
+  user: NavigationUser;
+  unreadNotificationCount: number;
+}) {
   const pathname = usePathname();
   const tNav = useTranslations("appShell.navigation");
   const tShell = useTranslations("appShell");
@@ -155,7 +162,14 @@ export function DesktopAppSidebar({ user }: { user: NavigationUser }) {
                     */}
 
                     <Link href={item.href}>
-                      <Icon className="h-5 w-5" />
+                      <span className="relative inline-flex">
+                        <Icon className="h-5 w-5" />
+                        {item.key === "notif" && (
+                          <NotificationBadge
+                            initialUnreadCount={unreadNotificationCount}
+                          />
+                        )}
+                      </span>
                       <span>{tNav(item.key)}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -195,7 +209,13 @@ export function DesktopAppSidebar({ user }: { user: NavigationUser }) {
   );
 }
 
-export function MobileBottomBar({ username }: { username: string }) {
+export function MobileBottomBar({
+  username,
+  unreadNotificationCount,
+}: {
+  username: string;
+  unreadNotificationCount: number;
+}) {
   const pathname = usePathname();
   const tNav = useTranslations("appShell.navigation");
   const profileHref = `/profile/${username}`;
@@ -222,7 +242,15 @@ export function MobileBottomBar({ username }: { username: string }) {
                     : "text-white/52 hover:bg-white/[0.03] hover:text-white/80",
                 )}
               >
-                <Icon className="h-4.5 w-4.5" />
+                <span className="relative inline-flex">
+                  <Icon className="h-4.5 w-4.5" />
+                  {item.key === "notif" && (
+                    <NotificationBadge
+                      initialUnreadCount={unreadNotificationCount}
+                      className="-right-2.5 -top-2.5 shadow-[0_0_0_2px_rgba(11,12,16,0.96)]"
+                    />
+                  )}
+                </span>
                 <span>{tNav(item.key)}</span>
               </Link>
             </li>
