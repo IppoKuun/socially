@@ -41,14 +41,17 @@ export default function FollowNotifCard({
   };
   return (
     <>
-      <button
-        className={cn("flex p-4", isActive && "bg-white/30")}
+      <div
+        className={cn(
+          "flex p-4 bg-white/5 border text-center justify-center items-center cursor-pointer rounded-lg w-[350px] ",
+          isActive && "bg-white/30",
+        )}
         onClick={async () => {
           handleFollowButtonClick();
         }}
       >
         Vous avez {unreadFollowCount} nouveaux abonnées
-      </button>
+      </div>
     </>
   );
 }

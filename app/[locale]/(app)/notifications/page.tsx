@@ -171,8 +171,11 @@ export default async function NotificationsPage({
           unreadFollowCount={unreadFollowCount}
           isActive={Boolean(isFollow)}
         />
-        <section className="flex flex-row">
-          <AllPostNotifs postNotificationGroups={postNotificationGroups} />
+        <section className="mt-5 flex flex-row space-x-2 gap-2">
+          <AllPostNotifs
+            selectedPostId={currentPostId}
+            postNotificationGroups={postNotificationGroups}
+          />
           <CurrentPostNotifs
             mode={mode}
             currentPost={currentPost}
