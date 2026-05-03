@@ -2,6 +2,8 @@ import { Link } from "@/i18n/routing";
 import { FollowNotificationType, PostNotificationGroup } from "../page";
 import Image from "next/image";
 import { User2Icon } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
 
 type CurrentPostNotifsProps = {
   followList: FollowNotificationType[];
@@ -45,11 +47,11 @@ export default function CurrentPostNotifs({
       ))}
     </section>
   ) : (
-    <section className="">
+    <section className="min-w-0 flex-1">
       {currentPost?.likeActors.length && (
-        <div className="flex flex-col">
-          {currentPost?.likeActors.length} Ont liké votre post
-          <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-col text-4xl font-sora font-bold tracking-tight ">
+          {currentPost?.likeActors.length} personne ont liké votre post
+          <div className="flex flex-row items-center gap-2 mt-5">
             {visibleLikeActors.map((actor) => (
               <div key={actor.id}>
                 {actor.avatarUrl ? (
@@ -77,18 +79,26 @@ export default function CurrentPostNotifs({
         </div>
       )}
       {currentPost ? (
-        <article className="">
+        <article className="mt-5 rounded-xl border border-white/10 bg-white/[0.08] p-5 shadow-2xl">
           {currentPost?.post.imagesUrl ? (
-            <div className="flex flex-row items-center">
-              <div className="flex flex-col">
-                <p className=""> {currentPost.post.title}</p>
-                <p className=""> {currentPost.post.content} </p>
+            <div className="flex min-w-0 flex-row items-start justify-between gap-6">
+              <div className="flex min-w-0 flex-1 flex-col">
+                <p className="font-manrope text-xl font-bold leading-tight">
+                  {currentPost.post.title}
+                </p>
+                <p className="mt-2 line-clamp-4 text-sm leading-relaxed text-white/70">
+                  {currentPost.post.content}
+                </p>
               </div>
-              <div className="">
-                <span className="">
-                  {currentPost.latestCreatedAt.toISOString()}
+              <div className="flex w-48 shrink-0 flex-col gap-2">
+                <span className="text-sm font-medium text-white/80 self-center ">
+                  {formatDistanceToNow(new Date(currentPost.latestCreatedAt), {
+                    addSuffix: true,
+                    locale: fr,
+                  })}
                 </span>
                 <Image
+                  className="flex aspect-square w-[110px] self-center shrink-0 flex-col gap-2 rounded-2xl border border-neutral-700/50 bg-neutral-800 object-cover"
                   width={100}
                   height={100}
                   src={currentPost.post.imagesUrl[0]}
@@ -97,12 +107,19 @@ export default function CurrentPostNotifs({
               </div>
             </div>
           ) : (
-            <div className="flex flex-col">
-              <span className="">
-                {currentPost.latestCreatedAt.toISOString()}
+            <div className="flex min-w-0 flex-col">
+              <span className="text-sm font-medium text-white/80">
+                {formatDistanceToNow(new Date(currentPost.latestCreatedAt), {
+                  addSuffix: true,
+                  locale: fr,
+                })}
               </span>
-              <p className="">{currentPost.post.title}</p>
-              <p className="">{currentPost.post.content} </p>
+              <p className="mt-3 font-manrope text-xl font-bold leading-tight">
+                {currentPost.post.title}
+              </p>
+              <p className="mt-2 line-clamp-6 text-sm leading-relaxed text-white/70">
+                {currentPost.post.content}
+              </p>
             </div>
           )}
         </article>

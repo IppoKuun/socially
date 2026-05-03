@@ -36,9 +36,12 @@ export default function AllPostNotifs({
     });
   }
   return (
-    <section className="flex flex-col border-r h-full border-neutral-800 min-w-80 w-full mr-15 ">
-      <h1 className="text-2xl mb-5 font-bold">Notifications</h1>
-      <section className="flex-1 overflow-y-auto flex flex-col space-y-4 ">
+    <section className="flex flex-col max-h-screen max-w-80 w-full border-r border-neutral-800 pr-6">
+      <div className="flex flex-row justify-between">
+        <h1 className="text-2xl mb-5 font-bold">Notifications</h1>
+      </div>
+
+      <section className="flex-1 mt-5 overflow-y-auto  flex flex-col space-y-4 p-1">
         {postNotificationGroups.length === 0 ? (
           <p className="">Vous navez aucune notifications</p>
         ) : (
@@ -61,16 +64,23 @@ export default function AllPostNotifs({
                 >
                   <article
                     className={cn(
-                      "flex flex-col justify-between p-4 rounded-xl hover:bg-neutral-800/40 transition-colors cursor-pointer  h-full min-h-[200px] bg-neutral-900/50",
+                      "flex flex-col justify-between p-4 rounded-xl hover:bg-neutral-800/40 transition-colors cursor-pointer  min-h-[200px] h-full bg-neutral-900/50",
                       post.isUnread ? "bg-white/20" : "bg-white/10",
                       isSelected &&
-                        "  shadow-[0_0_15px_rgba(168,85,247,0.15)], ring-3, ring-blue-500. ",
+                        "ring-1 ring-blue-400 bg-white/12 shadow-[0_0_24px_rgba(255,255,255,0.12)]",
                     )}
                   >
-                    <p className="line-clamp-3 leading-relaxed text-[11px] uppercase tracking-wider  bg-neutral-800 p-2 rounded-xs">
-                      {post.post.title}
-                    </p>
-                    <div className="flex flex-col justify-between space-y-1">
+                    <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+                      <p className="line-clamp-2 text-[11px] font-semibold uppercase leading-snug tracking-wider text-white">
+                        {post.post.title}
+                      </p>
+                      {post.post.content ? (
+                        <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-white/60">
+                          {post.post.content}
+                        </p>
+                      ) : null}
+                    </div>
+                    <div className="flex flex-col mt-5 justify-between space-y-1">
                       <div className="flex flex-row gap-2">
                         <Heart size={20} />
                         <p className="text-white/80 text-xs">

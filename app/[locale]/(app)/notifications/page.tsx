@@ -9,6 +9,7 @@ import AllPostNotifs from "./_components/AllPostNotifs";
 import CurrentPostNotifs from "./_components/CurrentPostNotifs";
 import MarkAllAsRead from "./_components/MarkAllAsRead";
 import FollowNotifCard from "./_components/FollowNotifCard";
+import { Separator } from "@/components/ui/separator";
 
 async function getNotificationsForUser(userId: string) {
   return myPrisma.notifications.findMany({
@@ -165,23 +166,24 @@ export default async function NotificationsPage({
 
   return (
     <AppPageShell title={t("title")} description={t("description")}>
-      <section className="flex flex-col relative">
+      <section className="flex w-full flex-row items-center justify-between gap-4">
         <MarkAllAsRead />
         <FollowNotifCard
           unreadFollowCount={unreadFollowCount}
           isActive={Boolean(isFollow)}
         />
-        <section className="mt-5 flex flex-row space-x-2 gap-2">
-          <AllPostNotifs
-            selectedPostId={currentPostId}
-            postNotificationGroups={postNotificationGroups}
-          />
-          <CurrentPostNotifs
-            mode={mode}
-            currentPost={currentPost}
-            followList={followNotifications}
-          />
-        </section>
+      </section>
+
+      <section className="mt-5 flex flex-row gap-2">
+        <AllPostNotifs
+          selectedPostId={currentPostId}
+          postNotificationGroups={postNotificationGroups}
+        />
+        <CurrentPostNotifs
+          mode={mode}
+          currentPost={currentPost}
+          followList={followNotifications}
+        />
       </section>
     </AppPageShell>
   );

@@ -29,12 +29,11 @@ export default function MarkAllAsRead() {
 
   return (
     <Button
-      type="submit"
+      type="button"
       disabled={isPending}
       onClick={() => handleButtonClick()}
-      className="flex flex-row p-4 cursor-pointer absolute right-2 w-[200px] h-[50px] "
+      className="h-[60px] w-[200px] cursor-pointer rounded  p-4 text font-mono shadow-2xl"
     >
-      <CheckCheck />
       Marqué tout comme lu
     </Button>
   );

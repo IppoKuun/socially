@@ -39,12 +39,16 @@ export default function FollowNotifCard({
 
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
+
+  const haveNewFollow = unreadFollowCount > 0;
   return (
     <>
       <div
         className={cn(
           "flex p-4 bg-white/5 border text-center justify-center items-center cursor-pointer rounded-lg w-[350px] ",
           isActive && "bg-white/30",
+          haveNewFollow &&
+            "border-blue-500/50 bg-blue-500/5 hover:bg-blue-500/40 transition-colors",
         )}
         onClick={async () => {
           handleFollowButtonClick();
