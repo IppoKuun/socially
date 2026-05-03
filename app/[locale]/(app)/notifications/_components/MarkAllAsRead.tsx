@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { markAllNotificationsAsRead } from "../_actions/readNotifs";
 import { CheckCheck } from "lucide-react";
 import { useRouter } from "@/i18n/routing";
@@ -19,18 +19,18 @@ export default function MarkAllAsRead() {
           console.error("Impossible d'effectuez l'action");
           return;
         }
+
+        router.refresh();
       } catch {
         console.error("Impossible d'effectuez l'action");
       }
     });
-
-    router.refresh();
   }
 
   return (
     <Button
       type="submit"
-      onClick={() => handleButtonClick}
+      onClick={() => handleButtonClick()}
       className="flex flex-row p-4"
     >
       <CheckCheck />

@@ -1,10 +1,10 @@
 "use client";
-import { Link } from "@/i18n/routing";
+import { Link, usePathname } from "@/i18n/routing";
 import { PostNotificationGroup } from "../page";
 import { Heart, MessageCircle } from "lucide-react";
 import { useTransition } from "react";
 import { markPostNotificationsAsRead } from "../_actions/readNotifs";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 type AllPostNotifsProps = {
@@ -15,12 +15,22 @@ export default function AllPostNotifs({
   postNotificationGroups,
 }: AllPostNotifsProps) {
   const router = useRouter();
+  const pathname = usePathname();
+
   const [isPending, startTransition] = useTransition();
 
   function handleNotificationClick(postId: string) {
     if (isPending) return;
+    const params = new URLSearchParams();
+
     startTransition(async () => {
-      await markPostNotificationsAsRead(postId);
+      try {
+        await markPostNotificationsAsRead(postId);
+        params.set("postId", postId);
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      } catch {
+        console.error("Impossible de marqué la notif comme read");
+      }
     });
   }
   return (
@@ -42,8 +52,6 @@ export default function AllPostNotifs({
                 onClick={async (event) => {
                   event.preventDefault();
                   handleNotificationClick(post.postId);
-                  // Après que la serv action est faites, on redirect //
-                  router.push(`/notifications?postId=${post.postId}`);
                 }}
               >
                 <article

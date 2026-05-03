@@ -119,7 +119,7 @@ function groupPostNotifications(notifications: PostNotification[]) {
 export default async function NotificationsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ followView: string }>;
+  searchParams: Promise<{ followView: string; postId: string }>;
 }) {
   const t = await getTranslations("appShell.pages.notifications");
   const session = await getSession();
@@ -138,6 +138,7 @@ export default async function NotificationsPage({
   }
 
   const isFollow = (await searchParams).followView;
+  const currentPostId = (await searchParams).postId;
 
   const notifications = await getNotificationsForUser(userProfile.id);
 
@@ -154,18 +155,29 @@ export default async function NotificationsPage({
     notifications.filter(hasPost),
   ) as PostNotificationGroup[];
 
+  const currentPost = currentPostId
+    ? (postNotificationGroups.find(
+        (group) => group.postId === currentPostId,
+      ) as PostNotificationGroup)
+    : null;
+
+  const mode = isFollow ? "follow" : "post";
+
   return (
     <AppPageShell title={t("title")} description={t("description")}>
       <section className="flex flex-col relative">
         <MarkAllAsRead />
         <FollowNotifCard
           unreadFollowCount={unreadFollowCount}
-          followList={followNotifications}
           isActive={Boolean(isFollow)}
         />
         <section className="flex flex-row">
           <AllPostNotifs postNotificationGroups={postNotificationGroups} />
-          <CurrentPostNotifs />
+          <CurrentPostNotifs
+            mode={mode}
+            currentPost={currentPost}
+            followList={followNotifications}
+          />
         </section>
       </section>
     </AppPageShell>
