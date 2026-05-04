@@ -374,7 +374,13 @@
       "follow": "Seguir",
       "following": "Siguiendo",
       "message": "Mensaje",
-      "followError": "No se pudo actualizar el seguimiento."
+      "followError": "No se pudo actualizar el seguimiento.",
+      "authRequired": "Inicia sesión para seguir este perfil.",
+      "viewerProfileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+      "targetProfileNotFound": "No se pudo encontrar el perfil que intentas seguir.",
+      "cannotFollowSelf": "No puedes seguirte a ti mismo.",
+      "blocked": "No puedes seguir este perfil porque una de las cuentas ha bloqueado a la otra.",
+      "databaseError": "No se pudo guardar el seguimiento. Inténtalo de nuevo."
     },
     "stats": {
       "posts": "Publicaciones",
@@ -435,7 +441,24 @@
       "notifications": {
         "title": "Notif",
         "description": "Consulta la actividad más reciente vinculada a tu cuenta y a tu contenido.",
-        "placeholder": "La agrupación de notificaciones y los estados leído/no leído llegarán más adelante. Por ahora esta página es un placeholder limpio."
+        "placeholder": "La agrupación de notificaciones y los estados leído/no leído llegarán más adelante. Por ahora esta página es un placeholder limpio.",
+        "back": "Volver a las notificaciones",
+        "markAllAsRead": "Marcar todo como leído",
+        "empty": "No tienes notificaciones",
+        "new": "Nuevo",
+        "followSummary": "{count, plural, =0 {Tienes 0 seguidores nuevos} one {Tienes # seguidor nuevo} other {Tienes # seguidores nuevos}}",
+        "followStarted": "Empezó a seguirte.",
+        "newFollower": "Nuevo seguidor",
+        "likedPost": "{count, plural, one {# persona dio like a tu publicación} other {# personas dieron like a tu publicación}}",
+        "commentedPost": "{count, plural, one {# persona comentó tu publicación} other {# personas comentaron tu publicación}}",
+        "repliedPost": "{count, plural, one {# respuesta} other {# respuestas}}",
+        "viewPost": "Ver tu publicación",
+        "follow": "Seguir",
+        "following": "Siguiendo",
+        "followError": "No se pudo actualizar el seguimiento.",
+        "badgeAria": "{count, plural, one {# notificación sin leer} other {# notificaciones sin leer}}",
+        "avatarAlt": "Avatar de {name}",
+        "postImageAlt": "Imagen de la publicación {title}"
       },
       "messages": {
         "title": "Message",
