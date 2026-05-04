@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "@/i18n/routing";
 import { markFollowNotificationsAsRead } from "../_actions/readNotifs";
 
 import { cn } from "@/lib/utils";
+import { NOTIFICATION_UNREAD_COUNT_CHANGED_EVENT } from "@/lib/pusher/events";
 
 type FollowListCardProps = {
   unreadFollowCount: number;
@@ -27,7 +28,16 @@ export default function FollowNotifCard({
 
     startTransition(async () => {
       try {
-        await markFollowNotificationsAsRead();
+        const result = await markFollowNotificationsAsRead();
+
+        if (result.updatedCount > 0) {
+          window.dispatchEvent(
+            new CustomEvent(NOTIFICATION_UNREAD_COUNT_CHANGED_EVENT, {
+              detail: { delta: -result.updatedCount },
+            }),
+          );
+        }
+
         handleFilterChange();
       } catch (e) {
         console.error("Échec silencieux du marquage :", e);
