@@ -3,9 +3,11 @@ import { Link, usePathname } from "@/i18n/routing";
 import { PostNotificationGroup } from "../page";
 import { Heart, MessageCircle } from "lucide-react";
 import { useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { markPostNotificationsAsRead } from "../_actions/readNotifs";
 import { useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import { NOTIFICATION_UNREAD_COUNT_CHANGED_EVENT } from "@/lib/pusher/events";
 
 type AllPostNotifsProps = {
   postNotificationGroups: PostNotificationGroup[];
@@ -16,6 +18,7 @@ export default function AllPostNotifs({
   postNotificationGroups,
   selectedPostId,
 }: AllPostNotifsProps) {
+  const t = useTranslations("appShell.pages.notifications");
   const router = useRouter();
   const pathname = usePathname();
 
@@ -27,10 +30,18 @@ export default function AllPostNotifs({
 
     startTransition(async () => {
       try {
-        await markPostNotificationsAsRead(postId);
+        const result = await markPostNotificationsAsRead(postId);
+
+        if (result.updatedCount > 0) {
+          window.dispatchEvent(
+            new CustomEvent(NOTIFICATION_UNREAD_COUNT_CHANGED_EVENT, {
+              detail: { delta: -result.updatedCount },
+            }),
+          );
+        }
+
         params.set("postId", postId);
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
-        router.refresh();
       } catch {
         console.error("Impossible de marqué la notif comme read");
       }
@@ -39,12 +50,12 @@ export default function AllPostNotifs({
   return (
     <section className="flex max-h-screen w-full flex-col md:max-w-80 md:border-r md:border-neutral-800 md:pr-6">
       <div className="flex flex-row justify-between">
-        <h1 className="text-2xl mb-5 font-bold">Notifications</h1>
+        <h1 className="text-2xl mb-5 font-bold">{t("title")}</h1>
       </div>
 
       <section className="flex-1 mt-5 overflow-y-auto   flex flex-col space-y-4 p-1">
         {postNotificationGroups.length === 0 ? (
-          <p className="">Vous navez aucune notifications</p>
+          <p className="">{t("empty")}</p>
         ) : (
           <>
             {postNotificationGroups.map((post) => {
@@ -75,7 +86,7 @@ export default function AllPostNotifs({
                   >
                     {post.isUnread && (
                       <span className="bg-blue-600 font-sora p-2 absolute top-2 right-2 rounded-3xl text-xs text-white/80">
-                        Nouveau
+                        {t("new")}
                       </span>
                     )}
                     <div className="rounded-lg border border-white/10 bg-black/20 p-3">
@@ -102,13 +113,15 @@ export default function AllPostNotifs({
                       <div className="flex flex-row gap-2">
                         <Heart size={20} />
                         <p className="text-xs">
-                          {post.likeActors.length} Ont aimé votre post
+                          {t("likedPost", { count: post.likeActors.length })}
                         </p>
                       </div>
                       <div className="flex flex-row gap-2">
                         <MessageCircle size={20} />
                         <p className=" text-xs">
-                          {post.commentActors.length} ont répondu
+                          {t("repliedPost", {
+                            count: post.commentActors.length,
+                          })}
                         </p>
                       </div>
                     </div>

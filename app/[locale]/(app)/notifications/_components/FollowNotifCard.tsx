@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/routing";
 import { markFollowNotificationsAsRead } from "../_actions/readNotifs";
 
@@ -15,6 +16,7 @@ export default function FollowNotifCard({
   unreadFollowCount,
   isActive,
 }: FollowListCardProps) {
+  const t = useTranslations("appShell.pages.notifications");
   const [isPending, startTransition] = useTransition();
 
   const router = useRouter();
@@ -27,7 +29,6 @@ export default function FollowNotifCard({
       try {
         await markFollowNotificationsAsRead();
         handleFilterChange();
-        router.refresh();
       } catch (e) {
         console.error("Échec silencieux du marquage :", e);
       }
@@ -55,7 +56,7 @@ export default function FollowNotifCard({
           handleFollowButtonClick();
         }}
       >
-        Vous avez {unreadFollowCount} nouveaux abonnées
+        {t("followSummary", { count: unreadFollowCount })}
       </div>
     </>
   );

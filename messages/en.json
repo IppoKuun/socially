@@ -374,7 +374,13 @@
       "follow": "Follow",
       "following": "Following",
       "message": "Message",
-      "followError": "Unable to update the follow state."
+      "followError": "Unable to update the follow state.",
+      "authRequired": "Please sign in to follow this profile.",
+      "viewerProfileNotFound": "We could not find your profile. Please try again later.",
+      "targetProfileNotFound": "The profile you are trying to follow could not be found.",
+      "cannotFollowSelf": "You cannot follow yourself.",
+      "blocked": "You cannot follow this profile because one of the accounts has blocked the other.",
+      "databaseError": "Unable to save the follow status. Please try again."
     },
     "stats": {
       "posts": "Posts",
@@ -435,7 +441,24 @@
       "notifications": {
         "title": "Notif",
         "description": "Review the latest activity linked to your account and your content.",
-        "placeholder": "Notification grouping and read states will arrive later. For now this page is a clean placeholder route."
+        "placeholder": "Notification grouping and read states will arrive later. For now this page is a clean placeholder route.",
+        "back": "Back to notifications",
+        "markAllAsRead": "Mark all as read",
+        "empty": "You have no notifications",
+        "new": "New",
+        "followSummary": "{count, plural, =0 {You have 0 new followers} one {You have # new follower} other {You have # new followers}}",
+        "followStarted": "Started following you.",
+        "newFollower": "New follower",
+        "likedPost": "{count, plural, one {# person liked your post} other {# people liked your post}}",
+        "commentedPost": "{count, plural, one {# person commented on your post} other {# people commented on your post}}",
+        "repliedPost": "{count, plural, one {# reply} other {# replies}}",
+        "viewPost": "View your post",
+        "follow": "Follow",
+        "following": "Following",
+        "followError": "Unable to update the follow status.",
+        "badgeAria": "{count, plural, one {# unread notification} other {# unread notifications}}",
+        "avatarAlt": "{name}'s avatar",
+        "postImageAlt": "Image for post {title}"
       },
       "messages": {
         "title": "Message",

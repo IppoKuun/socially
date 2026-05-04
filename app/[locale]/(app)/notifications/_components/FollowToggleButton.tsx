@@ -2,6 +2,7 @@
 
 import { LoaderCircle } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 import toggleFollow from "../../profile/_actions/toggleFollow";
@@ -15,6 +16,7 @@ export default function FollowToggleButton({
   username,
   initialIsFollowing,
 }: FollowToggleButtonProps) {
+  const t = useTranslations("appShell.pages.notifications");
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
   const [optimisticIsFollowing, setOptimisticIsFollowing] = useOptimistic(
@@ -39,7 +41,7 @@ export default function FollowToggleButton({
 
       if (!result.ok) {
         setOptimisticIsFollowing(previousFollowState);
-        setMessage(result.userMsg || "Impossible de modifier l'abonnement.");
+        setMessage(result.userMsg || t("followError"));
       }
     });
   }
@@ -59,7 +61,7 @@ export default function FollowToggleButton({
         aria-pressed={optimisticIsFollowing}
       >
         {isPending ? <LoaderCircle className="size-3.5 animate-spin" /> : null}
-        {optimisticIsFollowing ? "Abonné" : "Suivre"}
+        {optimisticIsFollowing ? t("following") : t("follow")}
       </button>
 
       {message ? (

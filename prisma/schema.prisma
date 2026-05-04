@@ -360,6 +360,7 @@ model Notifications {
   userId    String
   userNotif UserProfile @relation("ReceiverNotifications", fields: [userId], references: [id])
 
+  @@unique([actorId, userId, type, postId])
   @@schema("app")
 }
 

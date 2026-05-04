@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import {
   Bell,
@@ -20,6 +21,7 @@ import { cn } from "@/lib/utils";
 import {
   Sidebar,
   SidebarContent,
+  SidebarInset,
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
@@ -30,6 +32,13 @@ import {
 import { Separator } from "@/components/ui/separator";
 import sociallyWhiteLogo from "@/public/socially_white.png";
 import NotificationBadge from "./NotificationBadge";
+import { getPusherClient } from "@/lib/pusher/client";
+import {
+  getUserNotificationsChannel,
+  NOTIFICATION_UNREAD_COUNT_CHANGED_EVENT,
+  PUSHER_NOTIFICATION_CREATED_EVENT,
+  type NotificationCreatedEvent,
+} from "@/lib/pusher/events";
 
 type NavigationUser = {
   id: string | null;
@@ -80,6 +89,78 @@ function isActivePath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function useUnreadNotificationCount(
+  initialUnreadCount: number,
+  notificationProfileId: string | null,
+) {
+  const [unreadCount, setUnreadCount] = useState(initialUnreadCount);
+
+  useEffect(() => {
+    setUnreadCount(initialUnreadCount);
+  }, [initialUnreadCount]);
+
+  useEffect(() => {
+    function handleUnreadCountChanged(event: Event) {
+      const { detail } = event as CustomEvent<{ delta?: number }>;
+
+      if (typeof detail?.delta !== "number") {
+        return;
+      }
+
+      const { delta } = detail;
+
+      setUnreadCount((currentCount) => Math.max(0, currentCount + delta));
+    }
+
+    window.addEventListener(
+      NOTIFICATION_UNREAD_COUNT_CHANGED_EVENT,
+      handleUnreadCountChanged,
+    );
+
+    return () => {
+      window.removeEventListener(
+        NOTIFICATION_UNREAD_COUNT_CHANGED_EVENT,
+        handleUnreadCountChanged,
+      );
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!notificationProfileId) {
+      return;
+    }
+
+    const pusher = getPusherClient();
+
+    if (!pusher) {
+      return;
+    }
+
+    const channelName = getUserNotificationsChannel(notificationProfileId);
+    const channel = pusher.subscribe(channelName);
+    const handleNotificationCreated = (payload: NotificationCreatedEvent) => {
+      const delta =
+        typeof payload.unreadCountDelta === "number"
+          ? payload.unreadCountDelta
+          : 1;
+
+      setUnreadCount((currentCount) => Math.max(0, currentCount + delta));
+    };
+
+    channel.bind(PUSHER_NOTIFICATION_CREATED_EVENT, handleNotificationCreated);
+
+    return () => {
+      channel.unbind(
+        PUSHER_NOTIFICATION_CREATED_EVENT,
+        handleNotificationCreated,
+      );
+      pusher.unsubscribe(channelName);
+    };
+  }, [notificationProfileId]);
+
+  return unreadCount;
+}
+
 function UserAvatar({
   avatarUrl,
   displayName,
@@ -119,14 +200,53 @@ function UserAvatar({
   );
 }
 
+export function AppNavigationShell({
+  user,
+  initialUnreadNotificationCount,
+  notificationProfileId,
+  children,
+}: {
+  user: NavigationUser;
+  initialUnreadNotificationCount: number;
+  notificationProfileId: string | null;
+  children: ReactNode;
+}) {
+  const unreadNotificationCount = useUnreadNotificationCount(
+    initialUnreadNotificationCount,
+    notificationProfileId,
+  );
+
+  return (
+    <>
+      <DesktopAppSidebar
+        user={user}
+        unreadNotificationCount={unreadNotificationCount}
+      />
+
+      <SidebarInset className="app-shell-background">
+        <div className="flex min-h-screen flex-1 flex-col pb-[calc(9.5rem+env(safe-area-inset-bottom))] md:pb-0">
+          {/* padding bas pour la bottom bar mobile sur 2 lignes + safe area iPhone / flex-1 : le conteneur grandit pour prendre l'espace vertical disponible */}
+
+          <div className="mx-auto flex w-full lg:max-w-[1100px]   flex-1 flex-col px-4 py-6 sm:px-8 lg:px-6 lg:py-8">
+            {children}
+          </div>
+        </div>
+
+        <MobileBottomBar
+          username={user.username}
+          unreadNotificationCount={unreadNotificationCount}
+        />
+      </SidebarInset>
+    </>
+  );
+}
+
 export function DesktopAppSidebar({
   user,
   unreadNotificationCount,
-  notificationProfileId,
 }: {
   user: NavigationUser;
   unreadNotificationCount: number;
-  notificationProfileId: string | null;
 }) {
   const pathname = usePathname();
   const tNav = useTranslations("appShell.navigation");
@@ -169,8 +289,7 @@ export function DesktopAppSidebar({
                         <Icon className="h-5 w-5" />
                         {item.key === "notif" && (
                           <NotificationBadge
-                            initialUnreadCount={unreadNotificationCount}
-                            notificationProfileId={notificationProfileId}
+                            unreadCount={unreadNotificationCount}
                           />
                         )}
                       </span>
@@ -216,11 +335,9 @@ export function DesktopAppSidebar({
 export function MobileBottomBar({
   username,
   unreadNotificationCount,
-  notificationProfileId,
 }: {
   username: string;
   unreadNotificationCount: number;
-  notificationProfileId: string | null;
 }) {
   const pathname = usePathname();
   const tNav = useTranslations("appShell.navigation");
@@ -252,8 +369,7 @@ export function MobileBottomBar({
                   <Icon className="h-4.5 w-4.5" />
                   {item.key === "notif" && (
                     <NotificationBadge
-                      initialUnreadCount={unreadNotificationCount}
-                      notificationProfileId={notificationProfileId}
+                      unreadCount={unreadNotificationCount}
                       className="-right-2.5 -top-2.5 shadow-[0_0_0_2px_rgba(11,12,16,0.96)]"
                     />
                   )}

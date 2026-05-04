@@ -2,11 +2,13 @@
 import { getSession } from "@/lib/authSession";
 import { createNotificationIfMissing } from "@/lib/notifications";
 import { myPrisma } from "@/lib/prisma";
+import { getTranslations } from "next-intl/server";
 
 export default async function toggleFollow(username: string) {
+  const t = await getTranslations("profilePublic.actions");
   const session = await getSession();
   if (!session) {
-    return { ok: false, userMsg: "Vous n'etes pas connecté" };
+    return { ok: false, userMsg: t("authRequired") };
   }
 
   const viewer = await myPrisma.userProfile.findUnique({
@@ -17,7 +19,7 @@ export default async function toggleFollow(username: string) {
   if (!viewer) {
     return {
       ok: false,
-      userMsg: "Impossible de trouver votre compte veuillez ressayé",
+      userMsg: t("viewerProfileNotFound"),
     };
   }
 
@@ -29,12 +31,12 @@ export default async function toggleFollow(username: string) {
   if (!usernameTarget) {
     return {
       ok: false,
-      userMsg: "Le profil que vous essayé de follow n'as pas été trouvé",
+      userMsg: t("targetProfileNotFound"),
     };
   }
 
   if (usernameTarget.id === viewer.id) {
-    return { ok: false, userMsg: "Vous ne pouvez pas vous suivre vous meme" };
+    return { ok: false, userMsg: t("cannotFollowSelf") };
   }
 
   const searchBlock = await myPrisma.block.findFirst({
@@ -55,8 +57,7 @@ export default async function toggleFollow(username: string) {
   if (searchBlock) {
     return {
       ok: false,
-      userMsg:
-        "L'utilisateur vous a bloqué ou vous avez bloqué l'utilisateur, impossible de vous abonnez a ce compte",
+      userMsg: t("blocked"),
     };
   }
 
@@ -95,8 +96,7 @@ export default async function toggleFollow(username: string) {
   } catch {
     return {
       ok: false,
-      userMsg:
-        "Impossible d'enregistrer en base de données, veuillez recommencer",
+      userMsg: t("databaseError"),
     };
   }
 

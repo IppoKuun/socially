@@ -13,11 +13,46 @@ import FollowNotifCard from "./_components/FollowNotifCard";
 import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
-async function getNotificationsForUser(userId: string) {
+async function getFollowNotificationsForUser(userId: string) {
   return myPrisma.notifications.findMany({
-    where: { userId },
+    where: {
+      userId,
+      type: "FOLLOW",
+    },
     orderBy: { createdAt: "desc" },
-    take: 100,
+    take: 50,
+    select: {
+      id: true,
+      type: true,
+      isRead: true,
+      createdAt: true,
+      postId: true,
+      actor: {
+        select: {
+          id: true,
+          username: true,
+          displayname: true,
+          avatarUrl: true,
+          relationWhereUserIsFollowed: {
+            where: { followerProfileId: userId },
+            select: { id: true },
+          },
+        },
+      },
+    },
+  });
+}
+
+async function getPostNotificationsForUser(userId: string) {
+  return myPrisma.notifications.findMany({
+    where: {
+      userId,
+      type: { in: ["LIKE", "COMMENT"] },
+      postId: { not: null },
+      post: { deletedAt: null },
+    },
+    orderBy: { createdAt: "desc" },
+    take: 200,
     select: {
       id: true,
       type: true,
@@ -38,6 +73,7 @@ async function getNotificationsForUser(userId: string) {
       },
       post: {
         select: {
+          deletedAt: true,
           id: true,
           title: true,
           slug: true,
@@ -50,7 +86,10 @@ async function getNotificationsForUser(userId: string) {
 }
 
 type UserNotification = Awaited<
-  ReturnType<typeof getNotificationsForUser>
+  ReturnType<typeof getPostNotificationsForUser>
+>[number];
+type FollowNotification = Awaited<
+  ReturnType<typeof getFollowNotificationsForUser>
 >[number];
 
 // Post notications fusionne avec usernotifications mais écrase les données des proprété//
@@ -59,9 +98,7 @@ type PostNotification = UserNotification & {
   post: NonNullable<UserNotification["post"]>;
 };
 
-export type FollowNotificationType = UserNotification & {
-  type: "FOLLOW";
-};
+export type FollowNotificationType = FollowNotification;
 
 export type PostNotificationGroup = {
   postId: string;
@@ -147,11 +184,10 @@ export default async function NotificationsPage({
   const isFollow = (await searchParams).followView;
   const currentPostId = (await searchParams).postId;
 
-  const notifications = await getNotificationsForUser(userProfile.id);
-
-  const followNotifications = notifications.filter(
-    (notification) => notification.type === "FOLLOW",
-  ) as FollowNotificationType[];
+  const [followNotifications, postNotifications] = await Promise.all([
+    getFollowNotificationsForUser(userProfile.id),
+    getPostNotificationsForUser(userProfile.id),
+  ]);
 
   const unreadFollowNotifications = followNotifications.filter(
     (notification) => !notification.isRead,
@@ -159,7 +195,7 @@ export default async function NotificationsPage({
   const unreadFollowCount = unreadFollowNotifications.length;
 
   const postNotificationGroups = groupPostNotifications(
-    notifications.filter(hasPost),
+    postNotifications.filter(hasPost),
   ) as PostNotificationGroup[];
 
   const selectedPostId =
@@ -209,7 +245,7 @@ export default async function NotificationsPage({
               className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-sm font-semibold text-white/78 transition hover:border-white/16 hover:bg-white/[0.1] hover:text-white md:hidden"
             >
               <ArrowLeft className="size-4" />
-              Retour aux notifications
+              {t("back")}
             </Link>
           )}
           <CurrentPostNotifs

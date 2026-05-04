@@ -19,11 +19,13 @@ type SavedNotification = {
 async function triggerRealtimeNotification(
   receiverProfileId: string,
   notification: SavedNotification,
+  unreadCountDelta: number,
 ) {
   await triggerNotificationCreated(receiverProfileId, {
     notificationId: notification.id,
     type: notification.type,
     postId: notification.postId,
+    unreadCountDelta,
   });
 }
 
@@ -46,7 +48,7 @@ export async function createNotificationIfMissing({
       type,
       postId,
     },
-    select: { id: true },
+    select: { id: true, isRead: true },
   });
 
   if (existingNotification) {
@@ -65,7 +67,11 @@ export async function createNotificationIfMissing({
     });
 
     try {
-      await triggerRealtimeNotification(userId, notification);
+      await triggerRealtimeNotification(
+        userId,
+        notification,
+        existingNotification.isRead ? 1 : 0,
+      );
     } catch (error) {
       console.error("Unable to trigger realtime notification", error);
     }
@@ -88,7 +94,7 @@ export async function createNotificationIfMissing({
   });
 
   try {
-    await triggerRealtimeNotification(userId, notification);
+    await triggerRealtimeNotification(userId, notification, 1);
   } catch (error) {
     console.error("Unable to trigger realtime notification", error);
   }

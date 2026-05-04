@@ -2,12 +2,13 @@
 import { Button } from "@/components/ui/button";
 import { CheckCheck, LoaderCircle } from "lucide-react";
 import { useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { markAllNotificationsAsRead } from "../_actions/readNotifs";
-import { useRouter } from "@/i18n/routing";
+import { NOTIFICATION_UNREAD_COUNT_CHANGED_EVENT } from "@/lib/pusher/events";
 
 export default function MarkAllAsRead() {
+  const t = useTranslations("appShell.pages.notifications");
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
 
   function handleButtonClick() {
     if (isPending) return;
@@ -20,7 +21,13 @@ export default function MarkAllAsRead() {
           return;
         }
 
-        router.refresh();
+        if (result.updatedCount > 0) {
+          window.dispatchEvent(
+            new CustomEvent(NOTIFICATION_UNREAD_COUNT_CHANGED_EVENT, {
+              detail: { delta: -result.updatedCount },
+            }),
+          );
+        }
       } catch {
         console.error("Impossible d'effectuez l'action");
       }
@@ -39,7 +46,7 @@ export default function MarkAllAsRead() {
       ) : (
         <CheckCheck className="size-4 text-primary-glow" />
       )}
-      Marquer tout comme lu
+      {t("markAllAsRead")}
     </Button>
   );
 }

@@ -2,8 +2,9 @@ import { Link } from "@/i18n/routing";
 import { FollowNotificationType, PostNotificationGroup } from "../page";
 import Image from "next/image";
 import { User2Icon } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
+import { formatDistanceToNow, type Locale } from "date-fns";
+import { enUS, es, fr } from "date-fns/locale";
+import { getLocale, getTranslations } from "next-intl/server";
 import FollowToggleButton from "./FollowToggleButton";
 
 type CurrentPostNotifsProps = {
@@ -12,11 +13,28 @@ type CurrentPostNotifsProps = {
   currentPost: PostNotificationGroup | null;
 };
 
-export default function CurrentPostNotifs({
+function getDateFnsLocale(locale: string): Locale {
+  const language = locale.split("-")[0];
+
+  if (language === "fr") {
+    return fr;
+  }
+
+  if (language === "es") {
+    return es;
+  }
+
+  return enUS;
+}
+
+export default async function CurrentPostNotifs({
   currentPost,
   mode,
   followList,
 }: CurrentPostNotifsProps) {
+  const t = await getTranslations("appShell.pages.notifications");
+  const locale = await getLocale();
+  const dateFnsLocale = getDateFnsLocale(locale);
   const visibleLikeActors = currentPost?.likeActors.slice(0, 4) ?? [];
   const hiddenLikeActorsCount = Math.max(
     0,
@@ -38,7 +56,7 @@ export default function CurrentPostNotifs({
         const avatar = follow.actor.avatarUrl ? (
           <Image
             src={follow.actor.avatarUrl}
-            alt={`Avatar de ${follow.actor.displayname}`}
+            alt={t("avatarAlt", { name: follow.actor.displayname })}
             width={56}
             height={56}
             className="h-14 w-14 shrink-0 rounded-2xl object-cover ring-1 ring-white/10"
@@ -59,7 +77,7 @@ export default function CurrentPostNotifs({
                 @{follow.actor.username ?? "unknown"}
               </p>
               <p className="mt-3 line-clamp-2 text-sm leading-6 text-white/68">
-                A commencé à vous suivre.
+                {t("followStarted")}
               </p>
             </div>
           </>
@@ -85,7 +103,7 @@ export default function CurrentPostNotifs({
 
             <div className="mt-5 flex items-center justify-between gap-3">
               <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-medium text-white/58">
-                Nouvel abonné
+                {t("newFollower")}
               </span>
               <FollowToggleButton
                 username={follow.actor.username}
@@ -98,9 +116,9 @@ export default function CurrentPostNotifs({
     </section>
   ) : (
     <section className="min-w-0 flex-1">
-      {currentPost?.likeActors.length && (
+      {(currentPost?.likeActors?.length ?? 0) > 0 && (
         <div className="flex flex-col text-4xl font-sora font-bold tracking-tight ">
-          {currentPost?.likeActors.length} personne ont liké votre post
+          {t("likedPost", { count: currentPost?.likeActors.length ?? 0 })}
           <div className="flex flex-row items-center gap-2 mt-5">
             {visibleLikeActors.map((actor) => (
               <div key={actor.id}>
@@ -148,7 +166,7 @@ export default function CurrentPostNotifs({
                       new Date(currentPost.latestCreatedAt),
                       {
                         addSuffix: true,
-                        locale: fr,
+                        locale: dateFnsLocale,
                       },
                     )}
                   </span>
@@ -157,7 +175,7 @@ export default function CurrentPostNotifs({
                     width={100}
                     height={100}
                     src={currentPost.post.imagesUrl[0]}
-                    alt={`image du post ${currentPost.post.title}`}
+                    alt={t("postImageAlt", { title: currentPost.post.title })}
                   />
                 </div>
               </div>
@@ -166,7 +184,7 @@ export default function CurrentPostNotifs({
                 <span className="text-sm font-medium text-white/80">
                   {formatDistanceToNow(new Date(currentPost.latestCreatedAt), {
                     addSuffix: true,
-                    locale: fr,
+                    locale: dateFnsLocale,
                   })}
                 </span>
                 <p className="mt-3 font-manrope text-xl font-bold leading-tight">
@@ -181,8 +199,9 @@ export default function CurrentPostNotifs({
 
           {currentPost.commentActors.length > 0 && (
             <div className="mt-8 flex flex-col text-2xl font-sora font-bold tracking-tight">
-              {currentPost.commentActors.length} personne ont commenté votre
-              post
+              {t("commentedPost", {
+                count: currentPost.commentActors.length,
+              })}
               <div className="mt-5 flex flex-row items-center gap-2">
                 {visibleCommentActors.map((actor) => (
                   <div key={actor.id}>
@@ -215,10 +234,12 @@ export default function CurrentPostNotifs({
             href={`/post/${currentPost.post.slug}`}
             className="mt-8 inline-flex w-fit items-center justify-center rounded-full border border-white/10 bg-white px-5 py-3 text-sm font-semibold text-[#111318] shadow-[0_20px_60px_-45px_rgba(0,0,0,0.95)] transition hover:bg-white/90"
           >
-            Cliquez pour voir votre post
+            {t("viewPost")}
           </Link>
         </>
-      ) : null}
+      ) : (
+        <p className="">Notifications introuvable</p>
+      )}
     </section>
   );
 }

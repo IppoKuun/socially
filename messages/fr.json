@@ -374,7 +374,13 @@
       "follow": "Suivre",
       "following": "Suivi",
       "message": "Message",
-      "followError": "Impossible de mettre à jour l'abonnement."
+      "followError": "Impossible de mettre à jour l'abonnement.",
+      "authRequired": "Connecte-toi pour suivre ce profil.",
+      "viewerProfileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+      "targetProfileNotFound": "Le profil que vous essayez de suivre n'a pas été trouvé.",
+      "cannotFollowSelf": "Vous ne pouvez pas vous suivre vous-même.",
+      "blocked": "Impossible de suivre ce profil, car l'un des deux comptes a bloqué l'autre.",
+      "databaseError": "Impossible d'enregistrer l'abonnement. Réessayez."
     },
     "stats": {
       "posts": "Posts",
@@ -435,7 +441,24 @@
       "notifications": {
         "title": "Notif",
         "description": "Consulte les dernières activités liées à ton compte et à ton contenu.",
-        "placeholder": "Le regroupement des notifications et les états lu/non lu arriveront plus tard. Pour l'instant cette page reste un placeholder propre."
+        "placeholder": "Le regroupement des notifications et les états lu/non lu arriveront plus tard. Pour l'instant cette page reste un placeholder propre.",
+        "back": "Retour aux notifications",
+        "markAllAsRead": "Marquer tout comme lu",
+        "empty": "Vous n'avez aucune notification",
+        "new": "Nouveau",
+        "followSummary": "{count, plural, =0 {Vous avez 0 nouvel abonné} one {Vous avez # nouvel abonné} other {Vous avez # nouveaux abonnés}}",
+        "followStarted": "A commencé à vous suivre.",
+        "newFollower": "Nouvel abonné",
+        "likedPost": "{count, plural, one {# personne a aimé votre post} other {# personnes ont aimé votre post}}",
+        "commentedPost": "{count, plural, one {# personne a commenté votre post} other {# personnes ont commenté votre post}}",
+        "repliedPost": "{count, plural, one {# réponse} other {# réponses}}",
+        "viewPost": "Voir votre post",
+        "follow": "Suivre",
+        "following": "Abonné",
+        "followError": "Impossible de modifier l'abonnement.",
+        "badgeAria": "{count, plural, one {# notification non lue} other {# notifications non lues}}",
+        "avatarAlt": "Avatar de {name}",
+        "postImageAlt": "Image du post {title}"
       },
       "messages": {
         "title": "Message",
