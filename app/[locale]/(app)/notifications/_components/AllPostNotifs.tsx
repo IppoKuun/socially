@@ -30,18 +30,19 @@ export default function AllPostNotifs({
         await markPostNotificationsAsRead(postId);
         params.set("postId", postId);
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
+        router.refresh();
       } catch {
         console.error("Impossible de marqué la notif comme read");
       }
     });
   }
   return (
-    <section className="flex flex-col max-h-screen max-w-80 w-full border-r border-neutral-800 pr-6">
+    <section className="flex max-h-screen w-full flex-col md:max-w-80 md:border-r md:border-neutral-800 md:pr-6">
       <div className="flex flex-row justify-between">
         <h1 className="text-2xl mb-5 font-bold">Notifications</h1>
       </div>
 
-      <section className="flex-1 mt-5 overflow-y-auto  flex flex-col space-y-4 p-1">
+      <section className="flex-1 mt-5 overflow-y-auto   flex flex-col space-y-4 p-1">
         {postNotificationGroups.length === 0 ? (
           <p className="">Vous navez aucune notifications</p>
         ) : (
@@ -69,7 +70,7 @@ export default function AllPostNotifs({
                         ? " bg-white/10 min-h-[250px] pt-12"
                         : "bg-white/3 text-white/30 min-h-[200px] ",
                       isSelected &&
-                        "ring-1 ring-blue-400  shadow-[0_0_24px_rgba(255,255,255,0.12)]",
+                        "md:ring-1 md:ring-blue-400  shadow-[0_0_24px_rgba(255,255,255,0.12)]",
                     )}
                   >
                     {post.isUnread && (

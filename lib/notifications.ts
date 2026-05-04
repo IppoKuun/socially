@@ -1,4 +1,5 @@
 import { myPrisma } from "@/lib/prisma";
+import { triggerNotificationCreated } from "@/lib/pusher/server";
 
 type NotificationType = "LIKE" | "COMMENT" | "FOLLOW";
 
@@ -8,6 +9,23 @@ type CreateNotificationIfMissingInput = {
   type: NotificationType;
   postId?: string | null;
 };
+
+type SavedNotification = {
+  id: string;
+  type: NotificationType;
+  postId: string | null;
+};
+
+async function triggerRealtimeNotification(
+  receiverProfileId: string,
+  notification: SavedNotification,
+) {
+  await triggerNotificationCreated(receiverProfileId, {
+    notificationId: notification.id,
+    type: notification.type,
+    postId: notification.postId,
+  });
+}
 
 // Les notifications ne sont pas en transaction, c'est normal, si une notif ne passe pas
 // Ont veut pas que l'action entiere sois annulé//
@@ -32,15 +50,46 @@ export async function createNotificationIfMissing({
   });
 
   if (existingNotification) {
+    const notification = await myPrisma.notifications.update({
+      // On remets date de la notif a jour pour qu'elle sois considérée comme nouvelle  //
+      where: { id: existingNotification.id },
+      data: {
+        createdAt: new Date(),
+        isRead: false,
+      },
+      select: {
+        id: true,
+        type: true,
+        postId: true,
+      },
+    });
+
+    try {
+      await triggerRealtimeNotification(userId, notification);
+    } catch (error) {
+      console.error("Unable to trigger realtime notification", error);
+    }
+
     return;
   }
 
-  await myPrisma.notifications.create({
+  const notification = await myPrisma.notifications.create({
     data: {
       actorId,
       userId,
       type,
       ...(postId ? { postId } : {}),
     },
+    select: {
+      id: true,
+      type: true,
+      postId: true,
+    },
   });
+
+  try {
+    await triggerRealtimeNotification(userId, notification);
+  } catch (error) {
+    console.error("Unable to trigger realtime notification", error);
+  }
 }

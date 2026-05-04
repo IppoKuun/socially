@@ -32,6 +32,7 @@ import sociallyWhiteLogo from "@/public/socially_white.png";
 import NotificationBadge from "./NotificationBadge";
 
 type NavigationUser = {
+  id: string | null;
   avatarUrl: string | null;
   displayName: string;
   username: string;
@@ -121,9 +122,11 @@ function UserAvatar({
 export function DesktopAppSidebar({
   user,
   unreadNotificationCount,
+  notificationProfileId,
 }: {
   user: NavigationUser;
   unreadNotificationCount: number;
+  notificationProfileId: string | null;
 }) {
   const pathname = usePathname();
   const tNav = useTranslations("appShell.navigation");
@@ -167,6 +170,7 @@ export function DesktopAppSidebar({
                         {item.key === "notif" && (
                           <NotificationBadge
                             initialUnreadCount={unreadNotificationCount}
+                            notificationProfileId={notificationProfileId}
                           />
                         )}
                       </span>
@@ -212,9 +216,11 @@ export function DesktopAppSidebar({
 export function MobileBottomBar({
   username,
   unreadNotificationCount,
+  notificationProfileId,
 }: {
   username: string;
   unreadNotificationCount: number;
+  notificationProfileId: string | null;
 }) {
   const pathname = usePathname();
   const tNav = useTranslations("appShell.navigation");
@@ -247,6 +253,7 @@ export function MobileBottomBar({
                   {item.key === "notif" && (
                     <NotificationBadge
                       initialUnreadCount={unreadNotificationCount}
+                      notificationProfileId={notificationProfileId}
                       className="-right-2.5 -top-2.5 shadow-[0_0_0_2px_rgba(11,12,16,0.96)]"
                     />
                   )}

@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { CheckCheck, LoaderCircle } from "lucide-react";
 import { useTransition } from "react";
 import { markAllNotificationsAsRead } from "../_actions/readNotifs";
 import { useRouter } from "@/i18n/routing";
@@ -31,9 +32,14 @@ export default function MarkAllAsRead() {
       type="button"
       disabled={isPending}
       onClick={() => handleButtonClick()}
-      className="h-[60px] w-[200px] cursor-pointer rounded  p-4 text font-mono shadow-2xl"
+      className="h-11 cursor-pointer rounded-full border border-white/10 bg-white/[0.07] px-4 text-sm font-semibold text-white/82 shadow-[0_18px_52px_-40px_rgba(0,0,0,0.95)] transition hover:border-white/16 hover:bg-white/[0.11] hover:text-white disabled:cursor-not-allowed disabled:opacity-55"
     >
-      Marqué tout comme lu
+      {isPending ? (
+        <LoaderCircle className="size-4 animate-spin" />
+      ) : (
+        <CheckCheck className="size-4 text-primary-glow" />
+      )}
+      Marquer tout comme lu
     </Button>
   );
 }

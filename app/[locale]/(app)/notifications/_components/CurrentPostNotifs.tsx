@@ -131,7 +131,8 @@ export default function CurrentPostNotifs({
       {currentPost ? (
         <>
           <article className="mt-5 rounded-xl border border-white/10 bg-white/[0.08] p-5 shadow-2xl">
-            {currentPost?.post.imagesUrl ? (
+            {currentPost?.post.imagesUrl &&
+            currentPost?.post.imagesUrl.length > 0 ? (
               <div className="flex min-w-0 flex-row items-start justify-between gap-6">
                 <div className="flex min-w-0 flex-1 flex-col">
                   <p className="font-manrope text-xl font-bold leading-tight">

@@ -4,11 +4,14 @@ import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 import AppPageShell from "../_components/app-page-shell";
 import { redirect } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 import AllPostNotifs from "./_components/AllPostNotifs";
 import CurrentPostNotifs from "./_components/CurrentPostNotifs";
 import MarkAllAsRead from "./_components/MarkAllAsRead";
 import FollowNotifCard from "./_components/FollowNotifCard";
+import { Link } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 
 async function getNotificationsForUser(userId: string) {
   return myPrisma.notifications.findMany({
@@ -159,13 +162,17 @@ export default async function NotificationsPage({
     notifications.filter(hasPost),
   ) as PostNotificationGroup[];
 
-  const currentPost = currentPostId
+  const selectedPostId =
+    currentPostId ?? postNotificationGroups[0]?.postId ?? null;
+
+  const currentPost = selectedPostId
     ? (postNotificationGroups.find(
-        (group) => group.postId === currentPostId,
-      ) as PostNotificationGroup)
+        (group) => group.postId === selectedPostId,
+      ) ?? null)
     : null;
 
   const mode = isFollow ? "follow" : "post";
+  const hasDetailView = Boolean(currentPostId) || Boolean(isFollow);
 
   return (
     <AppPageShell title={t("title")} description={t("description")}>
@@ -177,16 +184,40 @@ export default async function NotificationsPage({
         />
       </section>
 
-      <section className="mt-5 flex flex-row gap-2">
-        <AllPostNotifs
-          selectedPostId={currentPostId}
-          postNotificationGroups={postNotificationGroups}
-        />
-        <CurrentPostNotifs
-          mode={mode}
-          currentPost={currentPost}
-          followList={followNotifications}
-        />
+      <section className="mt-5 flex flex-col gap-6 md:flex-row md:gap-2">
+        <section
+          className={cn(
+            "w-full md:block md:w-auto",
+            hasDetailView ? "hidden" : "block",
+          )}
+        >
+          <AllPostNotifs
+            selectedPostId={selectedPostId}
+            postNotificationGroups={postNotificationGroups}
+          />
+        </section>
+
+        <section
+          className={cn(
+            "min-w-0 flex-1 md:block",
+            hasDetailView ? "block" : "hidden",
+          )}
+        >
+          {hasDetailView && (
+            <Link
+              href="/notifications"
+              className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-sm font-semibold text-white/78 transition hover:border-white/16 hover:bg-white/[0.1] hover:text-white md:hidden"
+            >
+              <ArrowLeft className="size-4" />
+              Retour aux notifications
+            </Link>
+          )}
+          <CurrentPostNotifs
+            mode={mode}
+            currentPost={currentPost}
+            followList={followNotifications}
+          />
+        </section>
       </section>
     </AppPageShell>
   );

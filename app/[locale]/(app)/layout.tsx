@@ -43,6 +43,7 @@ export default async function AuthenticatedAppLayout({
     : 0;
 
   const navigationUser = {
+    id: userProfile?.id ?? null,
     avatarUrl: userProfile?.avatarUrl ?? currentSession.user.image ?? null,
     displayName:
       userProfile?.displayname ?? currentSession.user.name ?? "Socially member",
@@ -57,6 +58,7 @@ export default async function AuthenticatedAppLayout({
       <DesktopAppSidebar
         user={navigationUser}
         unreadNotificationCount={unreadNotificationCount}
+        notificationProfileId={navigationUser.id}
       />
 
       <SidebarInset className="app-shell-background">
@@ -71,6 +73,7 @@ export default async function AuthenticatedAppLayout({
         <MobileBottomBar
           username={navigationUser.username}
           unreadNotificationCount={unreadNotificationCount}
+          notificationProfileId={navigationUser.id}
         />
       </SidebarInset>
     </SidebarProvider>

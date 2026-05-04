@@ -27,6 +27,7 @@ export default function FollowNotifCard({
       try {
         await markFollowNotificationsAsRead();
         handleFilterChange();
+        router.refresh();
       } catch (e) {
         console.error("Échec silencieux du marquage :", e);
       }
@@ -45,7 +46,7 @@ export default function FollowNotifCard({
     <>
       <div
         className={cn(
-          "flex p-4 bg-white/5 border text-center justify-center items-center cursor-pointer rounded-lg w-[350px] ",
+          "flex p-4 bg-white/5 border text-center justify-center items-center cursor-pointer rounded-lg  w-[350px] md:max-w-[250px] md:text-ls text-xs ",
           isActive && "bg-white/30",
           haveNewFollow &&
             "border-blue-500/50 bg-blue-500/5 hover:bg-blue-500/40 transition-colors",
