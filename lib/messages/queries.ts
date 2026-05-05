@@ -31,10 +31,20 @@ export async function getUserConversations() {
       lastMessageText: true,
       lastMessageAt: true,
       participantOne: {
-        select: { id: true, avatarUrl: true, displayname: true },
+        select: {
+          id: true,
+          avatarUrl: true,
+          displayname: true,
+          username: true,
+        },
       },
       participantTwo: {
-        select: { id: true, avatarUrl: true, displayname: true },
+        select: {
+          id: true,
+          avatarUrl: true,
+          displayname: true,
+          username: true,
+        },
       },
       _count: {
         select: {
@@ -65,6 +75,10 @@ export async function getUserConversations() {
     };
   });
 }
+
+export type UserConversationReturnType = Awaited<
+  ReturnType<typeof getUserConversations>
+>;
 
 export async function getConversationMessages(conversationId: string) {
   const user = await getUser();
@@ -113,3 +127,7 @@ export async function getConversationMessages(conversationId: string) {
     messages: conversation.messages,
   };
 }
+
+export type UserConversationsMessagesReturnType = Awaited<
+  ReturnType<typeof getConversationMessages>
+>;
