@@ -174,7 +174,10 @@ export async function sendMessage(
 
       await tx.conversation.update({
         where: { id: conversation.id },
-        data: { lastMessageAt: sentAt },
+        data: {
+          lastMessageText: createdMessage.content,
+          lastMessageAt: sentAt,
+        },
         select: { id: true },
       });
 

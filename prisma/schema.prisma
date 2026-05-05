@@ -286,6 +286,7 @@ model Conversation {
   directKey     String   @unique
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  lastMessageText String?
   lastMessageAt DateTime @default(now())
 
   creatorId String
