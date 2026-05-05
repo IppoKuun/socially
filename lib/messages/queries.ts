@@ -91,10 +91,20 @@ export async function getConversationMessages(conversationId: string) {
     select: {
       id: true,
       participantOne: {
-        select: { id: true, avatarUrl: true, displayname: true },
+        select: {
+          id: true,
+          avatarUrl: true,
+          displayname: true,
+          username: true,
+        },
       },
       participantTwo: {
-        select: { id: true, avatarUrl: true, displayname: true },
+        select: {
+          id: true,
+          avatarUrl: true,
+          displayname: true,
+          username: true,
+        },
       },
       messages: {
         orderBy: { createdAt: "asc" },

@@ -86,7 +86,7 @@ export function ConversationList({
   const [conversations, setConversations] = useState(initialConversations);
 
   return (
-    <section className="flex flex-col">
+    <section className="flex flex-col md:hidden ">
       {conversations.map((conv) => (
         <Link key={conv.id} href={`conversations/${conv.id}`}>
           <article className="flex flex-row items-center gap-3">

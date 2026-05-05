@@ -5,7 +5,11 @@ import { makeQueryClient } from "@/lib/query-client";
 import { getUserConversations } from "@/lib/messages/queries";
 import { ConversationList } from "./_components/ConversationList";
 
-export default async function MessagesPage() {
+export default async function MessagesPage({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const t = await getTranslations("appShell.pages.messages");
 
   const queryClient = makeQueryClient();
@@ -19,7 +23,10 @@ export default async function MessagesPage() {
 
   return (
     <AppPageShell title={t("title")} description={t("description")}>
-      <ConversationList initialConversations={conversations} />
+      <section className="flex flex-row">
+        <ConversationList initialConversations={conversations} />
+        <main className="min-w-0">{children}</main>
+      </section>
     </AppPageShell>
   );
 }
