@@ -463,7 +463,15 @@
       "messages": {
         "title": "Message",
         "description": "Accede a tus futuras conversaciones privadas desde el shell autenticado compartido.",
-        "placeholder": "La mensajería privada aún no está conectada. Esta ruta está disponible a propósito para validar la navegación de extremo a extremo."
+        "placeholder": "La mensajería privada aún no está conectada. Esta ruta está disponible a propósito para validar la navegación de extremo a extremo.",
+        "actions": {
+          "authRequired": "Inicia sesión para empezar una conversación.",
+          "viewerProfileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+          "targetProfileNotFound": "No se pudo encontrar el perfil que intentas contactar.",
+          "cannotMessageSelf": "No puedes empezar una conversación contigo mismo.",
+          "blocked": "No se puede empezar esta conversación porque una de las cuentas ha bloqueado a la otra.",
+          "databaseError": "No se pudo preparar la conversación. Inténtalo de nuevo."
+        }
       },
       "search": {
         "title": "Búsqueda",

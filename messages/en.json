@@ -463,7 +463,15 @@
       "messages": {
         "title": "Message",
         "description": "Access your future private conversations from the shared authenticated shell.",
-        "placeholder": "Private messaging is not wired yet. This route is intentionally live so the shell can be validated end to end."
+        "placeholder": "Private messaging is not wired yet. This route is intentionally live so the shell can be validated end to end.",
+        "actions": {
+          "authRequired": "Please sign in to start a conversation.",
+          "viewerProfileNotFound": "We could not find your profile. Please try again later.",
+          "targetProfileNotFound": "The profile you are trying to contact could not be found.",
+          "cannotMessageSelf": "You cannot start a conversation with yourself.",
+          "blocked": "Unable to start this conversation because one of the accounts has blocked the other.",
+          "databaseError": "Unable to prepare the conversation. Please try again."
+        }
       },
       "search": {
         "title": "Search",

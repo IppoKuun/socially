@@ -463,7 +463,15 @@
       "messages": {
         "title": "Message",
         "description": "Accède à tes futures conversations privées depuis le shell authentifié partagé.",
-        "placeholder": "La messagerie privée n'est pas encore câblée. Cette route est volontairement disponible pour valider la navigation de bout en bout."
+        "placeholder": "La messagerie privée n'est pas encore câblée. Cette route est volontairement disponible pour valider la navigation de bout en bout.",
+        "actions": {
+          "authRequired": "Connecte-toi pour démarrer une conversation.",
+          "viewerProfileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+          "targetProfileNotFound": "Le profil que vous essayez de contacter n'a pas été trouvé.",
+          "cannotMessageSelf": "Vous ne pouvez pas démarrer une conversation avec vous-même.",
+          "blocked": "Impossible de démarrer cette conversation, car l'un des deux comptes a bloqué l'autre.",
+          "databaseError": "Impossible de préparer la conversation. Réessayez."
+        }
       },
       "search": {
         "title": "Recherche",
