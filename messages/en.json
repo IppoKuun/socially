@@ -470,7 +470,13 @@
           "targetProfileNotFound": "The profile you are trying to contact could not be found.",
           "cannotMessageSelf": "You cannot start a conversation with yourself.",
           "blocked": "Unable to start this conversation because one of the accounts has blocked the other.",
-          "databaseError": "Unable to prepare the conversation. Please try again."
+          "databaseError": "Unable to prepare the conversation. Please try again.",
+          "invalidInput": "Unable to send this message.",
+          "emptyMessage": "The message cannot be empty.",
+          "messageTooLong": "The message must not exceed 2000 characters.",
+          "conversationNotFound": "Conversation not found or inaccessible.",
+          "receiverProfileUnavailable": "This profile is no longer available.",
+          "sendFailed": "Unable to send the message. Please try again."
         }
       },
       "search": {

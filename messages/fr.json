@@ -470,7 +470,13 @@
           "targetProfileNotFound": "Le profil que vous essayez de contacter n'a pas été trouvé.",
           "cannotMessageSelf": "Vous ne pouvez pas démarrer une conversation avec vous-même.",
           "blocked": "Impossible de démarrer cette conversation, car l'un des deux comptes a bloqué l'autre.",
-          "databaseError": "Impossible de préparer la conversation. Réessayez."
+          "databaseError": "Impossible de préparer la conversation. Réessayez.",
+          "invalidInput": "Impossible d'envoyer ce message.",
+          "emptyMessage": "Le message ne peut pas être vide.",
+          "messageTooLong": "Le message ne doit pas dépasser 2000 caractères.",
+          "conversationNotFound": "Conversation introuvable ou inaccessible.",
+          "receiverProfileUnavailable": "Ce profil n'est plus disponible.",
+          "sendFailed": "Impossible d'envoyer le message. Réessayez."
         }
       },
       "search": {
