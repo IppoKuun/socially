@@ -25,12 +25,12 @@ type SentMessage = {
 type SendMessageResult =
   | {
       ok: true;
-      message: SentMessage;
+      messageQuery: SentMessage;
       userMsg: "";
     }
   | {
       ok: false;
-      message: null;
+      messageQuery: null;
       userMsg: string;
     };
 
@@ -41,7 +41,7 @@ export async function sendMessage(
   const session = await getSession();
 
   if (!session) {
-    return { ok: false, message: null, userMsg: t("authRequired") };
+    return { ok: false, messageQuery: null, userMsg: t("authRequired") };
   }
 
   if (
@@ -49,17 +49,17 @@ export async function sendMessage(
     typeof input.conversationId !== "string" ||
     typeof input.content !== "string"
   ) {
-    return { ok: false, message: null, userMsg: t("invalidInput") };
+    return { ok: false, messageQuery: null, userMsg: t("invalidInput") };
   }
 
   const content = input.content.trim();
 
   if (content.length === 0) {
-    return { ok: false, message: null, userMsg: t("emptyMessage") };
+    return { ok: false, messageQuery: null, userMsg: t("emptyMessage") };
   }
 
   if (content.length > MESSAGE_MAX_LENGTH) {
-    return { ok: false, message: null, userMsg: t("messageTooLong") };
+    return { ok: false, messageQuery: null, userMsg: t("messageTooLong") };
   }
 
   const viewer = await myPrisma.userProfile.findUnique({
@@ -70,7 +70,7 @@ export async function sendMessage(
   if (!viewer) {
     return {
       ok: false,
-      message: null,
+      messageQuery: null,
       userMsg: t("viewerProfileNotFound"),
     };
   }
@@ -102,7 +102,7 @@ export async function sendMessage(
   if (!conversation) {
     return {
       ok: false,
-      message: null,
+      messageQuery: null,
       userMsg: t("conversationNotFound"),
     };
   }
@@ -120,7 +120,7 @@ export async function sendMessage(
   if (receiver.deletedAt || receiver.defineltyDeleted) {
     return {
       ok: false,
-      message: null,
+      messageQuery: null,
       userMsg: t("receiverProfileUnavailable"),
     };
   }
@@ -144,7 +144,7 @@ export async function sendMessage(
   if (existingBlock) {
     return {
       ok: false,
-      message: null,
+      messageQuery: null,
       userMsg: t("blocked"),
     };
   }
@@ -152,7 +152,7 @@ export async function sendMessage(
   try {
     const sentAt = new Date();
 
-    const message = await myPrisma.$transaction(async (tx) => {
+    const messageQuery = await myPrisma.$transaction(async (tx) => {
       const createdMessage = await tx.message.create({
         data: {
           content,
@@ -183,18 +183,18 @@ export async function sendMessage(
 
     return {
       ok: true,
-      message: {
-        ...message,
-        createdAt: message.createdAt.toISOString(),
+      messageQuery: {
+        ...messageQuery,
+        createdAt: messageQuery.createdAt.toISOString(),
       },
       userMsg: "",
     };
   } catch (error) {
-    console.error("Unable to send message", error);
+    console.error("Unable to send messageQuery", error);
 
     return {
       ok: false,
-      message: null,
+      messageQuery: null,
       userMsg: t("sendFailed"),
     };
   }
