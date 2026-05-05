@@ -1,9 +1,9 @@
 import { getConversationMessages } from "@/lib/messages/queries";
-import { makeQueryClient } from "@/lib/query-client";
 import { notFound } from "next/navigation";
 import ConversationHeader from "../_components/ConversationHeader";
 import ChatWindow from "../_components/ChatWindow";
 import { MessageInput } from "../_components/MessageInput";
+import markConversationAsRead from "../_actions/markConversationRead";
 
 export default async function ConversationDetail({
   params,
@@ -16,14 +16,9 @@ export default async function ConversationDetail({
     notFound();
   }
 
-  const queryClient = makeQueryClient();
+  const messages = await getConversationMessages(conversationId);
 
-  const messages = await queryClient.fetchQuery({
-    queryKey: ["conversations", conversationId, "messages"],
-    queryFn: () => {
-      return getConversationMessages(conversationId);
-    },
-  });
+  await markConversationAsRead(conversationId);
 
   return (
     <section className="flex flex-col">
