@@ -2,7 +2,12 @@ import Pusher from "pusher";
 
 import {
   getUserNotificationsChannel,
+  getUserRealtimeChannel,
+  PUSHER_MESSAGE_CREATED_EVENT,
+  PUSHER_MESSAGE_READ_EVENT,
   PUSHER_NOTIFICATION_CREATED_EVENT,
+  type MessageCreatedEvent,
+  type MessageReadEvent,
   type NotificationCreatedEvent,
 } from "@/lib/pusher/events";
 
@@ -53,6 +58,40 @@ export async function triggerNotificationCreated(
   await pusher.trigger(
     getUserNotificationsChannel(receiverProfileId),
     PUSHER_NOTIFICATION_CREATED_EVENT,
+    payload,
+  );
+}
+
+export async function triggerMessageCreated(
+  receiverProfileId: string,
+  payload: MessageCreatedEvent,
+) {
+  const pusher = getPusherServer();
+
+  if (!pusher) {
+    return;
+  }
+
+  await pusher.trigger(
+    getUserRealtimeChannel(receiverProfileId),
+    PUSHER_MESSAGE_CREATED_EVENT,
+    payload,
+  );
+}
+
+export async function triggerMessageRead(
+  senderProfileId: string,
+  payload: MessageReadEvent,
+) {
+  const pusher = getPusherServer();
+
+  if (!pusher) {
+    return;
+  }
+
+  await pusher.trigger(
+    getUserRealtimeChannel(senderProfileId),
+    PUSHER_MESSAGE_READ_EVENT,
     payload,
   );
 }

@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 
 import { getSession } from "@/lib/authSession";
 import { getPusherServer } from "@/lib/pusher/server";
-import { getUserNotificationsChannel } from "@/lib/pusher/events";
+import {
+  CONVERSATION_REALTIME_CHANNEL_PREFIX,
+  getUserNotificationsChannel,
+} from "@/lib/pusher/events";
 import { myPrisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
@@ -26,12 +29,33 @@ export async function POST(request: Request) {
   const channelName = formData.get("channel_name");
   const expectedChannelName = getUserNotificationsChannel(userProfile.id);
 
-  if (
-    typeof socketId !== "string" ||
-    typeof channelName !== "string" ||
-    channelName !== expectedChannelName
-  ) {
+  if (typeof socketId !== "string" || typeof channelName !== "string") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  if (channelName !== expectedChannelName) {
+    if (!channelName.startsWith(CONVERSATION_REALTIME_CHANNEL_PREFIX)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const conversationId = channelName.slice(
+      CONVERSATION_REALTIME_CHANNEL_PREFIX.length,
+    );
+
+    const conversation = await myPrisma.conversation.findFirst({
+      where: {
+        id: conversationId,
+        OR: [
+          { participantOneId: userProfile.id },
+          { participantTwoId: userProfile.id },
+        ],
+      },
+      select: { id: true },
+    });
+
+    if (!conversation) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
   }
 
   const pusher = getPusherServer();

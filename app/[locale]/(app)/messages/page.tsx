@@ -1,14 +1,14 @@
-import { getTranslations } from "next-intl/server";
-
-import AppPageShell from "../_components/app-page-shell";
-import PagePlaceholderCard from "../_components/page-placeholder-card";
-
-export default async function MessagesPage() {
-  const t = await getTranslations("appShell.pages.messages");
-
+export default async function MessageEmptyPage() {
   return (
-    <AppPageShell title={t("title")} description={t("description")}>
-      <PagePlaceholderCard message={t("placeholder")} />
-    </AppPageShell>
+    <section className="flex min-h-[620px] items-center justify-center px-6 text-center">
+      <div className="max-w-sm space-y-2">
+        <p className="font-sora text-2xl font-semibold text-white">
+          Sélectionnez une conversation
+        </p>
+        <p className="text-sm leading-6 text-white/48">
+          Choisissez un échange dans la liste pour afficher les messages.
+        </p>
+      </div>
+    </section>
   );
 }
