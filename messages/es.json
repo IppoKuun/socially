@@ -476,7 +476,8 @@
           "messageTooLong": "El mensaje no debe superar los 2000 caracteres.",
           "conversationNotFound": "Conversación no encontrada o inaccesible.",
           "receiverProfileUnavailable": "Este perfil ya no está disponible.",
-          "sendFailed": "No se pudo enviar el mensaje. Inténtalo de nuevo."
+          "sendFailed": "No se pudo enviar el mensaje. Inténtalo de nuevo.",
+          "failedToMarkAsRead": "No se pudo marcar la conversación como leída. Inténtalo de nuevo."
         }
       },
       "search": {
