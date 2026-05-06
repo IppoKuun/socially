@@ -20,7 +20,7 @@ export default async function ConversationDetail({
   await markConversationAsRead(conversationId);
 
   return (
-    <section className="flex flex-col">
+    <section className="flex min-h-[620px] flex-col bg-[rgba(12,14,20,0.36)]">
       <ConversationHeader otherParticipant={messages.otherParticipant} />
       <ChatWindow
         conversationId={conversationId}

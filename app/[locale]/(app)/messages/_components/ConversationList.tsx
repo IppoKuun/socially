@@ -9,7 +9,7 @@ import {
   PUSHER_MESSAGE_CREATED_EVENT,
   type MessageCreatedEvent,
 } from "@/lib/pusher/events";
-import { CircleUserRound } from "lucide-react";
+import { CircleUserRound, Search } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -73,16 +73,16 @@ function ConversationAvatar({
       <Image
         src={avatarUrl}
         alt={`Avatar de ${displayname}`}
-        width={44}
-        height={44}
-        className="h-11 w-11 rounded-full object-cover"
+        width={48}
+        height={48}
+        className="h-12 w-12 rounded-full object-cover ring-1 ring-white/10"
       />
     );
   }
 
   return (
     <span
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.08] text-white/65"
+      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.08] text-white/65"
       aria-label={`Avatar de ${displayname}`}
     >
       <CircleUserRound className="h-5 w-5" />
@@ -172,24 +172,63 @@ export function ConversationList({
   }, [activeConversationId, viewerId]);
 
   return (
-    <section className="flex flex-col md:hidden ">
-      {conversations.map((conv) => (
-        <Link key={conv.id} href={`conversations/${conv.id}`}>
-          <article className="flex flex-row items-center gap-3">
-            <ConversationAvatar
-              avatarUrl={conv.otherParticipant.avatarUrl}
-              displayname={conv.otherParticipant.displayname}
-            />
-            <div className="flex min-w-0 flex-1 flex-col">
-              <p className="">{conv.otherParticipant.displayname}</p>
-              <p className="">{conv.lastMessageText}</p>
-            </div>
-            <span className="">
-              {formatConversationDate(conv.lastMessageAt, locale)}
-            </span>
-          </article>
-        </Link>
-      ))}
+    <section className="flex min-h-[620px] flex-col gap-5 bg-white/[0.035] p-4">
+      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
+        {conversations.map((conv) => {
+          const isActive = conv.id === activeConversationId;
+          const profileLabel = conv.otherParticipant.username
+            ? `@${conv.otherParticipant.username}`
+            : "@profile";
+
+          return (
+            <Link key={conv.id} href={`/messages/${conv.id}`}>
+              <article
+                className={[
+                  "group flex min-h-24 flex-row items-center gap-3 rounded-[1.25rem] border px-3 py-3 transition",
+                  isActive
+                    ? "border-white/18 bg-white/[0.16] shadow-[0_18px_44px_-32px_rgba(0,0,0,0.95)]"
+                    : "border-white/8 bg-white/[0.075] hover:bg-white/[0.12]",
+                ].join(" ")}
+              >
+                <ConversationAvatar
+                  avatarUrl={conv.otherParticipant.avatarUrl}
+                  displayname={conv.otherParticipant.displayname}
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-sora text-base font-semibold leading-tight text-white">
+                        {conv.otherParticipant.displayname}
+                      </p>
+                      <p className="mt-0.5 truncate text-sm text-white/52">
+                        {profileLabel}
+                      </p>
+                    </div>
+                    <time className="shrink-0 text-xs font-medium text-white/50">
+                      {formatConversationDate(conv.lastMessageAt, locale)}
+                    </time>
+                  </div>
+
+                  <div className="mt-1.5 flex items-center gap-2">
+                    <p className="min-w-0 flex-1 truncate text-sm leading-5 text-white/68">
+                      {conv.lastMessageText || "Aucun message pour le moment."}
+                    </p>
+                    {conv.unreadCount > 0 ? (
+                      <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-primary px-1.5 text-[0.68rem] font-bold text-white">
+                        {conv.unreadCount}
+                      </span>
+                    ) : (
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/[0.10] text-xs text-white/42">
+                        -
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </article>
+            </Link>
+          );
+        })}
+      </div>
     </section>
   );
 }

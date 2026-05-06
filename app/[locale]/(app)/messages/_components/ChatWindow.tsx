@@ -84,8 +84,12 @@ export default function ChatWindow({
   }, [conversationId, viewerId]);
 
   return (
-    <section className={cn("flex flex-col")}>
-      <div className={cn("flex flex-col gap-2 overflow-y-auto p-4")}>
+    <section className={cn("flex min-h-[526px] flex-1 flex-col")}>
+      <div
+        className={cn(
+          "flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-5 py-6",
+        )}
+      >
         {messages.map((message) => {
           const isMine = message.senderId === viewerId;
 
@@ -96,8 +100,10 @@ export default function ChatWindow({
             >
               <div
                 className={cn(
-                  "rounded-2xl px-4 py-2",
-                  isMine ? "bg-primary text-white" : "bg-white/10",
+                  "max-w-[78%] rounded-[1.15rem] px-4 py-3 text-sm leading-6 shadow-[0_14px_34px_-28px_rgba(0,0,0,0.95)]",
+                  isMine
+                    ? "rounded-br-md bg-primary text-white"
+                    : "rounded-bl-md border border-white/8 bg-white/[0.11] text-white/92",
                 )}
               >
                 {message.content}

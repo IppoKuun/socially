@@ -18,12 +18,13 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useImageColors } from "@/app/hooks/useImageColors";
 import type { ProfileData } from "../_actions/getProfile";
 import toggleFollow from "../_actions/toggleFollow";
 import ModifyProfilDialog from "./ModifyProfilDialog";
+import { createOrGetConversation } from "../../messages/_actions/createOrGetConversation";
 
 const DEFAULT_PROFILE_COLORS = [
   "hsl(216 72% 56%)",
@@ -118,16 +119,21 @@ export default function ProfileHeader({
   const t = useTranslations("profilePublic");
   const tNav = useTranslations("appShell.navigation");
   const locale = useLocale();
+  const router = useRouter();
   const imageColors = useImageColors(profile.avatarUrl);
-  const palette = imageColors.length >= 3 ? imageColors : DEFAULT_PROFILE_COLORS;
+  const palette =
+    imageColors.length >= 3 ? imageColors : DEFAULT_PROFILE_COLORS;
   const [isPending, startTransition] = useTransition();
+  const [isMessagePending, startMessageTransition] = useTransition();
   const [isFollowing, setIsFollowing] = useState(profile.isViewerFollowing);
   const [followersCount, setFollowersCount] = useState(
     profile._count.relationWhereUserIsFollowed,
   );
   const [actionError, setActionError] = useState<string | null>(null);
   const username = profile.username ?? "";
-  const connectionsBaseHref = username ? `/profile/${username}/connections` : null;
+  const connectionsBaseHref = username
+    ? `/profile/${username}/connections`
+    : null;
   const accentStyle = {
     "--profile-accent-1": palette[0],
     "--profile-accent-2": palette[1],
@@ -155,6 +161,25 @@ export default function ProfileHeader({
         setFollowersCount((current) => Math.max(0, current - followerDelta));
         setActionError(t("actions.followError"));
       }
+    });
+  }
+
+  function handleStartConversation() {
+    if (isOwner || !isAuthentificated || !profile.id || isMessagePending) {
+      return;
+    }
+
+    setActionError(null);
+
+    startMessageTransition(async () => {
+      const result = await createOrGetConversation(profile.id);
+
+      if (!result.ok) {
+        setActionError(result.userMsg);
+        return;
+      }
+
+      router.push(`/messages/${result.conversationId}`);
     });
   }
 
@@ -264,15 +289,19 @@ export default function ProfileHeader({
                 </Button>
 
                 <Button
-                  asChild
+                  type="button"
                   variant="outline"
                   size="lg"
+                  onClick={handleStartConversation}
+                  disabled={!isAuthentificated || isMessagePending}
                   className="h-10 rounded-full border-white/14 bg-white/[0.04] px-6 text-white/76 hover:bg-white/[0.10] hover:text-white"
                 >
-                  <Link href="/messages">
+                  {isMessagePending ? (
+                    <LoaderCircle className="h-4 w-4 animate-spin" />
+                  ) : (
                     <MessageCircle className="h-4 w-4" />
-                    {t("actions.message")}
-                  </Link>
+                  )}
+                  {t("actions.message")}
                 </Button>
               </>
             )}
