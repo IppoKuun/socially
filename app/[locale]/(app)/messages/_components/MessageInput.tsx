@@ -3,28 +3,70 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import {
-  ArrowRight,
-  ImageIcon,
-  LoaderCircle,
-  Paperclip,
-  Smile,
-} from "lucide-react";
-import { useState, useTransition } from "react";
+import { ArrowRight, LoaderCircle } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { sendMessage, SentMessage } from "../_actions/sendMessage";
 
 type MessageInputProps = {
   conversationId: string;
   onMessageSent: (message: SentMessage) => void;
+  onTypingChange?: (isTyping: boolean) => void;
 };
 
 export function MessageInput({
   conversationId,
   onMessageSent,
+  onTypingChange,
 }: MessageInputProps) {
   const [isPending, startTransition] = useTransition();
   const [content, setContent] = useState<string>("");
   const [servMsg, setServMsg] = useState<string>("");
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isTypingRef = useRef(false);
+
+  const stopTyping = useCallback(() => {
+    if (!isTypingRef.current) {
+      return;
+    }
+
+    isTypingRef.current = false;
+    onTypingChange?.(false);
+  }, [onTypingChange]);
+
+  const clearTypingTimeout = useCallback(() => {
+    if (!typingTimeoutRef.current) {
+      return;
+    }
+
+    clearTimeout(typingTimeoutRef.current);
+    typingTimeoutRef.current = null;
+  }, []);
+
+  function handleContentChange(value: string) {
+    setContent(value);
+    clearTypingTimeout();
+
+    if (!value.trim()) {
+      stopTyping();
+      return;
+    }
+
+    if (!isTypingRef.current) {
+      isTypingRef.current = true;
+      onTypingChange?.(true);
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      stopTyping();
+    }, 2500);
+  }
+
+  useEffect(() => {
+    return () => {
+      clearTypingTimeout();
+      stopTyping();
+    };
+  }, [clearTypingTimeout, stopTyping]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,6 +76,9 @@ export function MessageInput({
     const trimmedContent = content.trim();
 
     if (!trimmedContent) return;
+
+    clearTypingTimeout();
+    stopTyping();
 
     startTransition(async () => {
       setServMsg("");
@@ -77,7 +122,7 @@ export function MessageInput({
           placeholder="Write a message..."
           required
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(e) => handleContentChange(e.target.value)}
           className="h-[52px] rounded-full border-white/18 bg-black/12 px-5 pr-14 text-white placeholder:text-white/42 focus-visible:border-white/32 focus-visible:ring-white/12"
         />
       </div>

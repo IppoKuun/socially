@@ -1,12 +1,15 @@
 "use client";
 
 import {
+  getConversationRealtimeChannel,
   getUserRealtimeChannel,
   MESSAGE_CONVERSATION_UPDATED_EVENT,
   PUSHER_MESSAGE_CREATED_EVENT,
   PUSHER_MESSAGE_READ_EVENT,
+  PUSHER_MESSAGE_TYPING_EVENT,
   type MessageCreatedEvent,
   type MessageReadEvent,
+  type MessageTypingEvent,
 } from "@/lib/pusher/events";
 import { getPusherClient } from "@/lib/pusher/client";
 import markConversationAsRead from "../_actions/markConversationRead";
@@ -14,7 +17,7 @@ import type { SentMessage } from "../_actions/sendMessage";
 import { MessageInput } from "./MessageInput";
 import { cn } from "@/lib/utils";
 import { CheckCheck } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
 type ChatMessage = {
   id: string;
@@ -37,6 +40,8 @@ export default function ChatWindow({
   viewerId,
 }: ChatWindowProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [isOtherTyping, setIsOtherTyping] = useState(false);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [, startReadTransition] = useTransition();
 
   function handleMessageSent(message: SentMessage) {
@@ -49,6 +54,26 @@ export default function ChatWindow({
     );
   }
 
+  const triggerTypingState = useCallback((isTyping: boolean) => {
+    const pusher = getPusherClient();
+
+    if (!pusher) {
+      return;
+    }
+
+    const channelName = getConversationRealtimeChannel(conversationId);
+    const channel = pusher.channel(channelName) || pusher.subscribe(channelName);
+
+    // Typing indicator V1: l'auth du channel bloque les non-participants.
+    // Un participant peut toujours faker son propre typing depuis DevTools,
+    // mais c'est un etat ephemere sans impact metier, donc accepte pour cette scope.
+    channel.trigger(PUSHER_MESSAGE_TYPING_EVENT, {
+      conversationId,
+      senderId: viewerId,
+      isTyping,
+    } satisfies MessageTypingEvent);
+  }, [conversationId, viewerId]);
+
   useEffect(() => {
     const pusher = getPusherClient();
 
@@ -58,6 +83,9 @@ export default function ChatWindow({
 
     const channelName = getUserRealtimeChannel(viewerId);
     const channel = pusher.subscribe(channelName);
+    const conversationChannelName =
+      getConversationRealtimeChannel(conversationId);
+    const conversationChannel = pusher.subscribe(conversationChannelName);
 
     function handleMessageCreated(payload: MessageCreatedEvent) {
       if (payload.conversationId !== conversationId) {
@@ -98,12 +126,45 @@ export default function ChatWindow({
       );
     }
 
+    function handleMessageTyping(payload: MessageTypingEvent) {
+      if (
+        payload.conversationId !== conversationId ||
+        payload.senderId === viewerId
+      ) {
+        return;
+      }
+
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+
+      setIsOtherTyping(payload.isTyping);
+
+      if (payload.isTyping) {
+        typingTimeoutRef.current = setTimeout(() => {
+          setIsOtherTyping(false);
+        }, 3000);
+      }
+    }
+
     channel.bind(PUSHER_MESSAGE_CREATED_EVENT, handleMessageCreated);
     channel.bind(PUSHER_MESSAGE_READ_EVENT, handleMessageRead);
+    conversationChannel.bind(
+      PUSHER_MESSAGE_TYPING_EVENT,
+      handleMessageTyping,
+    );
 
     return () => {
       channel.unbind(PUSHER_MESSAGE_CREATED_EVENT, handleMessageCreated);
       channel.unbind(PUSHER_MESSAGE_READ_EVENT, handleMessageRead);
+      conversationChannel.unbind(
+        PUSHER_MESSAGE_TYPING_EVENT,
+        handleMessageTyping,
+      );
+
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
     };
   }, [conversationId, viewerId]);
 
@@ -144,10 +205,21 @@ export default function ChatWindow({
             </div>
           );
         })}
+
+        {isOtherTyping ? (
+          <div className="flex justify-start">
+            <div className="flex items-center gap-1 rounded-[1.15rem] rounded-bl-md border border-white/8 bg-white/[0.11] px-4 py-3 text-white/72 shadow-[0_14px_34px_-28px_rgba(0,0,0,0.95)]">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white/62" />
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white/62 [animation-delay:120ms]" />
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white/62 [animation-delay:240ms]" />
+            </div>
+          </div>
+        ) : null}
       </div>
       <MessageInput
         conversationId={conversationId}
         onMessageSent={handleMessageSent}
+        onTypingChange={triggerTypingState}
       />
     </section>
   );
