@@ -1,7 +1,7 @@
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 
-type getUserInfoType = {
+export type getUserInfoType = {
   userProfile: {
     id: string;
     username: string | null;

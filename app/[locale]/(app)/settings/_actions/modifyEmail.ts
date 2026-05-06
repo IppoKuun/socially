@@ -5,14 +5,14 @@ import { myPrisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
-type FormServ = {
+export type FormServ = {
   ok: boolean;
   userMsg: string;
 };
 
 export default async function modifyEmailActions(
   _prevstate: FormServ,
-  formData: FormData,
+  email: string,
 ): Promise<FormServ> {
   const session = await getSession();
 
@@ -27,8 +27,6 @@ export default async function modifyEmailActions(
   if (!user) {
     return { ok: false, userMsg: "Nous n'avons pas pu vous identifié" };
   }
-
-  const email = formData.get("email") as string;
 
   if (!email) {
     return { ok: false, userMsg: "Email est vide" };
