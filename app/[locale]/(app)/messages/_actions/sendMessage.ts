@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
+import { triggerMessageCreated } from "@/lib/pusher/server";
 
 const MESSAGE_MAX_LENGTH = 2000;
 
@@ -184,12 +185,20 @@ export async function sendMessage(
       return createdMessage;
     });
 
+    const serializedMessage = {
+      ...messageQuery,
+      createdAt: messageQuery.createdAt.toISOString(),
+    };
+
+    try {
+      await triggerMessageCreated(receiverId, serializedMessage);
+    } catch (error) {
+      console.error("Unable to trigger realtime message", error);
+    }
+
     return {
       ok: true,
-      messageQuery: {
-        ...messageQuery,
-        createdAt: messageQuery.createdAt.toISOString(),
-      },
+      messageQuery: serializedMessage,
       userMsg: "",
     };
   } catch (error) {

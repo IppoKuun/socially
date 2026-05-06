@@ -1,9 +1,16 @@
 "use client";
 
+import {
+  getUserRealtimeChannel,
+  PUSHER_MESSAGE_CREATED_EVENT,
+  type MessageCreatedEvent,
+} from "@/lib/pusher/events";
+import { getPusherClient } from "@/lib/pusher/client";
+import markConversationAsRead from "../_actions/markConversationRead";
 import type { SentMessage } from "../_actions/sendMessage";
 import { MessageInput } from "./MessageInput";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 type ChatMessage = {
   id: string;
@@ -26,10 +33,49 @@ export default function ChatWindow({
   viewerId,
 }: ChatWindowProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [, startReadTransition] = useTransition();
 
   function handleMessageSent(message: SentMessage) {
     setMessages((currentMessages) => [...currentMessages, message]);
   }
+
+  useEffect(() => {
+    const pusher = getPusherClient();
+
+    if (!pusher) {
+      return;
+    }
+
+    const channelName = getUserRealtimeChannel(viewerId);
+    const channel = pusher.subscribe(channelName);
+
+    function handleMessageCreated(payload: MessageCreatedEvent) {
+      if (payload.conversationId !== conversationId) {
+        return;
+      }
+
+      setMessages((currentMessages) => {
+        if (currentMessages.some((message) => message.id === payload.id)) {
+          return currentMessages;
+        }
+
+        return [...currentMessages, payload];
+      });
+
+      if (payload.senderId !== viewerId) {
+        startReadTransition(async () => {
+          await markConversationAsRead(conversationId);
+        });
+      }
+    }
+
+    channel.bind(PUSHER_MESSAGE_CREATED_EVENT, handleMessageCreated);
+
+    return () => {
+      channel.unbind(PUSHER_MESSAGE_CREATED_EVENT, handleMessageCreated);
+      pusher.unsubscribe(channelName);
+    };
+  }, [conversationId, viewerId]);
 
   return (
     <section className={cn("flex flex-col")}>
