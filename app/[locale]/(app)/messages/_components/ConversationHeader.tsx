@@ -1,7 +1,6 @@
 "use client";
 import { Link } from "@/i18n/routing";
-import { Button } from "@/components/ui/button";
-import { CircleUserRound, Info, MoreHorizontal, Phone } from "lucide-react";
+import { ArrowLeft, CircleUserRound } from "lucide-react";
 import Image from "next/image";
 
 type ConversationHeaderProps = {
@@ -50,7 +49,15 @@ export default function ConversationHeader({
     : "/profile";
 
   return (
-    <header className="flex min-h-24 items-center justify-between border-b border-white/10 px-5 py-4">
+    <header className="flex min-h-24 items-center justify-between border-b border-white/10 px-4 py-4 sm:px-5">
+      <Link
+        href="/messages"
+        className="mr-3 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.07] text-white/72 transition hover:bg-white/[0.12] hover:text-white md:hidden"
+        aria-label="Retour aux conversations"
+      >
+        <ArrowLeft className="h-5 w-5" />
+      </Link>
+
       <Link href={profileHref} className="min-w-0">
         <section className="flex min-w-0 items-center gap-4">
           <ConversationAvatar
@@ -67,36 +74,6 @@ export default function ConversationHeader({
           </div>
         </section>
       </Link>
-
-      <div className="flex items-center gap-2 text-white/58">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-lg"
-          className="rounded-full text-white/58 hover:bg-white/[0.08] hover:text-white"
-          aria-label="Appeler"
-        >
-          <Phone className="h-5 w-5" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-lg"
-          className="rounded-full text-white/58 hover:bg-white/[0.08] hover:text-white"
-          aria-label="Informations"
-        >
-          <Info className="h-5 w-5" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-lg"
-          className="rounded-full text-white/58 hover:bg-white/[0.08] hover:text-white"
-          aria-label="Plus d'options"
-        >
-          <MoreHorizontal className="h-5 w-5" />
-        </Button>
-      </div>
     </header>
   );
 }

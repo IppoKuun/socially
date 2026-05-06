@@ -4,13 +4,16 @@ import {
   getUserRealtimeChannel,
   MESSAGE_CONVERSATION_UPDATED_EVENT,
   PUSHER_MESSAGE_CREATED_EVENT,
+  PUSHER_MESSAGE_READ_EVENT,
   type MessageCreatedEvent,
+  type MessageReadEvent,
 } from "@/lib/pusher/events";
 import { getPusherClient } from "@/lib/pusher/client";
 import markConversationAsRead from "../_actions/markConversationRead";
 import type { SentMessage } from "../_actions/sendMessage";
 import { MessageInput } from "./MessageInput";
 import { cn } from "@/lib/utils";
+import { CheckCheck } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 
 type ChatMessage = {
@@ -76,10 +79,31 @@ export default function ChatWindow({
       }
     }
 
+    function handleMessageRead(payload: MessageReadEvent) {
+      if (payload.conversationId !== conversationId) {
+        return;
+      }
+
+      setMessages((currentMessages) =>
+        currentMessages.map((message) => {
+          if (
+            message.senderId !== viewerId ||
+            message.receiverId !== payload.readerId
+          ) {
+            return message;
+          }
+
+          return { ...message, isRead: true };
+        }),
+      );
+    }
+
     channel.bind(PUSHER_MESSAGE_CREATED_EVENT, handleMessageCreated);
+    channel.bind(PUSHER_MESSAGE_READ_EVENT, handleMessageRead);
 
     return () => {
       channel.unbind(PUSHER_MESSAGE_CREATED_EVENT, handleMessageCreated);
+      channel.unbind(PUSHER_MESSAGE_READ_EVENT, handleMessageRead);
     };
   }, [conversationId, viewerId]);
 
@@ -108,6 +132,15 @@ export default function ChatWindow({
               >
                 {message.content}
               </div>
+              {isMine ? (
+                <CheckCheck
+                  className={cn(
+                    "ml-2 mt-auto h-4 w-4 shrink-0",
+                    message.isRead ? "text-sky-300" : "text-white/32",
+                  )}
+                  aria-label={message.isRead ? "Message lu" : "Message envoyé"}
+                />
+              ) : null}
             </div>
           );
         })}

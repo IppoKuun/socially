@@ -1,5 +1,6 @@
 export const PUSHER_NOTIFICATION_CREATED_EVENT = "notification:new";
 export const PUSHER_MESSAGE_CREATED_EVENT = "message:new";
+export const PUSHER_MESSAGE_READ_EVENT = "message:read";
 export const MESSAGE_CONVERSATION_UPDATED_EVENT =
   "message-conversation:updated";
 export const NOTIFICATION_UNREAD_COUNT_CHANGED_EVENT =
@@ -20,6 +21,12 @@ export type MessageCreatedEvent = {
   receiverId: string;
   conversationId: string;
   isRead: boolean;
+};
+
+export type MessageReadEvent = {
+  conversationId: string;
+  readerId: string;
+  readAt: string;
 };
 
 export function getUserRealtimeChannel(userProfileId: string) {

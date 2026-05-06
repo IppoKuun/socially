@@ -1,6 +1,7 @@
 "use server";
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
+import { triggerMessageRead } from "@/lib/pusher/server";
 import { getTranslations } from "next-intl/server";
 
 export type markConversationAsReadResponseType = {
@@ -49,7 +50,7 @@ export default async function markConversationAsRead(
   }
 
   try {
-    await myPrisma.message.updateMany({
+    const updatedMessages = await myPrisma.message.updateMany({
       where: {
         conversationId: conversation.id,
         receiverId: viewer.id,
@@ -57,6 +58,23 @@ export default async function markConversationAsRead(
       },
       data: { isRead: true },
     });
+
+    if (updatedMessages.count > 0) {
+      const senderId =
+        conversation.participantOneId === viewer.id
+          ? conversation.participantTwoId
+          : conversation.participantOneId;
+
+      try {
+        await triggerMessageRead(senderId, {
+          conversationId: conversation.id,
+          readerId: viewer.id,
+          readAt: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.error("Impossible d'envoyer le read receipt Pusher", error);
+      }
+    }
   } catch (error) {
     console.error("Impossible de marqué la conversation comme read", error);
     return {

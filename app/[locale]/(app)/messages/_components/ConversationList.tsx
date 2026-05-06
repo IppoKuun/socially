@@ -173,7 +173,7 @@ export function ConversationList({
 
   return (
     <section className="flex min-h-[620px] flex-col gap-5 bg-white/[0.035] p-4">
-      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
+      <div className="min-h-0 flex-1 space-y-5 overflow-y-auto pr-1">
         {conversations.map((conv) => {
           const isActive = conv.id === activeConversationId;
           const profileLabel = conv.otherParticipant.username
@@ -181,7 +181,7 @@ export function ConversationList({
             : "@profile";
 
           return (
-            <Link key={conv.id} href={`/messages/${conv.id}`}>
+            <Link key={conv.id} className="block" href={`/messages/${conv.id}`}>
               <article
                 className={[
                   "group flex min-h-24 flex-row items-center gap-3 rounded-[1.25rem] border px-3 py-3 transition",

@@ -63,36 +63,6 @@ export function MessageInput({
         isPending && "opacity-70",
       )}
     >
-      <div className="flex shrink-0 items-center gap-2 text-white/54">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-lg"
-          className="rounded-full text-white/54 hover:bg-white/[0.08] hover:text-white"
-          aria-label="Joindre un fichier"
-        >
-          <Paperclip className="h-5 w-5" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-lg"
-          className="rounded-full text-white/54 hover:bg-white/[0.08] hover:text-white"
-          aria-label="Ajouter une image"
-        >
-          <ImageIcon className="h-5 w-5" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-lg"
-          className="rounded-full text-white/54 hover:bg-white/[0.08] hover:text-white"
-          aria-label="Ajouter un emoji"
-        >
-          <Smile className="h-5 w-5" />
-        </Button>
-      </div>
-
       <div className="relative min-w-0 flex-1">
         {servMsg && (
           <p className="absolute -top-7 left-4 text-xs text-destructive">
