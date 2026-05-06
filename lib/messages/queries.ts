@@ -126,7 +126,7 @@ export async function getConversationMessages(conversationId: string) {
   });
 
   if (!conversation) {
-    throw new myError("Conversation not found");
+    return null;
   }
 
   const otherParticipant =

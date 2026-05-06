@@ -5,15 +5,16 @@ import { UserConversationReturnType } from "@/lib/messages/queries";
 import { getPusherClient } from "@/lib/pusher/client";
 import {
   getUserRealtimeChannel,
+  MESSAGE_CONVERSATION_READ_EVENT,
   MESSAGE_CONVERSATION_UPDATED_EVENT,
   PUSHER_MESSAGE_CREATED_EVENT,
   type MessageCreatedEvent,
 } from "@/lib/pusher/events";
-import { CircleUserRound, Search } from "lucide-react";
+import { CircleUserRound } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type ConversationListProps = {
   initialConversations: UserConversationReturnType;
@@ -100,36 +101,39 @@ export function ConversationList({
   const activeConversationId =
     typeof params.conversationId === "string" ? params.conversationId : null;
 
-  function updateConversationFromMessage(message: MessageCreatedEvent) {
-    setConversations((currentConversations) => {
-      let updatedConversation: ConversationItem | null = null;
-      const nextConversations: ConversationItem[] = [];
+  const updateConversationFromMessage = useCallback(
+    (message: MessageCreatedEvent) => {
+      setConversations((currentConversations) => {
+        let updatedConversation: ConversationItem | null = null;
+        const nextConversations: ConversationItem[] = [];
 
-      for (const conversation of currentConversations) {
-        if (conversation.id !== message.conversationId) {
-          nextConversations.push(conversation);
-          continue;
+        for (const conversation of currentConversations) {
+          if (conversation.id !== message.conversationId) {
+            nextConversations.push(conversation);
+            continue;
+          }
+
+          updatedConversation = {
+            ...conversation,
+            lastMessageAt: new Date(message.createdAt),
+            lastMessageText: message.content,
+            unreadCount:
+              message.senderId !== viewerId &&
+              message.conversationId !== activeConversationId
+                ? conversation.unreadCount + 1
+                : conversation.unreadCount,
+          };
         }
 
-        updatedConversation = {
-          ...conversation,
-          lastMessageAt: new Date(message.createdAt),
-          lastMessageText: message.content,
-          unreadCount:
-            message.senderId !== viewerId &&
-            message.conversationId !== activeConversationId
-              ? conversation.unreadCount + 1
-              : conversation.unreadCount,
-        };
-      }
+        if (!updatedConversation) {
+          return currentConversations;
+        }
 
-      if (!updatedConversation) {
-        return currentConversations;
-      }
-
-      return [updatedConversation, ...nextConversations];
-    });
-  }
+        return [updatedConversation, ...nextConversations];
+      });
+    },
+    [activeConversationId, viewerId],
+  );
 
   useEffect(() => {
     function handleConversationUpdated(event: Event) {
@@ -137,9 +141,27 @@ export function ConversationList({
       updateConversationFromMessage(customEvent.detail);
     }
 
+    function handleConversationRead(event: Event) {
+      const customEvent = event as CustomEvent<{ conversationId: string }>;
+
+      setConversations((currentConversations) =>
+        currentConversations.map((conversation) => {
+          if (conversation.id !== customEvent.detail.conversationId) {
+            return conversation;
+          }
+
+          return { ...conversation, unreadCount: 0 };
+        }),
+      );
+    }
+
     window.addEventListener(
       MESSAGE_CONVERSATION_UPDATED_EVENT,
       handleConversationUpdated,
+    );
+    window.addEventListener(
+      MESSAGE_CONVERSATION_READ_EVENT,
+      handleConversationRead,
     );
 
     return () => {
@@ -147,8 +169,12 @@ export function ConversationList({
         MESSAGE_CONVERSATION_UPDATED_EVENT,
         handleConversationUpdated,
       );
+      window.removeEventListener(
+        MESSAGE_CONVERSATION_READ_EVENT,
+        handleConversationRead,
+      );
     };
-  }, [activeConversationId, viewerId]);
+  }, [updateConversationFromMessage]);
 
   useEffect(() => {
     const pusher = getPusherClient();
@@ -169,7 +195,7 @@ export function ConversationList({
     return () => {
       channel.unbind(PUSHER_MESSAGE_CREATED_EVENT, handleMessageCreated);
     };
-  }, [activeConversationId, viewerId]);
+  }, [updateConversationFromMessage, viewerId]);
 
   return (
     <section className="flex min-h-[620px] flex-col gap-5 bg-white/[0.035] p-4">

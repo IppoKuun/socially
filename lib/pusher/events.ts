@@ -4,6 +4,7 @@ export const PUSHER_MESSAGE_READ_EVENT = "message:read";
 export const PUSHER_MESSAGE_TYPING_EVENT = "client-message:typing";
 export const MESSAGE_CONVERSATION_UPDATED_EVENT =
   "message-conversation:updated";
+export const MESSAGE_CONVERSATION_READ_EVENT = "message-conversation:read";
 export const NOTIFICATION_UNREAD_COUNT_CHANGED_EVENT =
   "notification-unread-count:changed";
 export const CONVERSATION_REALTIME_CHANNEL_PREFIX = "private-conversation-";

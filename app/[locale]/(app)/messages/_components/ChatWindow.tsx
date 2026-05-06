@@ -3,6 +3,7 @@
 import {
   getConversationRealtimeChannel,
   getUserRealtimeChannel,
+  MESSAGE_CONVERSATION_READ_EVENT,
   MESSAGE_CONVERSATION_UPDATED_EVENT,
   PUSHER_MESSAGE_CREATED_EVENT,
   PUSHER_MESSAGE_READ_EVENT,
@@ -27,6 +28,11 @@ type ChatMessage = {
   receiverId: string;
   isRead: boolean;
 };
+
+function getMessageTimestamp(createdAt: Date | string) {
+  const timestamp = new Date(createdAt).getTime();
+  return Number.isNaN(timestamp) ? null : timestamp;
+}
 
 type ChatWindowProps = {
   conversationId: string;
@@ -112,11 +118,21 @@ export default function ChatWindow({
         return;
       }
 
+      const readAtTimestamp = getMessageTimestamp(payload.readAt);
+
+      if (readAtTimestamp === null) {
+        return;
+      }
+
       setMessages((currentMessages) =>
         currentMessages.map((message) => {
+          const messageTimestamp = getMessageTimestamp(message.createdAt);
+
           if (
             message.senderId !== viewerId ||
-            message.receiverId !== payload.readerId
+            message.receiverId !== payload.readerId ||
+            messageTimestamp === null ||
+            messageTimestamp > readAtTimestamp
           ) {
             return message;
           }
@@ -167,6 +183,20 @@ export default function ChatWindow({
       }
     };
   }, [conversationId, viewerId]);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      window.dispatchEvent(
+        new CustomEvent(MESSAGE_CONVERSATION_READ_EVENT, {
+          detail: { conversationId },
+        }),
+      );
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [conversationId]);
 
   return (
     <section className={cn("flex min-h-[526px] flex-1 flex-col")}>
