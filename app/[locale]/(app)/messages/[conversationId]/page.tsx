@@ -2,7 +2,6 @@ import { getConversationMessages } from "@/lib/messages/queries";
 import { notFound } from "next/navigation";
 import ConversationHeader from "../_components/ConversationHeader";
 import ChatWindow from "../_components/ChatWindow";
-import { MessageInput } from "../_components/MessageInput";
 import markConversationAsRead from "../_actions/markConversationRead";
 
 export default async function ConversationDetail({
@@ -23,8 +22,11 @@ export default async function ConversationDetail({
   return (
     <section className="flex flex-col">
       <ConversationHeader otherParticipant={messages.otherParticipant} />
-      <ChatWindow viewerId={messages.viewerId} messages={messages.messages} />
-      <MessageInput />
+      <ChatWindow
+        conversationId={conversationId}
+        viewerId={messages.viewerId}
+        initialMessages={messages.messages}
+      />
     </section>
   );
 }

@@ -12,7 +12,7 @@ type SendMessageInput = {
   content: string;
 };
 
-type SentMessage = {
+export type SentMessage = {
   id: string;
   content: string;
   createdAt: string;
