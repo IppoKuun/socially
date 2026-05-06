@@ -2,6 +2,7 @@
 
 import {
   getUserRealtimeChannel,
+  MESSAGE_CONVERSATION_UPDATED_EVENT,
   PUSHER_MESSAGE_CREATED_EVENT,
   type MessageCreatedEvent,
 } from "@/lib/pusher/events";
@@ -37,6 +38,12 @@ export default function ChatWindow({
 
   function handleMessageSent(message: SentMessage) {
     setMessages((currentMessages) => [...currentMessages, message]);
+
+    window.dispatchEvent(
+      new CustomEvent<MessageCreatedEvent>(MESSAGE_CONVERSATION_UPDATED_EVENT, {
+        detail: message,
+      }),
+    );
   }
 
   useEffect(() => {
@@ -73,7 +80,6 @@ export default function ChatWindow({
 
     return () => {
       channel.unbind(PUSHER_MESSAGE_CREATED_EVENT, handleMessageCreated);
-      pusher.unsubscribe(channelName);
     };
   }, [conversationId, viewerId]);
 

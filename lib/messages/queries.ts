@@ -17,6 +17,10 @@ async function getUser() {
   return user;
 }
 
+export async function getMessagesViewer() {
+  return getUser();
+}
+
 export async function getUserConversations() {
   const user = await getUser();
 

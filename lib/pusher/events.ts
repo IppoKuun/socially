@@ -1,5 +1,7 @@
 export const PUSHER_NOTIFICATION_CREATED_EVENT = "notification:new";
 export const PUSHER_MESSAGE_CREATED_EVENT = "message:new";
+export const MESSAGE_CONVERSATION_UPDATED_EVENT =
+  "message-conversation:updated";
 export const NOTIFICATION_UNREAD_COUNT_CHANGED_EVENT =
   "notification-unread-count:changed";
 
