@@ -3,6 +3,7 @@
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export default async function softDeleteAction() {
   const session = await getSession();
@@ -39,7 +40,11 @@ export default async function softDeleteAction() {
     ? "Suppression annulée avec succès !"
     : "Votre compte sera définitivement supprimé dans 30 jours.";
 
+  revalidatePath("/");
   revalidatePath("/settings/account");
 
+  if (!isRestoring) {
+    redirect("/");
+  }
   return { ok: true, userMsg: successMsg };
 }

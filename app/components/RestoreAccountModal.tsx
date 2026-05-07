@@ -1,0 +1,65 @@
+"use client";
+
+import { useRouter } from "@/i18n/routing";
+import { signOut } from "@/lib/authClient";
+import softDeleteAction from "../[locale]/(app)/settings/_actions/softDelete";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
+
+export function RestoreAccountModal() {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const handleRestore = () => {
+    startTransition(async () => {
+      await softDeleteAction();
+      // Le revalidatePath dans l'action fera disparaître la modale
+    });
+  };
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+
+    const result = await signOut();
+
+    if (result.error) {
+      setIsSigningOut(false);
+      toast.error("Impossible de vous déconnecter pour le moment.");
+      return;
+    }
+
+    router.replace("/login");
+    router.refresh();
+  };
+
+  return (
+    <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-2xl bg-neutral-900 p-8 border border-neutral-800 text-center">
+        <h2 className="text-2xl font-bold">Compte en attente de suppression</h2>
+        <p className="mt-4 text-neutral-400">
+          Votre compte est actuellement caché. Il sera définitivement supprimé
+          dans 30 jours.
+        </p>
+
+        <div className="mt-8 flex flex-col gap-3">
+          <button
+            onClick={handleRestore}
+            disabled={isPending}
+            className="w-full rounded-full bg-white py-3 font-semibold text-black hover:bg-neutral-200 transition-colors"
+          >
+            {isPending ? "Restauration..." : "Annuler la suppression"}
+          </button>
+
+          <button
+            onClick={handleSignOut}
+            disabled={isSigningOut}
+            className="text-sm text-neutral-500 hover:underline"
+          >
+            {isSigningOut ? "Déconnexion..." : "Se déconnecter"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
