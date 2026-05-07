@@ -7,7 +7,7 @@ type blockItem = {
   id: string;
 };
 
-type getUserBlockListType = {
+export type getUserBlockListType = {
   nextCursor: string | undefined;
   blocksProfilToDisplay: blockItem[];
 };
@@ -37,10 +37,13 @@ export async function getUserBlockList(
       cursor: { id: cursor },
       skip: 1,
     }),
+    where: {
+      blockerId: profile.id,
+    },
     orderBy: { createdAt: "desc" },
     select: {
       id: true,
-      blocker: { select: { id: true, avatarUrl: true, username: true } },
+      blocked: { select: { id: true, avatarUrl: true, username: true } },
     },
   });
 
@@ -53,9 +56,9 @@ export async function getUserBlockList(
   const nextCursor = blockList[20]?.id;
   const blocksProfilToDisplay: blockItem[] = rawBlocks.map((item) => {
     return {
-      id: item.blocker.id,
-      username: item.blocker.username,
-      avatarUrl: item.blocker.avatarUrl,
+      id: item.blocked.id,
+      username: item.blocked.username,
+      avatarUrl: item.blocked.avatarUrl,
     };
   });
 

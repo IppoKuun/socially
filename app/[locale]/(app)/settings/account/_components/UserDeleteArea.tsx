@@ -18,6 +18,7 @@ import {
 
 export default function UserDeleteArea() {
   const [isPending, startTransition] = useTransition();
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = () => {
     startTransition(async () => {
@@ -27,12 +28,13 @@ export default function UserDeleteArea() {
         return;
       }
       toast.success(result.userMsg);
+      setOpen(false);
     });
   };
   return (
-    <section className="">
-      <h1 className="">Delete Area</h1>
-      <Dialog>
+    <section>
+      <h1 className="">Suppression</h1>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant="destructive">Supprimer mon compte</Button>
         </DialogTrigger>
