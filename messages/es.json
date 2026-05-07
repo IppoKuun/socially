@@ -56,6 +56,106 @@
     "loginPrompt": "¿Ya tienes una cuenta?",
     "loginLink": "Iniciar sesión"
   },
+  "settings": {
+    "title": "Settings",
+    "description": "Centraliza los accesos a preferencias y gestión de la cuenta.",
+    "placeholder": "Las secciones de Settings se implementarán por etapas. Este placeholder permite mantener la navegación estable.",
+    "backToSettings": "Volver a los ajustes",
+    "menu": {
+      "account": {
+        "title": "Cuenta",
+        "description": "Consulta tu información y gestiona la eliminación de la cuenta."
+      },
+      "privacySecurity": {
+        "title": "Privacidad",
+        "description": "Gestiona los bloqueos y los ajustes relacionados con tu seguridad."
+      },
+      "data": {
+        "title": "Mis datos",
+        "description": "Exporta los datos asociados a tu actividad en Socially."
+      }
+    },
+    "account": {
+      "title": "Información de la cuenta",
+      "description": "Esta información se muestra en modo solo lectura a partir de los datos de tu cuenta y tu perfil.",
+      "viewProfile": "Ver mi perfil",
+      "notProvided": "No indicado",
+      "fields": {
+        "displayName": "Nombre público",
+        "username": "Nombre de usuario",
+        "language": "Idioma",
+        "occupation": "Ocupación",
+        "intent": "Intención",
+        "createdAt": "Cuenta creada el"
+      },
+      "email": {
+        "label": "Dirección de email",
+        "fallbackError": "No se pudo modificar tu email. Inténtalo de nuevo.",
+        "success": "Email modificado correctamente",
+        "pending": "Modificando...",
+        "submit": "Modificar mi email"
+      },
+      "delete": {
+        "title": "Eliminación",
+        "description": "Desactiva tu cuenta antes de su eliminación definitiva después del plazo previsto.",
+        "fallbackError": "No se pudo realizar la acción.",
+        "trigger": "Eliminar mi cuenta",
+        "dialogTitle": "¿Quieres eliminar tu cuenta?",
+        "dialogDescription": "Tu cuenta será desactivada. Podrás cancelar la eliminación durante 30 días antes de la eliminación definitiva.",
+        "cancel": "Cancelar",
+        "pending": "Eliminando...",
+        "confirm": "Sí, eliminar"
+      }
+    },
+    "privacy": {
+      "title": "Privacidad",
+      "description": "Encuentra los ajustes que limitan las interacciones con ciertos perfiles.",
+      "blockListCard": {
+        "title": "Usuarios bloqueados",
+        "description": "Consulta y gestiona los perfiles que has bloqueado.",
+        "button": "Ver la lista"
+      }
+    },
+    "blockList": {
+      "backToPrivacy": "Volver a privacidad",
+      "title": "Usuarios bloqueados",
+      "description": "Los perfiles listados aquí ya no pueden interactuar normalmente con tu cuenta.",
+      "loadError": "Lo sentimos, no pudimos recuperar los usuarios bloqueados.",
+      "unblockFallbackError": "No se pudo desbloquear este perfil. Inténtalo de nuevo.",
+      "avatarAlt": "Avatar de {name}",
+      "deletedUser": "Usuario eliminado",
+      "unblocked": "Desbloqueado",
+      "unblock": "Desbloquear",
+      "loadingMore": "Cargando más perfiles",
+      "loadMore": "Cargar más",
+      "empty": "No has bloqueado ningún perfil."
+    },
+    "dataExport": {
+      "backToSettings": "Volver a los ajustes",
+      "title": "Exportar mis datos",
+      "description": "Descarga un archivo JSON con tu perfil, tus publicaciones, tus likes, tus comentarios y los datos de seguimiento conservados.",
+      "archiveTitle": "Archivo personal",
+      "archiveDescription": "Disponible una vez por semana para limitar los procesos pesados.",
+      "rateLimitFallback": "Has alcanzado el límite de exportación de datos.",
+      "exportFailed": "La exportación falló",
+      "exportDownloaded": "Exportación descargada",
+      "preparingShort": "Preparando...",
+      "exportButton": "Exportar",
+      "preparing": "Preparando tu archivo...",
+      "warningTitle": "Atención:",
+      "warningRefresh": "No actualices la página mientras se genera el archivo. Solo puedes realizar esta acción una vez por semana.",
+      "warningUrls": "Algunas URL pueden dejar de estar disponibles si el contenido asociado fue eliminado."
+    },
+    "restoreAccount": {
+      "title": "Cuenta pendiente de eliminación",
+      "description": "Tu cuenta está actualmente oculta. Será eliminada definitivamente en 30 días.",
+      "signOutError": "No se pudo cerrar la sesión en este momento.",
+      "restorePending": "Restaurando...",
+      "restore": "Cancelar la eliminación",
+      "signOutPending": "Cerrando sesión...",
+      "signOut": "Cerrar sesión"
+    }
+  },
   "onboarding": {
     "progress": {
       "stepLabel": "Paso {current}/{total}",

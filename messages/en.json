@@ -56,6 +56,106 @@
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in"
   },
+  "settings": {
+    "title": "Settings",
+    "description": "Centralize preferences and account management entry points.",
+    "placeholder": "Settings sections will be implemented incrementally. This placeholder keeps the navigation stable.",
+    "backToSettings": "Back to settings",
+    "menu": {
+      "account": {
+        "title": "Account",
+        "description": "Review your information and manage account deletion."
+      },
+      "privacySecurity": {
+        "title": "Privacy",
+        "description": "Manage blocked users and security-related settings."
+      },
+      "data": {
+        "title": "My data",
+        "description": "Export the data linked to your Socially activity."
+      }
+    },
+    "account": {
+      "title": "Account information",
+      "description": "This information is shown read-only from your account and profile data.",
+      "viewProfile": "View my profile",
+      "notProvided": "Not provided",
+      "fields": {
+        "displayName": "Public name",
+        "username": "Username",
+        "language": "Language",
+        "occupation": "Occupation",
+        "intent": "Intent",
+        "createdAt": "Account created on"
+      },
+      "email": {
+        "label": "Email address",
+        "fallbackError": "Unable to update your email. Please try again.",
+        "success": "Email updated successfully",
+        "pending": "Updating...",
+        "submit": "Update my email"
+      },
+      "delete": {
+        "title": "Deletion",
+        "description": "Deactivate your account before it is permanently deleted after the planned delay.",
+        "fallbackError": "Unable to perform this action.",
+        "trigger": "Delete my account",
+        "dialogTitle": "Do you want to delete your account?",
+        "dialogDescription": "Your account will be deactivated. You can cancel deletion for 30 days before permanent deletion.",
+        "cancel": "Cancel",
+        "pending": "Deleting...",
+        "confirm": "Yes, delete"
+      }
+    },
+    "privacy": {
+      "title": "Privacy",
+      "description": "Find the settings that limit interactions with specific profiles.",
+      "blockListCard": {
+        "title": "Blocked users",
+        "description": "Review and manage the profiles you have blocked.",
+        "button": "View list"
+      }
+    },
+    "blockList": {
+      "backToPrivacy": "Back to privacy",
+      "title": "Blocked users",
+      "description": "The profiles listed here can no longer interact normally with your account.",
+      "loadError": "Sorry, we could not load blocked users.",
+      "unblockFallbackError": "Unable to unblock this profile. Please try again.",
+      "avatarAlt": "{name}'s avatar",
+      "deletedUser": "Deleted user",
+      "unblocked": "Unblocked",
+      "unblock": "Unblock",
+      "loadingMore": "Loading more profiles",
+      "loadMore": "Load more",
+      "empty": "You have not blocked any profiles."
+    },
+    "dataExport": {
+      "backToSettings": "Back to settings",
+      "title": "Export my data",
+      "description": "Download a JSON file with your profile, posts, likes, comments, and stored tracking data.",
+      "archiveTitle": "Personal archive",
+      "archiveDescription": "Available once per week to limit heavy processing.",
+      "rateLimitFallback": "You have reached the data export limit.",
+      "exportFailed": "Export failed",
+      "exportDownloaded": "Export downloaded",
+      "preparingShort": "Preparing...",
+      "exportButton": "Export",
+      "preparing": "Preparing your archive...",
+      "warningTitle": "Warning:",
+      "warningRefresh": "Please do not refresh the page while generation is running. You can only perform this action once per week.",
+      "warningUrls": "Some URLs may no longer be available if the related content has been deleted."
+    },
+    "restoreAccount": {
+      "title": "Account pending deletion",
+      "description": "Your account is currently hidden. It will be permanently deleted in 30 days.",
+      "signOutError": "Unable to sign you out right now.",
+      "restorePending": "Restoring...",
+      "restore": "Cancel deletion",
+      "signOutPending": "Signing out...",
+      "signOut": "Sign out"
+    }
+  },
   "onboarding": {
     "progress": {
       "stepLabel": "Step {current}/{total}",

@@ -7,23 +7,29 @@ import { Link } from "@/i18n/routing";
 const settingsSections = [
   {
     key: "account",
+    titleKey: "menu.account.title",
+    descriptionKey: "menu.account.description",
     href: "/settings/account",
     icon: User,
   },
   {
     key: "privacySecurity",
+    titleKey: "menu.privacySecurity.title",
+    descriptionKey: "menu.privacySecurity.description",
     href: "/settings/privacy",
     icon: Shield,
   },
   {
     key: "data",
+    titleKey: "menu.data.title",
+    descriptionKey: "menu.data.description",
     href: "/settings/data",
     icon: Database,
   },
 ] as const;
 
 export default async function SettingsPage() {
-  const t = await getTranslations("appShell.pages.settings");
+  const t = await getTranslations("settings");
 
   return (
     <AppPageShell title={t("title")} description={t("description")}>
@@ -40,10 +46,10 @@ export default async function SettingsPage() {
                   </span>
                   <div className="min-w-0 space-y-1">
                     <p className="font-medium text-white">
-                      {t(`menu.${section.key}.title`)}
+                      {t(section.titleKey)}
                     </p>
                     <p className="max-w-xl text-sm leading-6 text-white/50">
-                      {t(`menu.${section.key}.description`)}
+                      {t(section.descriptionKey)}
                     </p>
                   </div>
                 </div>

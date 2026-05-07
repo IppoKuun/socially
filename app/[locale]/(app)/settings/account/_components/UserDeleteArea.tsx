@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog";
 
 export default function UserDeleteArea() {
-  const t = useTranslations("appShell.pages.settings.account.delete");
+  const t = useTranslations("settings");
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 
@@ -26,7 +26,7 @@ export default function UserDeleteArea() {
     startTransition(async () => {
       const result = await softDeleteAction();
       if (!result.ok) {
-        toast.error(result.userMsg ?? t("fallbackError"));
+        toast.error(result.userMsg ?? t("account.delete.fallbackError"));
         return;
       }
       toast.success(result.userMsg);
@@ -38,31 +38,31 @@ export default function UserDeleteArea() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
           <h2 className="font-manrope text-xl font-semibold text-white">
-            {t("title")}
+            {t("account.delete.title")}
           </h2>
           <p className="max-w-xl text-sm leading-6 text-white/55">
-            {t("description")}
+            {t("account.delete.description")}
           </p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button variant="destructive" className="shrink-0">
-              {t("trigger")}
+              {t("account.delete.trigger")}
             </Button>
           </DialogTrigger>
 
           <DialogContent className="p-4">
             <DialogHeader>
-              <DialogTitle>{t("dialogTitle")}</DialogTitle>
+              <DialogTitle>{t("account.delete.dialogTitle")}</DialogTitle>
               <DialogDescription>
-                {t("dialogDescription")}
+                {t("account.delete.dialogDescription")}
               </DialogDescription>
             </DialogHeader>
 
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant="outline" disabled={isPending}>
-                  {t("cancel")}
+                  {t("account.delete.cancel")}
                 </Button>
               </DialogClose>
               <Button
@@ -70,7 +70,9 @@ export default function UserDeleteArea() {
                 disabled={isPending}
                 onClick={handleSubmit}
               >
-                {isPending ? t("pending") : t("confirm")}
+                {isPending
+                  ? t("account.delete.pending")
+                  : t("account.delete.confirm")}
               </Button>
             </DialogFooter>
           </DialogContent>

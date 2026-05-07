@@ -9,7 +9,7 @@ import { ArrowLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 export default async function settingsBlocksPage() {
-  const t = await getTranslations("appShell.pages.settings.blockList");
+  const t = await getTranslations("settings");
   const queryclient = makeQueryClient();
 
   await queryclient.fetchInfiniteQuery({
@@ -28,15 +28,15 @@ export default async function settingsBlocksPage() {
         className="inline-flex items-center gap-2 text-sm font-medium text-white/55 transition-colors hover:text-white"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />
-        {t("backToPrivacy")}
+        {t("blockList.backToPrivacy")}
       </Link>
 
       <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
         <h1 className="font-manrope text-xl font-semibold text-white">
-          {t("title")}
+          {t("blockList.title")}
         </h1>
         <p className="mt-1 max-w-xl text-sm leading-6 text-white/55">
-          {t("description")}
+          {t("blockList.description")}
         </p>
       </div>
 

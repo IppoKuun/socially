@@ -26,35 +26,44 @@ type userInfoProps = {
 const FormServ = { ok: false, userMsg: "" };
 
 export default function UserField({ userInfo }: userInfoProps) {
-  const t = useTranslations("appShell.pages.settings.account");
+  const t = useTranslations("settings");
   const locale = useLocale();
-  const [servMsg, setServMsg] = useState<string>(userInfo?.user.email ?? "");
-  const [email, setEmail] = useState("");
+  const [servMsg, setServMsg] = useState<string>();
+  const [email, setEmail] = useState(userInfo?.user.email ?? "");
   const [isPending, startTransition] = useTransition();
 
   const fields = [
     {
-      label: t("fields.displayName"),
+      label: t("account.fields.displayName"),
       value: userInfo?.userProfile.displayname,
     },
     {
-      label: t("fields.username"),
-      value: getReadableValue(userInfo?.userProfile.username, t("notProvided")),
-    },
-    { label: t("fields.language"), value: userInfo?.userProfile.language },
-    {
-      label: t("fields.occupation"),
+      label: t("account.fields.username"),
       value: getReadableValue(
-        userInfo?.userProfile.occupation,
-        t("notProvided"),
+        userInfo?.userProfile.username,
+        t("account.notProvided"),
       ),
     },
     {
-      label: t("fields.intent"),
-      value: getReadableValue(userInfo?.userProfile.intent, t("notProvided")),
+      label: t("account.fields.language"),
+      value: userInfo?.userProfile.language,
     },
     {
-      label: t("fields.createdAt"),
+      label: t("account.fields.occupation"),
+      value: getReadableValue(
+        userInfo?.userProfile.occupation,
+        t("account.notProvided"),
+      ),
+    },
+    {
+      label: t("account.fields.intent"),
+      value: getReadableValue(
+        userInfo?.userProfile.intent,
+        t("account.notProvided"),
+      ),
+    },
+    {
+      label: t("account.fields.createdAt"),
       value: formatDate(userInfo?.userProfile.createdAt, locale),
     },
   ];
@@ -63,9 +72,9 @@ export default function UserField({ userInfo }: userInfoProps) {
     startTransition(async () => {
       const result = await modifyEmailActions(FormServ, email);
       if (!result.ok) {
-        setServMsg(result.userMsg ?? t("email.fallbackError"));
+        setServMsg(result.userMsg ?? t("account.email.fallbackError"));
       }
-      setServMsg(t("email.success"));
+      setServMsg(t("account.email.success"));
     });
   };
   return (
@@ -73,17 +82,17 @@ export default function UserField({ userInfo }: userInfoProps) {
       <div className="flex flex-col gap-3 border-b border-white/10 pb-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
           <h2 className="font-manrope text-xl font-semibold text-white">
-            {t("title")}
+            {t("account.title")}
           </h2>
           <p className="max-w-xl text-sm leading-6 text-white/55">
-            {t("description")}
+            {t("account.description")}
           </p>
         </div>
 
         {userInfo?.userProfile.username && (
-          <Button asChild variant="outline" size="sm">
+          <Button asChild variant="outline" className="py-6">
             <Link href={`/profile/${userInfo?.userProfile.username}`}>
-              {t("viewProfile")}
+              {t("account.viewProfile")}
             </Link>
           </Button>
         )}
@@ -97,7 +106,9 @@ export default function UserField({ userInfo }: userInfoProps) {
         )}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
           <div className="min-w-0 flex-1 space-y-1">
-            <p className="text-sm font-medium text-white">{t("email.label")}</p>
+            <p className="text-sm font-medium text-white">
+              {t("account.email.label")}
+            </p>
             <Input
               name="email"
               value={email}
@@ -112,7 +123,7 @@ export default function UserField({ userInfo }: userInfoProps) {
             disabled={isPending}
             onClick={handleSubmit}
           >
-            {isPending ? t("email.pending") : t("email.submit")}
+            {isPending ? t("account.email.pending") : t("account.email.submit")}
           </Button>
         </div>
       </div>

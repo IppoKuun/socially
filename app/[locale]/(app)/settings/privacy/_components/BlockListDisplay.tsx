@@ -22,7 +22,7 @@ const BlockItemSkeleton = () => (
 );
 
 export default function BlockListDisplay() {
-  const t = useTranslations("appShell.pages.settings.blockList");
+  const t = useTranslations("settings");
   const [unblockedIds, setUnblockedIds] = useState<Set<string>>(new Set());
 
   const [isPending, startTransition] = useTransition();
@@ -43,7 +43,7 @@ export default function BlockListDisplay() {
           return next;
         });
       } catch {
-        toast.error(t("unblockFallbackError"));
+        toast.error(t("blockList.unblockFallbackError"));
       }
     });
   };
@@ -68,7 +68,7 @@ export default function BlockListDisplay() {
     <section className="space-y-3">
       {error && (
         <p className="rounded-lg border border-red-500/20 bg-red-500/[0.06] px-4 py-3 text-sm text-red-100">
-          {t("loadError")}
+          {t("blockList.loadError")}
         </p>
       )}
       {status == "pending" && (
@@ -88,8 +88,8 @@ export default function BlockListDisplay() {
                   {profile.avatarUrl ? (
                     <Image
                       src={profile.avatarUrl}
-                      alt={t("avatarAlt", {
-                        name: profile.username ?? t("deletedUser"),
+                      alt={t("blockList.avatarAlt", {
+                        name: profile.username ?? t("blockList.deletedUser"),
                       })}
                       width={40}
                       height={40}
@@ -100,7 +100,7 @@ export default function BlockListDisplay() {
                   )}
                 </div>
                 <p className="text-sm font-medium text-white">
-                  {profile.username ?? t("deletedUser")}
+                  {profile.username ?? t("blockList.deletedUser")}
                 </p>
               </>
             );
@@ -128,7 +128,7 @@ export default function BlockListDisplay() {
                   disabled={isPending || isUnblocked}
                   onClick={() => handleSubmit(profile.id)}
                 >
-                  {isUnblocked ? t("unblocked") : t("unblock")}
+                  {isUnblocked ? t("blockList.unblocked") : t("blockList.unblock")}
                 </Button>
               </article>
             );
@@ -142,8 +142,8 @@ export default function BlockListDisplay() {
                 disabled={isFetchingNextPage}
               >
                 {isFetchingNextPage
-                  ? t("loadingMore")
-                  : t("loadMore")}
+                  ? t("blockList.loadingMore")
+                  : t("blockList.loadMore")}
               </Button>
             </div>
           )}
@@ -161,7 +161,7 @@ export default function BlockListDisplay() {
       ) : (
         status !== "pending" && (
           <p className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-6 text-center text-sm leading-6 text-white/55">
-            {t("empty")}
+            {t("blockList.empty")}
           </p>
         )
       )}

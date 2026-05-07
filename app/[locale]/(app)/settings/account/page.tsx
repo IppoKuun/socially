@@ -7,7 +7,7 @@ import UserField from "./_components/UserField";
 import UserDeleteArea from "./_components/UserDeleteArea";
 
 export default async function SettingsAccountPage() {
-  const t = await getTranslations("appShell.pages.settings");
+  const t = await getTranslations("settings");
   const userInfo = await getUserInfo();
 
   if (!userInfo) {

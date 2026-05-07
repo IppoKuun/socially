@@ -7,7 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 export default function SettingDataPage() {
-  const t = useTranslations("appShell.pages.settings.dataExport");
+  const t = useTranslations("settings");
   const [status, setStatus] = useState<"idle" | "pending" | "error" | "succes">(
     "idle",
   );
@@ -22,14 +22,14 @@ export default function SettingDataPage() {
         const data = (await response.json()) as { userMsg?: string };
         setStatus("error");
         toast.error(
-          data.userMsg ?? t("rateLimitFallback"),
+          data.userMsg ?? t("dataExport.rateLimitFallback"),
         );
         return;
       }
 
       if (!response.ok) {
         setStatus("error");
-        toast.error(t("exportFailed"));
+        toast.error(t("dataExport.exportFailed"));
         return;
       }
 
@@ -51,11 +51,11 @@ export default function SettingDataPage() {
       URL.revokeObjectURL(downloadUrl);
 
       setStatus("succes");
-      toast.success(t("exportDownloaded"));
+      toast.success(t("dataExport.exportDownloaded"));
     } catch (err) {
       console.error(err);
       setStatus("error");
-      toast.error(t("exportFailed"));
+      toast.error(t("dataExport.exportFailed"));
     }
   };
   return (
@@ -65,7 +65,7 @@ export default function SettingDataPage() {
         className="inline-flex items-center gap-2 text-sm font-medium text-white/55 transition-colors hover:text-white"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />
-        {t("backToSettings")}
+        {t("dataExport.backToSettings")}
       </Link>
 
       <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
@@ -75,10 +75,10 @@ export default function SettingDataPage() {
           </span>
           <div className="space-y-1">
             <h1 className="font-manrope text-xl font-semibold text-white">
-              {t("title")}
+              {t("dataExport.title")}
             </h1>
             <p className="max-w-xl text-sm leading-6 text-white/55">
-              {t("description")}
+              {t("dataExport.description")}
             </p>
           </div>
         </div>
@@ -87,9 +87,11 @@ export default function SettingDataPage() {
       <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
-            <p className="font-medium text-white">{t("archiveTitle")}</p>
+            <p className="font-medium text-white">
+              {t("dataExport.archiveTitle")}
+            </p>
             <p className="text-sm leading-6 text-white/50">
-              {t("archiveDescription")}
+              {t("dataExport.archiveDescription")}
             </p>
           </div>
           <Button
@@ -100,12 +102,12 @@ export default function SettingDataPage() {
             {status === "pending" ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                {t("preparingShort")}
+                {t("dataExport.preparingShort")}
               </>
             ) : (
               <>
                 <Download className="size-4" />
-                {t("exportButton")}
+                {t("dataExport.exportButton")}
               </>
             )}
           </Button>
@@ -115,14 +117,16 @@ export default function SettingDataPage() {
       {status === "pending" && (
         <p className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
           <Loader2 className="size-4 animate-spin" />
-          {t("preparing")}
+          {t("dataExport.preparing")}
         </p>
       )}
       {(status === "pending" || status === "succes") && (
         <div className="rounded-lg border border-amber-400/20 bg-amber-400/[0.06] p-4 text-sm leading-6 text-amber-50/85">
-          <h2 className="font-medium text-amber-50">{t("warningTitle")}</h2>
-          <p className="mt-2">{t("warningRefresh")}</p>
-          <p className="mt-1">{t("warningUrls")}</p>
+          <h2 className="font-medium text-amber-50">
+            {t("dataExport.warningTitle")}
+          </h2>
+          <p className="mt-2">{t("dataExport.warningRefresh")}</p>
+          <p className="mt-1">{t("dataExport.warningUrls")}</p>
         </div>
       )}
     </section>

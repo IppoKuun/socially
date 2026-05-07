@@ -4,7 +4,7 @@ import { ArrowLeft, Shield, UserX } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 export default async function SettingsPrivacyPage() {
-  const t = await getTranslations("appShell.pages.settings");
+  const t = await getTranslations("settings");
 
   return (
     <section className="space-y-4">
