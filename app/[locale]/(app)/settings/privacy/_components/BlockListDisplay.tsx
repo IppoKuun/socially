@@ -6,18 +6,23 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
 import unblockUserAction from "../../_actions/unblockUser";
 import { UserRound } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 const BlockItemSkeleton = () => (
-  <div className="flex items-center gap-3 p-4 animate-pulse">
-    <div className="w-10 h-10 rounded-full bg-neutral-800" />
-    <div className="h-4 w-32 bg-neutral-800 rounded" />
+  <div className="flex animate-pulse items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] p-4">
+    <div className="size-10 rounded-full bg-white/10" />
+    <div className="space-y-2">
+      <div className="h-4 w-32 rounded bg-white/10" />
+      <div className="h-3 w-20 rounded bg-white/5" />
+    </div>
   </div>
 );
 
 export default function BlockListDisplay() {
+  const t = useTranslations("appShell.pages.settings.blockList");
   const [unblockedIds, setUnblockedIds] = useState<Set<string>>(new Set());
 
   const [isPending, startTransition] = useTransition();
@@ -38,7 +43,7 @@ export default function BlockListDisplay() {
           return next;
         });
       } catch {
-        toast.error("Impossible de débloqué, veuillez réesaiyez");
+        toast.error(t("unblockFallbackError"));
       }
     });
   };
@@ -53,28 +58,28 @@ export default function BlockListDisplay() {
   } = useInfiniteQuery({
     queryKey: ["blockList"],
     queryFn: ({ pageParam }) => readBlockListAction(pageParam ?? undefined),
-    initialPageParam: null,
+    initialPageParam: undefined,
     getNextPageParam: (lastPage: getUserBlockListType) =>
       lastPage.nextCursor ?? undefined,
   });
 
   const profiles = data?.pages.flatMap((page) => page.blocksProfilToDisplay);
   return (
-    <section className="flex flex-col">
+    <section className="space-y-3">
       {error && (
-        <p className="">
-          Désolé, nous navons pas pu avoir les utilisateurs bloqué
+        <p className="rounded-lg border border-red-500/20 bg-red-500/[0.06] px-4 py-3 text-sm text-red-100">
+          {t("loadError")}
         </p>
       )}
       {status == "pending" && (
-        <>
+        <div className="space-y-3">
           <BlockItemSkeleton />
           <BlockItemSkeleton />
           <BlockItemSkeleton />
-        </>
+        </div>
       )}
       {profiles?.length && profiles.length > 0 ? (
-        <>
+        <div className="space-y-3">
           {profiles.map((profile) => {
             const isUnblocked = unblockedIds.has(profile.id);
             const profileContent = (
@@ -83,7 +88,9 @@ export default function BlockListDisplay() {
                   {profile.avatarUrl ? (
                     <Image
                       src={profile.avatarUrl}
-                      alt={profile.username ?? "Profil bloqué"}
+                      alt={t("avatarAlt", {
+                        name: profile.username ?? t("deletedUser"),
+                      })}
                       width={40}
                       height={40}
                       className="size-full object-cover"
@@ -93,7 +100,7 @@ export default function BlockListDisplay() {
                   )}
                 </div>
                 <p className="text-sm font-medium text-white">
-                  {profile.username ?? "Utilisateur supprimé"}
+                  {profile.username ?? t("deletedUser")}
                 </p>
               </>
             );
@@ -101,12 +108,12 @@ export default function BlockListDisplay() {
             return (
               <article
                 key={profile.id}
-                className="flex flex-row justify-between p-4"
+                className="flex items-center justify-between gap-4 rounded-lg border border-white/10 bg-white/[0.03] p-4"
               >
                 {profile.username ? (
                   <Link
                     href={`/profile/${profile.username}`}
-                    className="flex min-w-0 items-center gap-3"
+                    className="flex min-w-0 items-center gap-3 rounded-md outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-white/30"
                   >
                     {profileContent}
                   </Link>
@@ -116,35 +123,47 @@ export default function BlockListDisplay() {
                   </div>
                 )}
                 <Button
+                  variant={isUnblocked ? "outline" : "secondary"}
+                  className="shrink-0"
                   disabled={isPending || isUnblocked}
                   onClick={() => handleSubmit(profile.id)}
                 >
-                  {isUnblocked ? "Débloqué" : "Débloquer"}
+                  {isUnblocked ? t("unblocked") : t("unblock")}
                 </Button>
               </article>
             );
           })}
 
           {hasNextPage && (
-            <Button onClick={() => fetchNextPage()}>
-              {isFetchingNextPage
-                ? "Chargememnt des autres profiles"
-                : "Charger plus"}
-            </Button>
+            <div className="flex justify-center pt-2">
+              <Button
+                variant="outline"
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+              >
+                {isFetchingNextPage
+                  ? t("loadingMore")
+                  : t("loadMore")}
+              </Button>
+            </div>
           )}
 
           {isFetchingNextPage && (
-            <>
+            <div className="space-y-3">
               <BlockItemSkeleton />
               <BlockItemSkeleton />
               <BlockItemSkeleton />
               <BlockItemSkeleton />
               <BlockItemSkeleton />
-            </>
+            </div>
           )}
-        </>
+        </div>
       ) : (
-        <p className="">Vous navez bloqué aucun profiles</p>
+        status !== "pending" && (
+          <p className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-6 text-center text-sm leading-6 text-white/55">
+            {t("empty")}
+          </p>
+        )
       )}
     </section>
   );

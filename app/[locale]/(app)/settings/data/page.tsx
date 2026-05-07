@@ -1,10 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Link } from "@/i18n/routing";
+import { ArrowLeft, Download, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export default function SettingDataPage() {
+  const t = useTranslations("appShell.pages.settings.dataExport");
   const [status, setStatus] = useState<"idle" | "pending" | "error" | "succes">(
     "idle",
   );
@@ -19,14 +22,14 @@ export default function SettingDataPage() {
         const data = (await response.json()) as { userMsg?: string };
         setStatus("error");
         toast.error(
-          data.userMsg ?? "Vous avez atteint la limite d'export de données.",
+          data.userMsg ?? t("rateLimitFallback"),
         );
         return;
       }
 
       if (!response.ok) {
         setStatus("error");
-        toast.error("Export échoué");
+        toast.error(t("exportFailed"));
         return;
       }
 
@@ -48,36 +51,80 @@ export default function SettingDataPage() {
       URL.revokeObjectURL(downloadUrl);
 
       setStatus("succes");
-      toast.success("Export téléchargé");
+      toast.success(t("exportDownloaded"));
     } catch (err) {
       console.error(err);
       setStatus("error");
-      toast.error("Export échoué");
+      toast.error(t("exportFailed"));
     }
   };
   return (
-    <section className="">
-      <h1 className="">Exportez mes données</h1>
-      <p className="">Attention, disponible uniquement 1 fois par semaines</p>
-      {status === "pending" && (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Préparation de votre archive...
-        </>
-      )}
-      <Button onClick={handleExport} disabled={status === "pending"} />
-      {status === "pending" ||
-        (status === "succes" && (
-          <>
-            <h2 className="">Attention:</h2>
-            <p className="">
-              - Veuillez a ne pas rafraichir la page pour ne pas perdre les
-              donnèes Vous ne pouvez effectuez cette action quune fois par
-              semaine
+    <section className="space-y-4">
+      <Link
+        href="/settings"
+        className="inline-flex items-center gap-2 text-sm font-medium text-white/55 transition-colors hover:text-white"
+      >
+        <ArrowLeft className="size-4" aria-hidden="true" />
+        {t("backToSettings")}
+      </Link>
+
+      <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
+        <div className="flex items-start gap-3">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] text-white/70">
+            <Download className="size-5" aria-hidden="true" />
+          </span>
+          <div className="space-y-1">
+            <h1 className="font-manrope text-xl font-semibold text-white">
+              {t("title")}
+            </h1>
+            <p className="max-w-xl text-sm leading-6 text-white/55">
+              {t("description")}
             </p>
-            <p className="">- Certains URL ne peuvent plus etre dispo car s</p>
-          </>
-        ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1">
+            <p className="font-medium text-white">{t("archiveTitle")}</p>
+            <p className="text-sm leading-6 text-white/50">
+              {t("archiveDescription")}
+            </p>
+          </div>
+          <Button
+            onClick={handleExport}
+            disabled={status === "pending"}
+            className="shrink-0"
+          >
+            {status === "pending" ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                {t("preparingShort")}
+              </>
+            ) : (
+              <>
+                <Download className="size-4" />
+                {t("exportButton")}
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {status === "pending" && (
+        <p className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
+          <Loader2 className="size-4 animate-spin" />
+          {t("preparing")}
+        </p>
+      )}
+      {(status === "pending" || status === "succes") && (
+        <div className="rounded-lg border border-amber-400/20 bg-amber-400/[0.06] p-4 text-sm leading-6 text-amber-50/85">
+          <h2 className="font-medium text-amber-50">{t("warningTitle")}</h2>
+          <p className="mt-2">{t("warningRefresh")}</p>
+          <p className="mt-1">{t("warningUrls")}</p>
+        </div>
+      )}
     </section>
   );
 }

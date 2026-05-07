@@ -3,10 +3,12 @@
 import { useRouter } from "@/i18n/routing";
 import { signOut } from "@/lib/authClient";
 import softDeleteAction from "../[locale]/(app)/settings/_actions/softDelete";
+import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 export function RestoreAccountModal() {
+  const t = useTranslations("appShell.pages.settings.restoreAccount");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -25,7 +27,7 @@ export function RestoreAccountModal() {
 
     if (result.error) {
       setIsSigningOut(false);
-      toast.error("Impossible de vous déconnecter pour le moment.");
+      toast.error(t("signOutError"));
       return;
     }
 
@@ -36,10 +38,9 @@ export function RestoreAccountModal() {
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
       <div className="w-full max-w-md rounded-2xl bg-neutral-900 p-8 border border-neutral-800 text-center">
-        <h2 className="text-2xl font-bold">Compte en attente de suppression</h2>
+        <h2 className="text-2xl font-bold">{t("title")}</h2>
         <p className="mt-4 text-neutral-400">
-          Votre compte est actuellement caché. Il sera définitivement supprimé
-          dans 30 jours.
+          {t("description")}
         </p>
 
         <div className="mt-8 flex flex-col gap-3">
@@ -48,7 +49,7 @@ export function RestoreAccountModal() {
             disabled={isPending}
             className="w-full rounded-full bg-white py-3 font-semibold text-black hover:bg-neutral-200 transition-colors"
           >
-            {isPending ? "Restauration..." : "Annuler la suppression"}
+            {isPending ? t("restorePending") : t("restore")}
           </button>
 
           <button
@@ -56,7 +57,7 @@ export function RestoreAccountModal() {
             disabled={isSigningOut}
             className="text-sm text-neutral-500 hover:underline"
           >
-            {isSigningOut ? "Déconnexion..." : "Se déconnecter"}
+            {isSigningOut ? t("signOutPending") : t("signOut")}
           </button>
         </div>
       </div>
