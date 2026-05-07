@@ -40,6 +40,7 @@ export default async function AuthenticatedAppLayout({
         where: {
           userId: userProfile.id,
           isRead: false,
+          actor: { deletedAt: null },
         },
       })
     : 0;

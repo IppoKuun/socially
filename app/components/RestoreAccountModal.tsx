@@ -19,6 +19,7 @@ export function RestoreAccountModal() {
       if (!result.ok) {
         toast.error(result.userMsg);
       }
+      router.refresh();
     });
   };
 
