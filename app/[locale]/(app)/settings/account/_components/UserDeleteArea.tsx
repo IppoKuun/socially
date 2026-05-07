@@ -1,1 +1,3 @@
-export default function UserDeleteArea() {}
+export default function UserDeleteArea() {
+  return null;
+}
