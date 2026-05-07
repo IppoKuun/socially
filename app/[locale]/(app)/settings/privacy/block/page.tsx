@@ -8,7 +8,7 @@ import QueryProvider from "@/components/providers/query-provider";
 export default async function settingsBlocksPage() {
   const queryclient = makeQueryClient();
 
-  const data = await queryclient.fetchInfiniteQuery({
+  await queryclient.fetchInfiniteQuery({
     queryKey: ["blockList"],
     queryFn: async ({ pageParam }) => await readBlockListAction(pageParam),
     initialPageParam: undefined as string | undefined,

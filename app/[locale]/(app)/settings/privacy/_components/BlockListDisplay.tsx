@@ -1,3 +1,4 @@
+"use client";
 import { getUserBlockListType } from "@/lib/settings/block/queries";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import readBlockListAction from "../../_actions/readBlockList";
@@ -72,7 +73,7 @@ export default function BlockListDisplay() {
           <BlockItemSkeleton />
         </>
       )}
-      {profiles ? (
+      {profiles?.length === 0 ? (
         <>
           {profiles.map((profile) => {
             const isUnblocked = unblockedIds.has(profile.id);
@@ -115,7 +116,7 @@ export default function BlockListDisplay() {
                   </div>
                 )}
                 <Button
-                  disabled={isPending}
+                  disabled={isPending || isUnblocked}
                   onClick={() => handleSubmit(profile.id)}
                 >
                   {isUnblocked ? "Débloqué" : "Débloquer"}
