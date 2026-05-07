@@ -35,8 +35,8 @@ export async function createOrGetConversation(
     return { ok: false, conversationId: null, userMsg: t("authRequired") };
   }
 
-  const viewer = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const viewer = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
     select: { id: true },
   });
 

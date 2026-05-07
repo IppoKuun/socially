@@ -21,9 +21,10 @@ async function requireViewerProfile() {
     throw new Error("Unauthorized");
   }
 
-  const profile = await myPrisma.userProfile.findUnique({
+  const profile = await myPrisma.userProfile.findFirst({
     where: {
       userId: session.user.id,
+      deletedAt: null,
     },
     select: {
       id: true,

@@ -5,8 +5,8 @@ import { myPrisma } from "../prisma";
 async function getUser() {
   const session = await getSession();
 
-  const user = await myPrisma.userProfile.findUnique({
-    where: { userId: session?.user.id },
+  const user = await myPrisma.userProfile.findFirst({
+    where: { userId: session?.user.id, deletedAt: null },
     select: { id: true },
   });
 
@@ -27,6 +27,8 @@ export async function getUserConversations() {
   const conversations = await myPrisma.conversation.findMany({
     where: {
       OR: [{ participantOneId: user.id }, { participantTwoId: user.id }],
+      participantOne: { deletedAt: null },
+      participantTwo: { deletedAt: null },
     },
     orderBy: { lastMessageAt: "desc" },
     select: {
@@ -91,6 +93,8 @@ export async function getConversationMessages(conversationId: string) {
     where: {
       id: conversationId,
       OR: [{ participantOneId: user.id }, { participantTwoId: user.id }],
+      participantOne: { deletedAt: null },
+      participantTwo: { deletedAt: null },
     },
     select: {
       id: true,

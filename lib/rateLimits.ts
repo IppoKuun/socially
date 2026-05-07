@@ -43,6 +43,12 @@ export const rateLimits = {
     prefix: "ratelimit:comment",
     limiter: Ratelimit.slidingWindow(20, "30 m"),
   }),
+  dataExport: new Ratelimit({
+    redis,
+    prefix: "ratelimit:data-export",
+    limiter: Ratelimit.slidingWindow(1, "7 d"),
+    analytics: true,
+  }),
 } as const;
 
 export type RateLimitKey = keyof typeof rateLimits;

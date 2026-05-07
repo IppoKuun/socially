@@ -31,8 +31,8 @@ export default async function submitSearch(formData: FormData) {
     redirect({ href: "/search", locale });
   }
 
-  const user = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const user = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
     select: { id: true },
   });
 

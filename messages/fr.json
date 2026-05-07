@@ -56,6 +56,106 @@
     "loginPrompt": "Vous avez déjà un compte ?",
     "loginLink": "Se connecter"
   },
+  "settings": {
+    "title": "Settings",
+    "description": "Centralise les entrées vers les préférences et la gestion du compte.",
+    "placeholder": "Les sections Settings seront implémentées progressivement. Ce placeholder permet de garder une navigation stable.",
+    "backToSettings": "Retour aux paramètres",
+    "menu": {
+      "account": {
+        "title": "Compte",
+        "description": "Consultez vos informations et gérez la suppression du compte."
+      },
+      "privacySecurity": {
+        "title": "Confidentialité",
+        "description": "Gérez les blocages et les réglages liés à votre sécurité."
+      },
+      "data": {
+        "title": "Mes données",
+        "description": "Exportez les données associées à votre activité Socially."
+      }
+    },
+    "account": {
+      "title": "Informations du compte",
+      "description": "Ces informations sont affichées en lecture seule depuis les données de votre compte et de votre profil.",
+      "viewProfile": "Voir mon profil",
+      "notProvided": "Non renseigné",
+      "fields": {
+        "displayName": "Nom public",
+        "username": "Nom d'utilisateur",
+        "language": "Langue",
+        "occupation": "Occupation",
+        "intent": "Intention",
+        "createdAt": "Compte créé le"
+      },
+      "email": {
+        "label": "Adresse email",
+        "fallbackError": "Impossible de modifier votre email. Veuillez réessayer.",
+        "success": "Email modifié avec succès",
+        "pending": "Modification...",
+        "submit": "Modifier mon mail"
+      },
+      "delete": {
+        "title": "Suppression",
+        "description": "Désactivez votre compte avant sa suppression définitive après le délai prévu.",
+        "fallbackError": "Impossible d'effectuer l'action.",
+        "trigger": "Supprimer mon compte",
+        "dialogTitle": "Voulez-vous supprimer votre compte ?",
+        "dialogDescription": "Votre compte sera désactivé. Vous pourrez annuler la suppression pendant 30 jours avant la suppression définitive.",
+        "cancel": "Annuler",
+        "pending": "Suppression...",
+        "confirm": "Oui, supprimer"
+      }
+    },
+    "privacy": {
+      "title": "Confidentialité",
+      "description": "Retrouvez les réglages qui limitent les interactions avec certains profils.",
+      "blockListCard": {
+        "title": "Utilisateurs bloqués",
+        "description": "Consultez et gérez les profils que vous avez bloqués.",
+        "button": "Voir la liste"
+      }
+    },
+    "blockList": {
+      "backToPrivacy": "Retour à la confidentialité",
+      "title": "Utilisateurs bloqués",
+      "description": "Les profils listés ici ne peuvent plus interagir normalement avec votre compte.",
+      "loadError": "Désolé, nous n'avons pas pu récupérer les utilisateurs bloqués.",
+      "unblockFallbackError": "Impossible de débloquer ce profil. Veuillez réessayer.",
+      "avatarAlt": "Avatar de {name}",
+      "deletedUser": "Utilisateur supprimé",
+      "unblocked": "Débloqué",
+      "unblock": "Débloquer",
+      "loadingMore": "Chargement des autres profils",
+      "loadMore": "Charger plus",
+      "empty": "Vous n'avez bloqué aucun profil."
+    },
+    "dataExport": {
+      "backToSettings": "Retour aux paramètres",
+      "title": "Exporter mes données",
+      "description": "Téléchargez un fichier JSON avec votre profil, vos posts, vos likes, vos commentaires et les données de suivi conservées.",
+      "archiveTitle": "Archive personnelle",
+      "archiveDescription": "Disponible une fois par semaine pour limiter les traitements lourds.",
+      "rateLimitFallback": "Vous avez atteint la limite d'export de données.",
+      "exportFailed": "Export échoué",
+      "exportDownloaded": "Export téléchargé",
+      "preparingShort": "Préparation...",
+      "exportButton": "Exporter",
+      "preparing": "Préparation de votre archive...",
+      "warningTitle": "Attention :",
+      "warningRefresh": "Veuillez ne pas rafraîchir la page pendant la génération. Vous ne pouvez effectuer cette action qu'une fois par semaine.",
+      "warningUrls": "Certaines URL peuvent ne plus être disponibles si les contenus associés ont été supprimés."
+    },
+    "restoreAccount": {
+      "title": "Compte en attente de suppression",
+      "description": "Votre compte est actuellement caché. Il sera définitivement supprimé dans 30 jours.",
+      "signOutError": "Impossible de vous déconnecter pour le moment.",
+      "restorePending": "Restauration...",
+      "restore": "Annuler la suppression",
+      "signOutPending": "Déconnexion...",
+      "signOut": "Se déconnecter"
+    }
+  },
   "onboarding": {
     "progress": {
       "stepLabel": "Étape {current}/{total}",
@@ -517,7 +617,102 @@
       "settings": {
         "title": "Settings",
         "description": "Centralise les entrées vers les préférences et la gestion du compte.",
-        "placeholder": "Les sections Settings seront implémentées progressivement. Ce placeholder permet de garder une navigation stable."
+        "placeholder": "Les sections Settings seront implémentées progressivement. Ce placeholder permet de garder une navigation stable.",
+        "backToSettings": "Retour aux paramètres",
+        "menu": {
+          "account": {
+            "title": "Compte",
+            "description": "Consultez vos informations et gérez la suppression du compte."
+          },
+          "privacySecurity": {
+            "title": "Confidentialité",
+            "description": "Gérez les blocages et les réglages liés à votre sécurité."
+          },
+          "data": {
+            "title": "Mes données",
+            "description": "Exportez les données associées à votre activité Socially."
+          }
+        },
+        "account": {
+          "title": "Informations du compte",
+          "description": "Ces informations sont affichées en lecture seule depuis les données de votre compte et de votre profil.",
+          "viewProfile": "Voir mon profil",
+          "notProvided": "Non renseigné",
+          "fields": {
+            "displayName": "Nom public",
+            "username": "Nom d'utilisateur",
+            "language": "Langue",
+            "occupation": "Occupation",
+            "intent": "Intention",
+            "createdAt": "Compte créé le"
+          },
+          "email": {
+            "label": "Adresse email",
+            "fallbackError": "Impossible de modifier votre email. Veuillez réessayer.",
+            "success": "Email modifié avec succès",
+            "pending": "Modification...",
+            "submit": "Modifier mon mail"
+          },
+          "delete": {
+            "title": "Suppression",
+            "description": "Désactivez votre compte avant sa suppression définitive après le délai prévu.",
+            "fallbackError": "Impossible d'effectuer l'action.",
+            "trigger": "Supprimer mon compte",
+            "dialogTitle": "Voulez-vous supprimer votre compte ?",
+            "dialogDescription": "Votre compte sera désactivé. Vous pourrez annuler la suppression pendant 30 jours avant la suppression définitive.",
+            "cancel": "Annuler",
+            "pending": "Suppression...",
+            "confirm": "Oui, supprimer"
+          }
+        },
+        "privacy": {
+          "title": "Confidentialité",
+          "description": "Retrouvez les réglages qui limitent les interactions avec certains profils.",
+          "blockListCard": {
+            "title": "Utilisateurs bloqués",
+            "description": "Consultez et gérez les profils que vous avez bloqués.",
+            "button": "Voir la liste"
+          }
+        },
+        "blockList": {
+          "backToPrivacy": "Retour à la confidentialité",
+          "title": "Utilisateurs bloqués",
+          "description": "Les profils listés ici ne peuvent plus interagir normalement avec votre compte.",
+          "loadError": "Désolé, nous n'avons pas pu récupérer les utilisateurs bloqués.",
+          "unblockFallbackError": "Impossible de débloquer ce profil. Veuillez réessayer.",
+          "avatarAlt": "Avatar de {name}",
+          "deletedUser": "Utilisateur supprimé",
+          "unblocked": "Débloqué",
+          "unblock": "Débloquer",
+          "loadingMore": "Chargement des autres profils",
+          "loadMore": "Charger plus",
+          "empty": "Vous n'avez bloqué aucun profil."
+        },
+        "dataExport": {
+          "backToSettings": "Retour aux paramètres",
+          "title": "Exporter mes données",
+          "description": "Téléchargez un fichier JSON avec votre profil, vos posts, vos likes, vos commentaires et les données de suivi conservées.",
+          "archiveTitle": "Archive personnelle",
+          "archiveDescription": "Disponible une fois par semaine pour limiter les traitements lourds.",
+          "rateLimitFallback": "Vous avez atteint la limite d'export de données.",
+          "exportFailed": "Export échoué",
+          "exportDownloaded": "Export téléchargé",
+          "preparingShort": "Préparation...",
+          "exportButton": "Exporter",
+          "preparing": "Préparation de votre archive...",
+          "warningTitle": "Attention :",
+          "warningRefresh": "Veuillez ne pas rafraîchir la page pendant la génération. Vous ne pouvez effectuer cette action qu'une fois par semaine.",
+          "warningUrls": "Certaines URL peuvent ne plus être disponibles si les contenus associés ont été supprimés."
+        },
+        "restoreAccount": {
+          "title": "Compte en attente de suppression",
+          "description": "Votre compte est actuellement caché. Il sera définitivement supprimé dans 30 jours.",
+          "signOutError": "Impossible de vous déconnecter pour le moment.",
+          "restorePending": "Restauration...",
+          "restore": "Annuler la suppression",
+          "signOutPending": "Déconnexion...",
+          "signOut": "Se déconnecter"
+        }
       },
       "profile": {
         "title": "Profile",

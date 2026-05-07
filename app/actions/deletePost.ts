@@ -11,12 +11,16 @@ export default async function deletePost(id: string) {
     return { ok: false, userMsg: t("authRequired") };
   }
 
-  const user = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const user = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
   });
 
-  const post = await myPrisma.post.findUnique({
-    where: { id },
+  const post = await myPrisma.post.findFirst({
+    where: {
+      id,
+      deletedAt: null,
+      author: { deletedAt: null },
+    },
   });
 
   if (!post) {

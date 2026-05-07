@@ -5,6 +5,8 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppNavigationShell } from "./_components/navigation-shell";
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
+import { userAgent } from "next/server";
+import { RestoreAccountModal } from "@/app/components/RestoreAccountModal";
 
 export default async function AuthenticatedAppLayout({
   children,
@@ -27,14 +29,18 @@ export default async function AuthenticatedAppLayout({
       avatarUrl: true,
       displayname: true,
       username: true,
+      deletedAt: true,
     },
   });
+
+  const isSoftDelete = userProfile?.deletedAt;
 
   const unreadNotificationCount = userProfile
     ? await myPrisma.notifications.count({
         where: {
           userId: userProfile.id,
           isRead: false,
+          actor: { deletedAt: null },
         },
       })
     : 0;
@@ -58,6 +64,7 @@ export default async function AuthenticatedAppLayout({
         notificationProfileId={navigationUser.id}
       >
         {children}
+        {isSoftDelete && <RestoreAccountModal />}
       </AppNavigationShell>
     </SidebarProvider>
   );

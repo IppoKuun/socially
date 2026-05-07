@@ -15,8 +15,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const userProfile = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const userProfile = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
     select: { id: true },
   });
 
@@ -45,6 +45,8 @@ export async function POST(request: Request) {
     const conversation = await myPrisma.conversation.findFirst({
       where: {
         id: conversationId,
+        participantOne: { deletedAt: null },
+        participantTwo: { deletedAt: null },
         OR: [
           { participantOneId: userProfile.id },
           { participantTwoId: userProfile.id },
