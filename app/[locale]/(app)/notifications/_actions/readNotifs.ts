@@ -11,8 +11,8 @@ async function getCurrentProfileId() {
     return null;
   }
 
-  const userProfile = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const userProfile = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
     select: { id: true },
   });
 

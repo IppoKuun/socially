@@ -63,8 +63,8 @@ export async function sendMessage(
     return { ok: false, messageQuery: null, userMsg: t("messageTooLong") };
   }
 
-  const viewer = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const viewer = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
     select: { id: true },
   });
 

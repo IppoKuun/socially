@@ -20,8 +20,8 @@ export default async function modifyEmailActions(
     return { ok: false, userMsg: "Session expirée ou invalide" };
   }
 
-  const user = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const user = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
     select: { id: true },
   });
   if (!user) {
@@ -39,7 +39,8 @@ export default async function modifyEmailActions(
   if (!emailRegex.test(cleanEmail)) {
     return { ok: false, userMsg: "L'adresse email n'est pas valide" };
   }
-
+  // modification email est faible pour l'instant c'est un choix assumé
+  // Plus tard, a intégré : validationn mail //
   try {
     await myPrisma.user.update({
       where: { id: session.user.id },

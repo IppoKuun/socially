@@ -22,8 +22,8 @@ export default async function createPost(
   if (!session) {
     return { ok: false, userMsg: t("authRequired") };
   }
-  const user = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const user = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
   });
   if (!user) {
     return { ok: false, userMsg: t("profileNotFound") };

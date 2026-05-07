@@ -23,8 +23,8 @@ export default async function modifyProfil(
   if (!session) {
     return { ok: false, userMsg: t("authRequired") };
   }
-  const user = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const user = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
     select: { id: true, avatarPublicId: true },
   });
   if (!user) {

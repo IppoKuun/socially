@@ -21,8 +21,8 @@ export async function getUserBlockList(
     throw new Error("Unauthorized");
   }
 
-  const profile = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const profile = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
     select: { id: true },
   });
   if (!profile) {
@@ -53,7 +53,7 @@ export async function getUserBlockList(
   // Sinon on prends le block telle qu'il l'est//
   const rawBlocks = hasNextPage ? blockList.slice(0, 20) : blockList;
 
-  const nextCursor = blockList[20]?.id;
+  const nextCursor = hasNextPage ? blockList[19]?.id : undefined;
   const blocksProfilToDisplay: blockItem[] = rawBlocks.map((item) => {
     return {
       id: item.blocked.id,

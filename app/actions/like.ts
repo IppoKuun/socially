@@ -13,8 +13,8 @@ export async function Like(postId: string) {
     return { ok: false, userMsg: t("authRequired") };
   }
 
-  const user = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const user = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
   });
 
   if (!user) {
@@ -39,8 +39,12 @@ export async function Like(postId: string) {
         where: { id: isLiked.id },
       });
     } else {
-      const targetPost = await myPrisma.post.findUnique({
-        where: { id: postId },
+      const targetPost = await myPrisma.post.findFirst({
+        where: {
+          id: postId,
+          deletedAt: null,
+          author: { deletedAt: null },
+        },
         select: { id: true, userId: true },
       });
 
@@ -78,8 +82,8 @@ export async function commentLike(commentId: string) {
     return { ok: false, userMsg: t("authRequired") };
   }
 
-  const user = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const user = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
   });
 
   if (!user) {
@@ -105,6 +109,23 @@ export async function commentLike(commentId: string) {
         where: { id: isLiked.id },
       });
     } else {
+      const targetComment = await myPrisma.comment.findFirst({
+        where: {
+          id: commentId,
+          deletedAt: null,
+          author: { deletedAt: null },
+          post: {
+            deletedAt: null,
+            author: { deletedAt: null },
+          },
+        },
+        select: { id: true },
+      });
+
+      if (!targetComment) {
+        return { ok: false, userMsg: t("toggleFailed") };
+      }
+
       await myPrisma.commentLike.create({
         data: { user_id: user.id, comment_id: commentId },
       });

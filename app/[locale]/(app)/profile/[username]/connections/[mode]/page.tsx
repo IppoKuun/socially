@@ -10,8 +10,8 @@ interface PageProps {
 export default async function connectionMode({ params }: PageProps) {
   const session = await getSession();
 
-  const viewer = await myPrisma.userProfile.findUnique({
-    where: { userId: session?.user.id },
+  const viewer = await myPrisma.userProfile.findFirst({
+    where: { userId: session?.user.id, deletedAt: null },
     select: { id: true },
   });
 

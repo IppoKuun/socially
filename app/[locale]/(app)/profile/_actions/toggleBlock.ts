@@ -23,8 +23,8 @@ export default async function toggleBlockAction(
     return { ok: false, userMsg: "Profil ciblé introuvable." };
   }
 
-  const viewer = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const viewer = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
     select: { id: true },
   });
 
@@ -36,8 +36,8 @@ export default async function toggleBlockAction(
     return { ok: false, userMsg: "Vous ne pouvez pas vous bloquer vous-même." };
   }
 
-  const target = await myPrisma.userProfile.findUnique({
-    where: { id: targetProfileId },
+  const target = await myPrisma.userProfile.findFirst({
+    where: { id: targetProfileId, deletedAt: null },
     select: { id: true, username: true },
   });
 

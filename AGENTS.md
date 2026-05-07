@@ -337,6 +337,7 @@ Do not leave the user with only a flat list of created files when a study path w
 - For small low-risk fixes, local work is acceptable.
 - For larger feature work, prefer working in an isolated branch and through a PR workflow.
 - If a task is large, risky, cross-cutting, or unclear, say so explicitly before implementation.
+- Do not run `npm run build` in this repository. It is too slow and currently unreliable for agent-side verification. Prefer targeted checks such as `npm run lint -- <paths>`, `npm run typecheck`, `npm run test -- <paths>`, or focused Playwright commands when relevant. When build confidence matters, explicitly say that the build was not run.
 - If instructions conflict, prioritize:
   1. security
   2. correctness

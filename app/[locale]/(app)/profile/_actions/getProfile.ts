@@ -22,8 +22,8 @@ export type ProfileData = {
 export default async function getProfilePage(username: string) {
   const session = await getSession();
 
-  const viewer = await myPrisma.userProfile.findUnique({
-    where: { userId: session?.user.id },
+  const viewer = await myPrisma.userProfile.findFirst({
+    where: { userId: session?.user.id, deletedAt: null },
     select: { id: true },
   });
 

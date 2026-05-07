@@ -11,8 +11,8 @@ export default async function toggleFollow(username: string) {
     return { ok: false, userMsg: t("authRequired") };
   }
 
-  const viewer = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const viewer = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
     select: { id: true },
   });
 
@@ -23,8 +23,8 @@ export default async function toggleFollow(username: string) {
     };
   }
 
-  const usernameTarget = await myPrisma.userProfile.findUnique({
-    where: { username },
+  const usernameTarget = await myPrisma.userProfile.findFirst({
+    where: { username, deletedAt: null },
     select: { id: true },
   });
 

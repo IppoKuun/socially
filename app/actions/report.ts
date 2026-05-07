@@ -12,8 +12,8 @@ export default async function report(postId: string) {
     return { ok: false, userMsg: t("authRequired") };
   }
 
-  const user = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const user = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
   });
 
   if (!user) {
@@ -23,8 +23,12 @@ export default async function report(postId: string) {
     };
   }
 
-  const post = await myPrisma.post.findUnique({
-    where: { id: postId },
+  const post = await myPrisma.post.findFirst({
+    where: {
+      id: postId,
+      deletedAt: null,
+      author: { deletedAt: null },
+    },
   });
   if (!post) {
     return { ok: false, userMsg: t("postNotFound") };

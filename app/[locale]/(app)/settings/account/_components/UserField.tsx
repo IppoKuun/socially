@@ -73,6 +73,7 @@ export default function UserField({ userInfo }: userInfoProps) {
       const result = await modifyEmailActions(FormServ, email);
       if (!result.ok) {
         setServMsg(result.userMsg ?? t("account.email.fallbackError"));
+        return;
       }
       setServMsg(t("account.email.success"));
     });

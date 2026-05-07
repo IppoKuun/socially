@@ -7,8 +7,8 @@ export default async function ProfilePage() {
   const locale = await getLocale();
   const session = await getSession();
   const userProfile = session;
-  const username = await myPrisma.userProfile.findUnique({
-    where: { userId: session?.user.id },
+  const username = await myPrisma.userProfile.findFirst({
+    where: { userId: session?.user.id, deletedAt: null },
     select: {
       username: true,
     },
@@ -21,8 +21,17 @@ export default async function ProfilePage() {
     });
   }
 
+  const profileUsername = username?.username;
+
+  if (!profileUsername) {
+    redirect({
+      href: "/settings/account",
+      locale,
+    });
+  }
+
   redirect({
-    href: `/profile/${username?.username}`,
+    href: `/profile/${profileUsername}`,
     locale,
   });
 }

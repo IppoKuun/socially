@@ -49,6 +49,7 @@ jest.mock("@/lib/prisma", () => ({
   myPrisma: {
     userProfile: {
       findUnique: (...args: unknown[]) => mockUserProfileFindUnique(...args),
+      findFirst: (...args: unknown[]) => mockUserProfileFindUnique(...args),
     },
     post: {
       create: (...args: unknown[]) => mockCreatePost(...args),

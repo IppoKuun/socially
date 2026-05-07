@@ -15,8 +15,10 @@ export function RestoreAccountModal() {
 
   const handleRestore = () => {
     startTransition(async () => {
-      await softDeleteAction();
-      // Le revalidatePath dans l'action fera disparaître la modale
+      const result = await softDeleteAction();
+      if (!result.ok) {
+        toast.error(result.userMsg);
+      }
     });
   };
 

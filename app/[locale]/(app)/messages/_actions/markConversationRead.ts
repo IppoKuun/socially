@@ -21,8 +21,8 @@ export default async function markConversationAsRead(
     return { ok: false, userMsg: t("authRequired") };
   }
 
-  const viewer = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const viewer = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
     select: { id: true },
   });
 
@@ -37,6 +37,8 @@ export default async function markConversationAsRead(
     where: {
       id: conversationId,
       OR: [{ participantOneId: viewer.id }, { participantTwoId: viewer.id }],
+      participantOne: { deletedAt: null },
+      participantTwo: { deletedAt: null },
     },
     select: {
       id: true,

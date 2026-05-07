@@ -20,8 +20,8 @@ export default async function createComment(
   if (!session) {
     return { ok: false, userMsg: t("authRequired") };
   }
-  const user = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const user = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
   });
   if (!user) {
     return { ok: false, userMsg: t("profileNotFound") };
@@ -59,8 +59,12 @@ export default async function createComment(
     return { ok: false, userMsg: t("unexpectedError") };
   }
 
-  const targetPost = await myPrisma.post.findUnique({
-    where: { id: postId },
+  const targetPost = await myPrisma.post.findFirst({
+    where: {
+      id: postId,
+      deletedAt: null,
+      author: { deletedAt: null },
+    },
     select: { id: true, userId: true },
   });
 
@@ -84,8 +88,12 @@ export default async function createComment(
       };
     }
 
-    commentParent = await myPrisma.comment.findUnique({
-      where: { id: responseToCommentId },
+    commentParent = await myPrisma.comment.findFirst({
+      where: {
+        id: responseToCommentId,
+        deletedAt: null,
+        author: { deletedAt: null },
+      },
       select: { id: true, postId: true },
     });
 

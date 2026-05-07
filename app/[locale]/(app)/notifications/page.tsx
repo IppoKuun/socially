@@ -18,6 +18,7 @@ async function getFollowNotificationsForUser(userId: string) {
     where: {
       userId,
       type: "FOLLOW",
+      actor: { deletedAt: null },
     },
     orderBy: { createdAt: "desc" },
     take: 50,
@@ -49,7 +50,8 @@ async function getPostNotificationsForUser(userId: string) {
       userId,
       type: { in: ["LIKE", "COMMENT"] },
       postId: { not: null },
-      post: { deletedAt: null },
+      actor: { deletedAt: null },
+      post: { deletedAt: null, author: { deletedAt: null } },
     },
     orderBy: { createdAt: "desc" },
     take: 200,
@@ -172,8 +174,8 @@ export default async function NotificationsPage({
     return <AppPageShell title={t("title")} description={t("description")} />;
   }
 
-  const userProfile = await myPrisma.userProfile.findUnique({
-    where: { userId: session.user.id },
+  const userProfile = await myPrisma.userProfile.findFirst({
+    where: { userId: session.user.id, deletedAt: null },
     select: { id: true },
   });
 
