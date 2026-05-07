@@ -1,5 +1,6 @@
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
+import { rateLimits } from "@/lib/rateLimits";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -13,6 +14,19 @@ export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
   try {
+    const rateLimitResult = await rateLimits.dataExport.limit(userId);
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        {
+          error: "DATA_EXPORT_RATE_LIMITED",
+          userMsg: "Vous avez déjà exporté vos données cette semaine.",
+          resetAt: new Date(rateLimitResult.reset).toISOString(),
+        },
+        { status: 429 },
+      );
+    }
+
     const viewer = await myPrisma.userProfile.findUnique({
       where: { userId },
       select: {

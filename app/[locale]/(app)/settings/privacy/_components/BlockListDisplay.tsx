@@ -73,7 +73,7 @@ export default function BlockListDisplay() {
           <BlockItemSkeleton />
         </>
       )}
-      {profiles?.length === 0 ? (
+      {profiles?.length && profiles.length > 0 ? (
         <>
           {profiles.map((profile) => {
             const isUnblocked = unblockedIds.has(profile.id);

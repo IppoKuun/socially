@@ -12,7 +12,7 @@ const settingsSections = [
   },
   {
     key: "privacySecurity",
-    href: "/settings/privacy-security",
+    href: "/settings/privacy",
     icon: Shield,
   },
   {
