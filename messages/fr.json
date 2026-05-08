@@ -26,6 +26,12 @@
     "decline": "Refuser",
     "settings": "Gérer les préférences"
   },
+  "authRequiredDialog": {
+    "title": "Connecte-toi pour continuer",
+    "description": "Cette action est réservée aux membres connectés. Connecte-toi ou crée un compte pour interagir avec Socially.",
+    "action": "Se connecter",
+    "cancel": "Plus tard"
+  },
   "login": {
     "hero": "Là où les conversations créent du lien.",
     "title": {

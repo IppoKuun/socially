@@ -171,6 +171,7 @@ export default async function createPost(
       content: parsed.data?.content,
       imagesUrl: parsed.data.imagesUrl ?? [],
       categories: IAcategories,
+      imagesPublicId: ids,
       userId: user.id,
     },
   });

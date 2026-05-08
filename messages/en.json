@@ -26,6 +26,12 @@
     "decline": "Decline",
     "settings": "Manage preferences"
   },
+  "authRequiredDialog": {
+    "title": "Sign in to continue",
+    "description": "This action is reserved for signed-in members. Sign in or create an account to interact on Socially.",
+    "action": "Sign in",
+    "cancel": "Later"
+  },
   "login": {
     "hero": "Where conversations connect.",
     "title": {

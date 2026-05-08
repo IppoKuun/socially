@@ -5,7 +5,6 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppNavigationShell } from "./_components/navigation-shell";
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
-import { userAgent } from "next/server";
 import { RestoreAccountModal } from "@/app/components/RestoreAccountModal";
 
 export default async function AuthenticatedAppLayout({

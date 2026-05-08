@@ -26,6 +26,12 @@
     "decline": "Rechazar",
     "settings": "Gestionar preferencias"
   },
+  "authRequiredDialog": {
+    "title": "Inicia sesión para continuar",
+    "description": "Esta acción está reservada a miembros conectados. Inicia sesión o crea una cuenta para interactuar en Socially.",
+    "action": "Iniciar sesión",
+    "cancel": "Más tarde"
+  },
   "login": {
     "hero": "Donde las conversaciones conectan.",
     "title": {
