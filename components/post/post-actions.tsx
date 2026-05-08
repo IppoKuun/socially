@@ -14,6 +14,7 @@ import {
 
 import deletePost from "@/app/actions/deletePost";
 import { Like } from "@/app/actions/like";
+import AuthRequiredDialog from "@/components/auth/AuthRequiredDialog";
 import report from "@/app/actions/report";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +33,7 @@ import { cn } from "@/lib/utils";
 type PostActionsProps = {
   post: FeedPost;
   commentHref: string;
+  isAuthenticated: boolean;
   compact?: boolean;
   onDeleteSuccess?: (postId: string) => void;
 };
@@ -39,6 +41,7 @@ type PostActionsProps = {
 export default function PostActions({
   post,
   commentHref,
+  isAuthenticated,
   compact = false,
   onDeleteSuccess,
 }: PostActionsProps) {
@@ -49,6 +52,7 @@ export default function PostActions({
   const [isReportPending, startReportTransition] = useTransition();
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  const [authRequiredOpen, setAuthRequiredOpen] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [reported, setReported] = useState(post.viewer.hasReported);
   const [optimisticLikeState, updateOptimisticLikeState] = useOptimistic(
@@ -89,6 +93,11 @@ export default function PostActions({
   }
 
   function handleLike() {
+    if (!isAuthenticated) {
+      setAuthRequiredOpen(true);
+      return;
+    }
+
     setStatusMessage("");
 
     const nextHasLiked = !optimisticLikeState.hasLiked;
@@ -124,6 +133,11 @@ export default function PostActions({
   }
 
   function handleReport() {
+    if (!isAuthenticated) {
+      setAuthRequiredOpen(true);
+      return;
+    }
+
     setStatusMessage("");
 
     startReportTransition(async () => {
@@ -171,19 +185,34 @@ export default function PostActions({
           </span>
         </Button>
 
-        <Button
-          asChild
-          variant="ghost"
-          size={buttonSize}
-          className="rounded-full border border-white/10 bg-white/[0.03] text-white/82 hover:bg-white/[0.08]"
-        >
-          <Link href={commentHref}>
+        {isAuthenticated ? (
+          <Button
+            asChild
+            variant="ghost"
+            size={buttonSize}
+            className="rounded-full border border-white/10 bg-white/[0.03] text-white/82 hover:bg-white/[0.08]"
+          >
+            <Link href={commentHref}>
+              <MessageSquare className="size-4" />
+              <span>
+                {t("comment")} {post.commentCount}
+              </span>
+            </Link>
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant="ghost"
+            size={buttonSize}
+            className="rounded-full border border-white/10 bg-white/[0.03] text-white/82 hover:bg-white/[0.08]"
+            onClick={() => setAuthRequiredOpen(true)}
+          >
             <MessageSquare className="size-4" />
             <span>
               {t("comment")} {post.commentCount}
             </span>
-          </Link>
-        </Button>
+          </Button>
+        )}
 
         <Button
           type="button"
@@ -307,6 +336,11 @@ export default function PostActions({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AuthRequiredDialog
+        open={authRequiredOpen}
+        onOpenChange={setAuthRequiredOpen}
+      />
     </div>
   );
 }

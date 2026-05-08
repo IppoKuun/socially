@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { commentLike } from "@/app/actions/like";
+import AuthRequiredDialog from "@/components/auth/AuthRequiredDialog";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
 import type { FeedComment } from "@/lib/feed/shared";
@@ -22,6 +23,7 @@ type CommentCardProps = {
   variant?: "default" | "context";
   threadHref?: string;
   replyHref: string;
+  isAuthenticated: boolean;
   highlighted?: boolean;
 };
 
@@ -66,6 +68,7 @@ export default function CommentCard({
   variant = "default",
   threadHref,
   replyHref,
+  isAuthenticated,
   highlighted = false,
 }: CommentCardProps) {
   const t = useTranslations("comments.card");
@@ -74,6 +77,7 @@ export default function CommentCard({
   const compact = variant === "context";
   const [isLikePending, startLikeTransition] = useTransition();
   const [statusMessage, setStatusMessage] = useState("");
+  const [authRequiredOpen, setAuthRequiredOpen] = useState(false);
   const [optimisticLikeState, updateOptimisticLikeState] = useOptimistic(
     {
       hasLiked: comment.viewer.hasLiked,
@@ -86,6 +90,11 @@ export default function CommentCard({
   );
 
   function handleLike() {
+    if (!isAuthenticated) {
+      setAuthRequiredOpen(true);
+      return;
+    }
+
     setStatusMessage("");
 
     const nextHasLiked = !optimisticLikeState.hasLiked;
@@ -197,21 +206,38 @@ export default function CommentCard({
                 <span>{optimisticLikeState.likeCount}</span>
               </Button>
 
-              <Button
-                asChild
-                variant="ghost"
-                size={compact ? "sm" : "default"}
-                className="rounded-full border border-white/10 bg-white/[0.03] text-white/82 hover:bg-white/[0.08]"
-              >
-                <Link href={replyHref}>
+              {isAuthenticated ? (
+                <Button
+                  asChild
+                  variant="ghost"
+                  size={compact ? "sm" : "default"}
+                  className="rounded-full border border-white/10 bg-white/[0.03] text-white/82 hover:bg-white/[0.08]"
+                >
+                  <Link href={replyHref}>
+                    <MessageSquare className="size-4" />
+                    <span>
+                      {comment.replyCount > 0
+                        ? t("replyCount", { count: comment.replyCount })
+                        : t("reply")}
+                    </span>
+                  </Link>
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size={compact ? "sm" : "default"}
+                  className="rounded-full border border-white/10 bg-white/[0.03] text-white/82 hover:bg-white/[0.08]"
+                  onClick={() => setAuthRequiredOpen(true)}
+                >
                   <MessageSquare className="size-4" />
                   <span>
                     {comment.replyCount > 0
                       ? t("replyCount", { count: comment.replyCount })
                       : t("reply")}
                   </span>
-                </Link>
-              </Button>
+                </Button>
+              )}
             </div>
 
             {statusMessage ? (
@@ -222,6 +248,11 @@ export default function CommentCard({
           </div>
         </div>
       </div>
+
+      <AuthRequiredDialog
+        open={authRequiredOpen}
+        onOpenChange={setAuthRequiredOpen}
+      />
     </article>
   );
 }
