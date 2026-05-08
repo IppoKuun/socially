@@ -1,6 +1,3 @@
-import { getLocale } from "next-intl/server";
-
-import { redirect } from "@/i18n/routing";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppNavigationShell } from "./_components/navigation-shell";
 import { getSession } from "@/lib/authSession";
@@ -12,25 +9,20 @@ export default async function AuthenticatedAppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const locale = await getLocale();
   const session = await getSession();
 
-  if (!session) {
-    redirect({ href: "/login", locale });
-  }
-
-  const currentSession = session!;
-
-  const userProfile = await myPrisma.userProfile.findUnique({
-    where: { userId: currentSession.user.id },
-    select: {
-      id: true,
-      avatarUrl: true,
-      displayname: true,
-      username: true,
-      deletedAt: true,
-    },
-  });
+  const userProfile = session
+    ? await myPrisma.userProfile.findUnique({
+        where: { userId: session.user.id },
+        select: {
+          id: true,
+          avatarUrl: true,
+          displayname: true,
+          username: true,
+          deletedAt: true,
+        },
+      })
+    : null;
 
   const isSoftDelete = userProfile?.deletedAt;
 
@@ -46,10 +38,10 @@ export default async function AuthenticatedAppLayout({
 
   const navigationUser = {
     id: userProfile?.id ?? null,
-    avatarUrl: userProfile?.avatarUrl ?? currentSession.user.image ?? null,
+    avatarUrl: userProfile?.avatarUrl ?? session?.user.image ?? null,
     displayName:
-      userProfile?.displayname ?? currentSession.user.name ?? "Socially member",
-    username: userProfile?.username ?? "pending-profile",
+      userProfile?.displayname ?? session?.user.name ?? "Socially visitor",
+    username: userProfile?.username ?? null,
   };
 
   return (
