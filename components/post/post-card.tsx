@@ -136,7 +136,7 @@ export default function PostCard({
       role={isNavigable ? "link" : undefined}
       tabIndex={isNavigable ? 0 : undefined}
       className={cn(
-        "relative overflow-hidden rounded-[24px] bg-[#12151c] shadow-[0_28px_80px_-54px_rgba(0,0,0,0.98)]",
+        "relative overflow-hidden rounded-[4px] border-b border-b-slate-500 bg-transparent    p-6 shadow-[0_28px_80px_-54px_rgba(0,0,0,0.98)]",
         compact
           ? "px-4 py-4"
           : isProfile
@@ -306,9 +306,7 @@ export default function PostCard({
                   alt={t("imageAlt", { index: 1 })}
                   fill
                   className="object-cover transition duration-300 group-hover:scale-[1.015]"
-                  sizes={
-                    compact ? "190px" : "(max-width: 1024px) 100vw, 240px"
-                  }
+                  sizes={compact ? "190px" : "(max-width: 1024px) 100vw, 240px"}
                 />
               </div>
 

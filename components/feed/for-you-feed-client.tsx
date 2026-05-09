@@ -135,7 +135,7 @@ export default function ForYouFeedClient({
   const posts = feedQuery.data?.pages.flatMap((page) => page.items) ?? [];
 
   return (
-    <div className="relative space-y-4">
+    <div className="relative space-y-1">
       {showNewPostsBadge ? (
         <button
           type="button"
