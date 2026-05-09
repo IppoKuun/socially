@@ -61,6 +61,16 @@
       "secondaryAction": "Voir les tendances"
     }
   },
+  "errorBoundary": {
+    "app": {
+      "pageTitle": "Erreur",
+      "pageDescription": "Une erreur est survenue pendant le chargement de cette section.",
+      "eyebrow": "Erreur applicative",
+      "title": "Quelque chose s'est mal passé",
+      "description": "La section n'a pas pu être affichée correctement. Tu peux réessayer sans quitter la page.",
+      "retry": "Réessayer"
+    }
+  },
   "login": {
     "hero": "Là où les conversations créent du lien.",
     "title": {

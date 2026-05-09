@@ -61,6 +61,16 @@
       "secondaryAction": "Ver tendencias"
     }
   },
+  "errorBoundary": {
+    "app": {
+      "pageTitle": "Error",
+      "pageDescription": "Se produjo un error al cargar esta sección.",
+      "eyebrow": "Error de aplicación",
+      "title": "Algo salió mal",
+      "description": "Esta sección no se pudo mostrar correctamente. Puedes intentarlo de nuevo sin salir de la página.",
+      "retry": "Intentar de nuevo"
+    }
+  },
   "login": {
     "hero": "Donde las conversaciones conectan.",
     "title": {

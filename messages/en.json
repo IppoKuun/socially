@@ -61,6 +61,16 @@
       "secondaryAction": "View trending"
     }
   },
+  "errorBoundary": {
+    "app": {
+      "pageTitle": "Error",
+      "pageDescription": "An error occurred while loading this section.",
+      "eyebrow": "Application error",
+      "title": "Something went wrong",
+      "description": "This section could not be displayed correctly. You can retry without leaving the page.",
+      "retry": "Try again"
+    }
+  },
   "login": {
     "hero": "Where conversations connect.",
     "title": {
