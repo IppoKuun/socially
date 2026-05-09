@@ -213,28 +213,34 @@ async function getTrendingViewerState(input: {
 
 export async function getTrendingFeedPostsForViewer(input: {
   candidates: TrendingPostCandidate[];
-  viewerId: string;
+  viewerId?: string | null;
 }) {
-  const authorIds = input.candidates.map((post) => post.author.id);
-  const blockedAuthorIds = await getBlockedTrendingAuthorIds({
-    viewerId: input.viewerId,
-    authorIds,
-  });
+  const blockedAuthorIds = input.viewerId
+    ? await getBlockedTrendingAuthorIds({
+        viewerId: input.viewerId,
+        authorIds: input.candidates.map((post) => post.author.id),
+      })
+    : new Set<string>();
 
   const visiblePosts = input.candidates
     .filter((post) => !blockedAuthorIds.has(post.author.id))
     .slice(0, TRENDING_POST_LIMIT);
 
-  const viewerState = await getTrendingViewerState({
-    viewerId: input.viewerId,
-    postIds: visiblePosts.map((post) => post.id),
-  });
+  const viewerState = input.viewerId
+    ? await getTrendingViewerState({
+        viewerId: input.viewerId,
+        postIds: visiblePosts.map((post) => post.id),
+      })
+    : {
+        likedPostIds: new Set<string>(),
+        reportedPostIds: new Set<string>(),
+      };
 
   return visiblePosts.map(
     (post): FeedPost => ({
       ...post,
       viewer: {
-        isOwner: post.author.id === input.viewerId,
+        isOwner: Boolean(input.viewerId && post.author.id === input.viewerId),
         hasLiked: viewerState.likedPostIds.has(post.id),
         hasReported: viewerState.reportedPostIds.has(post.id),
       },

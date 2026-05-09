@@ -23,27 +23,35 @@ type ViewerProfile = {
   id: string;
 };
 
+const ANONYMOUS_VIEWER_ID = "__anonymous_viewer__";
+
 // Ces 2 fonctions sont la pour filtrer le contenu qu'on vas voir dans notre feed
 // Ils vont etre appellée lors de requete prisma avec un spread Operator //
 // Where Input dans les fonctions sont utile, pour l'autocompletion et surtout
 // Pour avoir les bonnes propriété //
-function getVisibleAuthorWhere(viewerId: string): Prisma.UserProfileWhereInput {
+function getVisibleAuthorWhere(
+  viewerId?: string | null,
+): Prisma.UserProfileWhereInput {
   return {
     deletedAt: null,
-    blocked: {
-      none: {
-        blockerId: viewerId,
-      },
-    },
-    blocker: {
-      none: {
-        blockedById: viewerId,
-      },
-    },
+    ...(viewerId
+      ? {
+          blocked: {
+            none: {
+              blockerId: viewerId,
+            },
+          },
+          blocker: {
+            none: {
+              blockedById: viewerId,
+            },
+          },
+        }
+      : {}),
   };
 }
 
-function getVisiblePostWhere(viewerId: string): Prisma.PostWhereInput {
+function getVisiblePostWhere(viewerId?: string | null): Prisma.PostWhereInput {
   return {
     deletedAt: null,
     author: getVisibleAuthorWhere(viewerId),
@@ -62,26 +70,22 @@ function getVisiblePostWhereFollowingFeed(
   };
 }
 
-async function requireViewerProfile(): Promise<ViewerProfile> {
+async function getViewerProfile(): Promise<ViewerProfile | null> {
   const session = await getSession();
 
   if (!session) {
-    throw new Error("Unauthorized");
+    return null;
   }
 
-  const profile = await myPrisma.userProfile.findFirst({
+  return myPrisma.userProfile.findFirst({
     where: { userId: session.user.id, deletedAt: null },
     select: { id: true },
   });
-
-  if (!profile) {
-    throw new Error("Profile not found");
-  }
-
-  return profile;
 }
 
-function getPostSelect(viewerId: string) {
+function getPostSelect(viewerId?: string | null) {
+  const safeViewerId = viewerId ?? ANONYMOUS_VIEWER_ID;
+
   return {
     id: true,
     slug: true,
@@ -102,12 +106,12 @@ function getPostSelect(viewerId: string) {
       },
     },
     likes: {
-      where: { user_id: viewerId },
+      where: { user_id: safeViewerId },
       select: { id: true },
     },
     reported: {
       // Ont veut juste savoir si user a Liker/Reported, pas User lui meme //
-      where: { reporterId: viewerId },
+      where: { reporterId: safeViewerId },
       select: { id: true },
     },
     // Ont vas prendre tout le nombre total de Likes/Comment //
@@ -127,7 +131,9 @@ function getPostSelect(viewerId: string) {
   } satisfies Prisma.PostSelect;
 }
 
-function getCommentSelect(viewerId: string) {
+function getCommentSelect(viewerId?: string | null) {
+  const safeViewerId = viewerId ?? ANONYMOUS_VIEWER_ID;
+
   return {
     id: true,
     postId: true,
@@ -152,7 +158,7 @@ function getCommentSelect(viewerId: string) {
       },
     },
     Likes: {
-      where: { user_id: viewerId },
+      where: { user_id: safeViewerId },
       select: { id: true },
     },
     _count: {
@@ -198,7 +204,7 @@ function serializeAuthor(author: {
   };
 }
 
-function serializePost(post: PostRecord, viewerId: string): FeedPost {
+function serializePost(post: PostRecord, viewerId?: string | null): FeedPost {
   return {
     id: post.id,
     slug: post.slug,
@@ -212,16 +218,16 @@ function serializePost(post: PostRecord, viewerId: string): FeedPost {
     commentCount: post._count.comment,
     author: serializeAuthor(post.author),
     viewer: {
-      isOwner: post.userId === viewerId,
-      hasLiked: post.likes.length > 0,
-      hasReported: post.reported.length > 0,
+      isOwner: Boolean(viewerId && post.userId === viewerId),
+      hasLiked: Boolean(viewerId && post.likes.length > 0),
+      hasReported: Boolean(viewerId && post.reported.length > 0),
     },
   };
 }
 
 function serializeComment(
   comment: CommentRecord,
-  viewerId: string,
+  viewerId?: string | null,
 ): FeedComment {
   return {
     id: comment.id,
@@ -235,8 +241,8 @@ function serializeComment(
     replyCount: comment._count.replies,
     author: serializeAuthor(comment.author),
     viewer: {
-      isOwner: comment.authorId === viewerId,
-      hasLiked: comment.Likes.length > 0,
+      isOwner: Boolean(viewerId && comment.authorId === viewerId),
+      hasLiked: Boolean(viewerId && comment.Likes.length > 0),
     },
   };
 }
@@ -273,17 +279,18 @@ export async function getForYouFeedPageQuery(input?: {
   cursor?: FeedCursor;
   limit?: number;
 }): Promise<ForYouFeedPage> {
-  const viewer = await requireViewerProfile();
+  const viewer = await getViewerProfile();
+  const viewerId = viewer?.id ?? null;
   const limit = input?.limit ?? FEED_PAGE_SIZE;
 
   const posts = await myPrisma.post.findMany({
     take: limit + 1,
     where: {
-      ...getVisiblePostWhere(viewer.id),
+      ...getVisiblePostWhere(viewerId),
       ...getFeedCursorWhere(input?.cursor ?? null),
     },
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-    select: getPostSelect(viewer.id),
+    select: getPostSelect(viewerId),
   });
 
   // On accede au post qui est = a la valeur limits //
@@ -292,7 +299,7 @@ export async function getForYouFeedPageQuery(input?: {
   const visibleItems = posts.slice(0, limit);
 
   return {
-    items: visibleItems.map((post) => serializePost(post, viewer.id)),
+    items: visibleItems.map((post) => serializePost(post, viewerId)),
     nextCursor: nextItem
       ? {
           id: nextItem.id,
@@ -303,10 +310,10 @@ export async function getForYouFeedPageQuery(input?: {
 }
 
 export async function getForYouFeedHeadQuery(): Promise<ForYouFeedHead> {
-  const viewer = await requireViewerProfile();
+  const viewer = await getViewerProfile();
 
   const latestPost = await myPrisma.post.findFirst({
-    where: getVisiblePostWhere(viewer.id),
+    where: getVisiblePostWhere(viewer?.id),
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     select: {
       id: true,
@@ -321,7 +328,14 @@ export async function getForYouFeedHeadQuery(): Promise<ForYouFeedHead> {
 }
 
 export async function getFollowingPage(cursor: FeedCursor) {
-  const viewer = await requireViewerProfile();
+  const viewer = await getViewerProfile();
+
+  if (!viewer) {
+    return {
+      items: [],
+      nextCursor: null,
+    };
+  }
 
   const posts = await myPrisma.post.findMany({
     take: FEED_PAGE_SIZE + 1,
@@ -351,7 +365,14 @@ export async function getFollowingPage(cursor: FeedCursor) {
 }
 
 export async function getFollowingFeedHeadQuery(): Promise<ForYouFeedHead> {
-  const viewer = await requireViewerProfile();
+  const viewer = await getViewerProfile();
+
+  if (!viewer) {
+    return {
+      latestPostId: null,
+      latestCreatedAt: null,
+    };
+  }
 
   const latestPost = await myPrisma.post.findFirst({
     where: getVisiblePostWhereFollowingFeed(viewer.id),
@@ -371,14 +392,15 @@ export async function getFollowingFeedHeadQuery(): Promise<ForYouFeedHead> {
 export async function getPostDetailQuery(
   slug: string,
 ): Promise<PostDetailResult | null> {
-  const viewer = await requireViewerProfile();
+  const viewer = await getViewerProfile();
+  const viewerId = viewer?.id ?? null;
 
   const post = await myPrisma.post.findFirst({
     where: {
       slug,
-      ...getVisiblePostWhere(viewer.id),
+      ...getVisiblePostWhere(viewerId),
     },
-    select: getPostSelect(viewer.id),
+    select: getPostSelect(viewerId),
   });
 
   if (!post) {
@@ -386,7 +408,7 @@ export async function getPostDetailQuery(
   }
 
   return {
-    post: serializePost(post, viewer.id),
+    post: serializePost(post, viewerId),
   };
 }
 
@@ -394,17 +416,18 @@ export async function getPostCommentsQuery(input: {
   slug: string;
   sort: CommentSort;
 }): Promise<PostCommentsResult> {
-  const viewer = await requireViewerProfile();
+  const viewer = await getViewerProfile();
+  const viewerId = viewer?.id ?? null;
 
   const comments = await myPrisma.comment.findMany({
     where: {
       deletedAt: null,
       responseToCommentId: null, // Ont ne veux pas prendre le post Parents car on est déjà sur le post parents //
 
-      author: getVisibleAuthorWhere(viewer.id),
+      author: getVisibleAuthorWhere(viewerId),
       post: {
         slug: input.slug,
-        ...getVisiblePostWhere(viewer.id),
+        ...getVisiblePostWhere(viewerId),
       },
     },
     orderBy:
@@ -415,11 +438,11 @@ export async function getPostCommentsQuery(input: {
     // Si meme nombre de Likes, ont fallback sur le plus récents //
     // Sinon on tri plus récents c'est tout//
 
-    select: getCommentSelect(viewer.id),
+    select: getCommentSelect(viewerId),
   });
 
   return {
-    comments: comments.map((comment) => serializeComment(comment, viewer.id)),
+    comments: comments.map((comment) => serializeComment(comment, viewerId)),
     sort: input.sort,
   };
 }
@@ -428,28 +451,29 @@ export async function getCommentThreadQuery(input: {
   slug: string;
   commentId: string;
 }): Promise<CommentThreadResult | null> {
-  const viewer = await requireViewerProfile();
+  const viewer = await getViewerProfile();
+  const viewerId = viewer?.id ?? null;
 
   // Ici ont veut juste sortir avec 2 constante, post et le commentaires actuelle //
   const [post, currentComment] = await Promise.all([
     myPrisma.post.findFirst({
       where: {
         slug: input.slug,
-        ...getVisiblePostWhere(viewer.id),
+        ...getVisiblePostWhere(viewerId),
       },
-      select: getPostSelect(viewer.id),
+      select: getPostSelect(viewerId),
     }),
     myPrisma.comment.findFirst({
       where: {
         id: input.commentId,
         deletedAt: null,
-        author: getVisibleAuthorWhere(viewer.id),
+        author: getVisibleAuthorWhere(viewerId),
         post: {
           slug: input.slug,
-          ...getVisiblePostWhere(viewer.id),
+          ...getVisiblePostWhere(viewerId),
         },
       },
-      select: getCommentSelect(viewer.id),
+      select: getCommentSelect(viewerId),
     }),
   ]);
 
@@ -464,10 +488,10 @@ export async function getCommentThreadQuery(input: {
           where: {
             id: currentComment.responseToCommentId,
             deletedAt: null,
-            author: getVisibleAuthorWhere(viewer.id),
+            author: getVisibleAuthorWhere(viewerId),
             postId: currentComment.postId,
           },
-          select: getCommentSelect(viewer.id),
+          select: getCommentSelect(viewerId),
         })
       : Promise.resolve(null),
     //Ont cancel si on a rien trouvé ça veut dire qu'il répond pas a un commentaire mais au post directement //
@@ -476,20 +500,20 @@ export async function getCommentThreadQuery(input: {
         deletedAt: null,
         // Tous les commentaires qui ont responseToCommentId l'ID de mon commentaires sont des replies de mon commentaires //
         responseToCommentId: currentComment.id,
-        author: getVisibleAuthorWhere(viewer.id),
+        author: getVisibleAuthorWhere(viewerId),
         postId: currentComment.postId,
       },
       orderBy: [{ createdAt: "desc" }],
-      select: getCommentSelect(viewer.id),
+      select: getCommentSelect(viewerId),
     }),
   ]);
 
   return {
-    post: serializePost(post, viewer.id),
+    post: serializePost(post, viewerId),
     parentComment: parentComment
-      ? serializeComment(parentComment, viewer.id)
+      ? serializeComment(parentComment, viewerId)
       : null,
-    comment: serializeComment(currentComment, viewer.id),
-    replies: replies.map((reply) => serializeComment(reply, viewer.id)),
+    comment: serializeComment(currentComment, viewerId),
+    replies: replies.map((reply) => serializeComment(reply, viewerId)),
   };
 }
