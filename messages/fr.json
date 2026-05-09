@@ -32,6 +32,35 @@
     "action": "Se connecter",
     "cancel": "Plus tard"
   },
+  "notFound": {
+    "general": {
+      "pageTitle": "Page introuvable",
+      "pageDescription": "Cette page n'existe pas ou n'est plus disponible.",
+      "eyebrow": "Erreur 404",
+      "title": "On n'a pas trouvé cette page",
+      "description": "Le lien est peut-être incorrect, ou la ressource a été déplacée ou supprimée.",
+      "primaryAction": "Retour au feed",
+      "secondaryAction": "Rechercher"
+    },
+    "profile": {
+      "pageTitle": "Profil introuvable",
+      "pageDescription": "Ce profil n'existe pas ou n'est plus accessible.",
+      "eyebrow": "Profil indisponible",
+      "title": "Ce profil est introuvable",
+      "description": "L'utilisateur a peut-être changé de nom, supprimé son compte, ou ce profil n'est plus visible.",
+      "primaryAction": "Rechercher un profil",
+      "secondaryAction": "Retour au feed"
+    },
+    "post": {
+      "pageTitle": "Post introuvable",
+      "pageDescription": "Ce post n'existe pas ou n'est plus accessible.",
+      "eyebrow": "Post indisponible",
+      "title": "Ce post est introuvable",
+      "description": "Le post a peut-être été supprimé, modéré, ou le lien que tu as suivi n'est plus valide.",
+      "primaryAction": "Retour au feed",
+      "secondaryAction": "Voir les tendances"
+    }
+  },
   "login": {
     "hero": "Là où les conversations créent du lien.",
     "title": {

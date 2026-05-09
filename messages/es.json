@@ -32,6 +32,35 @@
     "action": "Iniciar sesión",
     "cancel": "Más tarde"
   },
+  "notFound": {
+    "general": {
+      "pageTitle": "Página no encontrada",
+      "pageDescription": "Esta página no existe o ya no está disponible.",
+      "eyebrow": "Error 404",
+      "title": "No encontramos esta página",
+      "description": "Puede que el enlace sea incorrecto, o que el recurso se haya movido o eliminado.",
+      "primaryAction": "Volver al feed",
+      "secondaryAction": "Buscar"
+    },
+    "profile": {
+      "pageTitle": "Perfil no encontrado",
+      "pageDescription": "Este perfil no existe o ya no es accesible.",
+      "eyebrow": "Perfil no disponible",
+      "title": "No se encontró este perfil",
+      "description": "El usuario puede haber cambiado su nombre, eliminado su cuenta, o este perfil ya no es visible.",
+      "primaryAction": "Buscar perfiles",
+      "secondaryAction": "Volver al feed"
+    },
+    "post": {
+      "pageTitle": "Post no encontrado",
+      "pageDescription": "Este post no existe o ya no es accesible.",
+      "eyebrow": "Post no disponible",
+      "title": "No se encontró este post",
+      "description": "El post puede haber sido eliminado, moderado, o el enlace que seguiste ya no es válido.",
+      "primaryAction": "Volver al feed",
+      "secondaryAction": "Ver tendencias"
+    }
+  },
   "login": {
     "hero": "Donde las conversaciones conectan.",
     "title": {

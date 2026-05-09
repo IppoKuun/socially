@@ -32,6 +32,35 @@
     "action": "Sign in",
     "cancel": "Later"
   },
+  "notFound": {
+    "general": {
+      "pageTitle": "Page not found",
+      "pageDescription": "This page does not exist or is no longer available.",
+      "eyebrow": "Error 404",
+      "title": "We could not find this page",
+      "description": "The link may be incorrect, or the resource may have been moved or deleted.",
+      "primaryAction": "Back to feed",
+      "secondaryAction": "Search"
+    },
+    "profile": {
+      "pageTitle": "Profile not found",
+      "pageDescription": "This profile does not exist or is no longer accessible.",
+      "eyebrow": "Profile unavailable",
+      "title": "This profile could not be found",
+      "description": "The user may have changed their username, deleted their account, or this profile may no longer be visible.",
+      "primaryAction": "Search profiles",
+      "secondaryAction": "Back to feed"
+    },
+    "post": {
+      "pageTitle": "Post not found",
+      "pageDescription": "This post does not exist or is no longer accessible.",
+      "eyebrow": "Post unavailable",
+      "title": "This post could not be found",
+      "description": "The post may have been deleted, moderated, or the link you followed may no longer be valid.",
+      "primaryAction": "Back to feed",
+      "secondaryAction": "View trending"
+    }
+  },
   "login": {
     "hero": "Where conversations connect.",
     "title": {
