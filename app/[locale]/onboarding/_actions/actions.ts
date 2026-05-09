@@ -44,6 +44,7 @@ export async function verifyUsername(
 
   const username = await myPrisma.userProfile.findUnique({
     where: { username: usernameInput },
+    select: { userId: true },
   });
 
   if (username && username.userId !== session?.user.id) {

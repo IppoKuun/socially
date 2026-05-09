@@ -12,6 +12,7 @@ export default async function generateSlug(title: string) {
   const slug = `${baseSlug}-${slugID}`;
   const verifySlug = await myPrisma.post.findUnique({
     where: { slug },
+    select: { id: true },
   });
   if (verifySlug) return await generateSlug(title);
 

@@ -15,6 +15,7 @@ export async function Like(postId: string) {
 
   const user = await myPrisma.userProfile.findFirst({
     where: { userId: session.user.id, deletedAt: null },
+    select: { id: true },
   });
 
   if (!user) {
@@ -32,6 +33,7 @@ export async function Like(postId: string) {
           user_id: user.id,
         },
       },
+      select: { id: true },
     });
 
     if (isLiked) {
@@ -84,6 +86,7 @@ export async function commentLike(commentId: string) {
 
   const user = await myPrisma.userProfile.findFirst({
     where: { userId: session.user.id, deletedAt: null },
+    select: { id: true },
   });
 
   if (!user) {
@@ -102,6 +105,7 @@ export async function commentLike(commentId: string) {
           user_id: user.id,
         },
       },
+      select: { id: true },
     });
 
     if (isLiked) {

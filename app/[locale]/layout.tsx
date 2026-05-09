@@ -33,6 +33,7 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
     const id = session.user.id;
     const user = await myPrisma.userProfile.findUnique({
       where: { userId: id },
+      select: { hasOnboarded: true },
     });
 
     if (!user?.hasOnboarded && !pathname?.includes("/onboarding")) {

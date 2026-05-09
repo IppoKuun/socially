@@ -14,6 +14,7 @@ export default async function report(postId: string) {
 
   const user = await myPrisma.userProfile.findFirst({
     where: { userId: session.user.id, deletedAt: null },
+    select: { id: true },
   });
 
   if (!user) {
@@ -37,6 +38,7 @@ export default async function report(postId: string) {
   try {
     const createReport = await myPrisma.report.create({
       data: { reporterId: user.id, postId },
+      select: { id: true },
     });
 
     if (!createReport) {

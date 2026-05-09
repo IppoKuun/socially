@@ -24,6 +24,7 @@ export default async function createPost(
   }
   const user = await myPrisma.userProfile.findFirst({
     where: { userId: session.user.id, deletedAt: null },
+    select: { id: true },
   });
   if (!user) {
     return { ok: false, userMsg: t("profileNotFound") };
@@ -174,6 +175,7 @@ export default async function createPost(
       imagesPublicId: ids,
       userId: user.id,
     },
+    select: { id: true, moderationStatus: true },
   });
 
   if (!created) {

@@ -138,7 +138,7 @@ export default function PostCard({
       className={cn(
         "relative overflow-hidden rounded-[4px] border-b border-b-slate-500 bg-transparent    p-6 shadow-[0_28px_80px_-54px_rgba(0,0,0,0.98)]",
         compact
-          ? "px-4 py-4"
+          ? "px-4 py-4 border border-white/5 "
           : isProfile
             ? "px-4 py-4 sm:px-5 sm:py-5"
             : "px-5 py-5 sm:px-6 sm:py-6",

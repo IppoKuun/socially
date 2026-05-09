@@ -18,6 +18,7 @@ export default async function OnboardingPage() {
   const id = session!.user.id;
   const user = await myPrisma.userProfile.findUnique({
     where: { userId: id },
+    select: { hasOnboarded: true, onboardedStep: true },
   });
 
   if (user?.hasOnboarded) {

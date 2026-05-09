@@ -13,6 +13,7 @@ export default async function deletePost(id: string) {
 
   const user = await myPrisma.userProfile.findFirst({
     where: { userId: session.user.id, deletedAt: null },
+    select: { id: true },
   });
 
   const post = await myPrisma.post.findFirst({
@@ -21,6 +22,7 @@ export default async function deletePost(id: string) {
       deletedAt: null,
       author: { deletedAt: null },
     },
+    select: { id: true, imagesPublicId: true, imagesUrl: true, userId: true },
   });
 
   if (!post) {

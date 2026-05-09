@@ -16,6 +16,7 @@ export default async function OnboardingLayout({
   }
   const user = await myPrisma.userProfile.findUnique({
     where: { userId: session?.user.id },
+    select: { onboardedStep: true },
   });
 
   const step = user?.onboardedStep ?? 0;
