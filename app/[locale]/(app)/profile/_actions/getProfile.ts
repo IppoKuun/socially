@@ -63,6 +63,7 @@ export default async function getProfilePage(username: string) {
           post: {
             where: {
               deletedAt: null,
+              moderationStatus: { not: "UNSAFE" },
             },
           },
           relationWhereUserIsFollowed: true,
@@ -73,6 +74,7 @@ export default async function getProfilePage(username: string) {
         orderBy: { createdAt: "desc" },
         where: {
           deletedAt: null,
+          moderationStatus: { not: "UNSAFE" },
         },
         take: 3,
         select: {

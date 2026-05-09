@@ -46,6 +46,7 @@ export async function Like(postId: string) {
         where: {
           id: postId,
           deletedAt: null,
+          moderationStatus: { not: "UNSAFE" },
           author: { deletedAt: null },
         },
         select: { id: true, userId: true },
@@ -139,6 +140,7 @@ export async function commentLike(commentId: string) {
           author: { deletedAt: null },
           post: {
             deletedAt: null,
+            moderationStatus: { not: "UNSAFE" },
             author: { deletedAt: null },
           },
         },

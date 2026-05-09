@@ -29,6 +29,7 @@ export default async function report(postId: string) {
     where: {
       id: postId,
       deletedAt: null,
+      moderationStatus: { not: "UNSAFE" },
       author: { deletedAt: null },
     },
     select: { id: true },

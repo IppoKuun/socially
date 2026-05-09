@@ -52,7 +52,11 @@ async function getPostNotificationsForUser(userId: string) {
       type: { in: ["LIKE", "COMMENT"] },
       postId: { not: null },
       actor: { deletedAt: null },
-      post: { deletedAt: null, author: { deletedAt: null } },
+      post: {
+        deletedAt: null,
+        moderationStatus: { not: "UNSAFE" },
+        author: { deletedAt: null },
+      },
     },
     orderBy: { createdAt: "desc" },
     take: 200,

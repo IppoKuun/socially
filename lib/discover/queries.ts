@@ -33,7 +33,7 @@ export type DiscoverProfileCandidate = {
 
 async function getPostDiscoverCandidate() {
   return await myPrisma.post.findMany({
-    where: { deletedAt: null },
+    where: { deletedAt: null, moderationStatus: { not: "UNSAFE" } },
     select: {
       author: {
         select: {
@@ -240,6 +240,7 @@ export async function getPostForCategory(
         deletedAt: null,
       },
       deletedAt: null,
+      moderationStatus: { not: "UNSAFE" },
       categories: { has: category },
     },
     select: {

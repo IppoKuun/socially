@@ -200,6 +200,7 @@ export async function getQueriesResult(queries: string): Promise<SearchResult> {
     myPrisma.post.findMany({
       where: {
         deletedAt: null,
+        moderationStatus: { not: "UNSAFE" },
         author: getVisibleAuthorWhere(user?.id),
         OR: [
           { title: { contains: normalizedQuery, mode: "insensitive" } },

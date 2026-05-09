@@ -76,6 +76,7 @@ export default async function createComment(
     where: {
       id: postId,
       deletedAt: null,
+      moderationStatus: { not: "UNSAFE" },
       author: { deletedAt: null },
     },
     select: { id: true, userId: true },

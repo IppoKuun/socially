@@ -54,12 +54,14 @@ function getVisibleAuthorWhere(
 function getVisiblePostWhere(viewerId?: string | null): Prisma.PostWhereInput {
   return {
     deletedAt: null,
+    moderationStatus: { not: "UNSAFE" },
     author: getVisibleAuthorWhere(viewerId),
   };
 }
 
 function getPostDetailWhere(viewerId?: string | null): Prisma.PostWhereInput {
   return {
+    moderationStatus: { not: "UNSAFE" },
     author: getVisibleAuthorWhere(viewerId),
   };
 }

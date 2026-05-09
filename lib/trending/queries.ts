@@ -96,6 +96,7 @@ async function getTrendingPostCandidatesFromDb() {
         gte: getTrendingWindowStart(),
       },
       deletedAt: null,
+      moderationStatus: { not: "UNSAFE" },
       likes: {
         // Les post qui ont au moins 1 like. //
         some: {},
