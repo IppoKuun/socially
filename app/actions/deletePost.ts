@@ -33,7 +33,7 @@ export default async function deletePost(id: string) {
     return { ok: false, userMsg: t("forbidden") };
   }
 
-  if (post.imagesUrl) {
+  if (post.imagesPublicId.length > 0) {
     try {
       await deleteCloudinary(post.imagesPublicId);
     } catch (error) {
@@ -51,11 +51,19 @@ export default async function deletePost(id: string) {
     }
   }
 
-  let deletePost;
+  let deletedPost;
 
   try {
-    deletePost = await myPrisma.post.delete({
+    deletedPost = await myPrisma.post.update({
       where: { id },
+      data: {
+        title: "Deleted post",
+        content: null,
+        imagesUrl: [],
+        imagesPublicId: [],
+        deletedAt: new Date(),
+      },
+      select: { id: true },
     });
   } catch (error) {
     console.error("Impossible de supprimer le post", error);
@@ -70,7 +78,7 @@ export default async function deletePost(id: string) {
     return { ok: false, userMsg: t("deleteFailed") };
   }
 
-  if (!deletePost) {
+  if (!deletedPost) {
     return { ok: false, userMsg: t("deleteFailed") };
   }
   return { ok: true, userMsg: "" };
