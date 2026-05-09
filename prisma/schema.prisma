@@ -14,6 +14,13 @@ enum Theme {
   @@schema("app")
 }
 
+enum EmailStatus {
+  SENT
+  FAILED
+
+  @@schema("app")
+}
+
 // ModerationStatus est le status que renvoie l'IA apres avoir placé analysé le post //
 
 enum ModerationStatus {
