@@ -58,6 +58,12 @@ function getVisiblePostWhere(viewerId?: string | null): Prisma.PostWhereInput {
   };
 }
 
+function getPostDetailWhere(viewerId?: string | null): Prisma.PostWhereInput {
+  return {
+    author: getVisibleAuthorWhere(viewerId),
+  };
+}
+
 function getVisiblePostWhereFollowingFeed(
   viewerId: string,
 ): Prisma.PostWhereInput {
@@ -92,6 +98,7 @@ function getPostSelect(viewerId?: string | null) {
     title: true,
     content: true,
     createdAt: true,
+    deletedAt: true,
     moderationStatus: true,
     imagesUrl: true,
     userId: true,
@@ -212,6 +219,7 @@ function serializePost(post: PostRecord, viewerId?: string | null): FeedPost {
     content: post.content,
     // Conversion de Date pour User //
     createdAt: post.createdAt.toISOString(),
+    deletedAt: post.deletedAt?.toISOString() ?? null,
     moderationStatus: post.moderationStatus,
     images: post.imagesUrl,
     likeCount: post._count.likes,
@@ -398,7 +406,7 @@ export async function getPostDetailQuery(
   const post = await myPrisma.post.findFirst({
     where: {
       slug,
-      ...getVisiblePostWhere(viewerId),
+      ...getPostDetailWhere(viewerId),
     },
     select: getPostSelect(viewerId),
   });
@@ -427,7 +435,7 @@ export async function getPostCommentsQuery(input: {
       author: getVisibleAuthorWhere(viewerId),
       post: {
         slug: input.slug,
-        ...getVisiblePostWhere(viewerId),
+        ...getPostDetailWhere(viewerId),
       },
     },
     orderBy:
@@ -459,7 +467,7 @@ export async function getCommentThreadQuery(input: {
     myPrisma.post.findFirst({
       where: {
         slug: input.slug,
-        ...getVisiblePostWhere(viewerId),
+        ...getPostDetailWhere(viewerId),
       },
       select: getPostSelect(viewerId),
     }),
@@ -470,7 +478,7 @@ export async function getCommentThreadQuery(input: {
         author: getVisibleAuthorWhere(viewerId),
         post: {
           slug: input.slug,
-          ...getVisiblePostWhere(viewerId),
+          ...getPostDetailWhere(viewerId),
         },
       },
       select: getCommentSelect(viewerId),
