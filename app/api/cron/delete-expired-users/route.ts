@@ -84,7 +84,6 @@ async function anonymizeDeletedProfile(profile: {
         language: "deleted",
         pinnedPostId: null,
         hasAcceptedCookies: false,
-        last_login_at: null,
         last_seen_at: null,
         utm_source: null,
         utm_medium: null,

@@ -39,7 +39,6 @@ export async function GET() {
         createdAt: true,
         isPro: true,
         hasAcceptedCookies: true,
-        last_login_at: true,
         last_seen_at: true,
         utm_source: true,
         utm_medium: true,
@@ -161,7 +160,6 @@ export async function GET() {
       })),
       tracking: {
         hasAcceptedCookies: viewer.hasAcceptedCookies,
-        lastLoginAt: viewer.last_login_at?.toISOString() ?? null,
         lastSeenAt: viewer.last_seen_at?.toISOString() ?? null,
         utmSource: viewer.utm_source,
         utmMedium: viewer.utm_medium,

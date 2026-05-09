@@ -7,6 +7,7 @@ export default async function FeedbackPage() {
   const t = await getTranslations("appShell.pages.feedback");
 
   return (
+    // Page en demo pour l'instant, c'est pas grave //
     <AppPageShell title={t("title")} description={t("description")}>
       <PagePlaceholderCard message={t("placeholder")} />
     </AppPageShell>

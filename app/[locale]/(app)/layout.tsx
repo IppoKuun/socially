@@ -3,6 +3,7 @@ import { AppNavigationShell } from "./_components/navigation-shell";
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 import { RestoreAccountModal } from "@/app/components/RestoreAccountModal";
+import { touchUserLastSeen } from "@/lib/user-activity";
 
 export default async function AuthenticatedAppLayout({
   children,
@@ -20,21 +21,34 @@ export default async function AuthenticatedAppLayout({
           displayname: true,
           username: true,
           deletedAt: true,
+          last_seen_at: true,
         },
       })
     : null;
 
   const isSoftDelete = userProfile?.deletedAt;
 
-  const unreadNotificationCount = userProfile
-    ? await myPrisma.notifications.count({
+  let unreadNotificationCount = 0;
+
+  if (userProfile) {
+    const [notificationCount] = await Promise.all([
+      myPrisma.notifications.count({
         where: {
           userId: userProfile.id,
           isRead: false,
           actor: { deletedAt: null },
         },
-      })
-    : 0;
+      }),
+      isSoftDelete
+        ? Promise.resolve()
+        : touchUserLastSeen({
+            profileId: userProfile.id,
+            lastSeenAt: userProfile.last_seen_at,
+          }),
+    ]);
+
+    unreadNotificationCount = notificationCount;
+  }
 
   const navigationUser = {
     id: userProfile?.id ?? null,
