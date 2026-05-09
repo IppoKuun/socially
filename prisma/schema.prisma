@@ -192,7 +192,7 @@ model Report {
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   reporterId String
-  reporter   UserProfile @relation(fields: [reporterId], references: [id])
+  reporter   UserProfile @relation(fields: [reporterId], references: [id], onDelete: Cascade)
 
   @@unique([reporterId, postId])
   @@index([postId])
@@ -230,10 +230,10 @@ model PostLike {
   id String @id @default(cuid())
 
   post_id String
-  post    Post   @relation(fields: [post_id], references: [id])
+  post    Post   @relation(fields: [post_id], references: [id], onDelete: Cascade)
 
   user_id String
-  user    UserProfile @relation(fields: [user_id], references: [id])
+  user    UserProfile @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -249,10 +249,10 @@ model CommentLike {
   id String @id @default(cuid())
 
   comment_id String
-  comment    Comment @relation(fields: [comment_id], references: [id])
+  comment    Comment @relation(fields: [comment_id], references: [id], onDelete: Cascade)
 
   user_id String
-  user    UserProfile @relation(fields: [user_id], references: [id])
+  user    UserProfile @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -267,10 +267,10 @@ model Follow {
   createdAt DateTime @default(now())
 
   followedProfileId String
-  followedProfile   UserProfile @relation("FollowedProfile", fields: [followedProfileId], references: [id])
+  followedProfile   UserProfile @relation("FollowedProfile", fields: [followedProfileId], references: [id], onDelete: Cascade)
 
   followerProfileId String
-  followerProfile   UserProfile @relation("FollowerProfile", fields: [followerProfileId], references: [id])
+  followerProfile   UserProfile @relation("FollowerProfile", fields: [followerProfileId], references: [id], onDelete: Cascade)
 
   @@unique([followedProfileId, followerProfileId])
   @@index([followerProfileId, followedProfileId])
@@ -281,10 +281,10 @@ model Follow {
 model Block {
   id          String      @id @default(cuid())
   blockedById String
-  blocked     UserProfile @relation("blocked", fields: [blockedById], references: [id])
+  blocked     UserProfile @relation("blocked", fields: [blockedById], references: [id], onDelete: Cascade)
 
   blockerId String
-  blocker   UserProfile @relation("Blocker", fields: [blockerId], references: [id])
+  blocker   UserProfile @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -347,7 +347,7 @@ model Notifications {
   createdAt DateTime @default(now())
 
   postId String?
-  post   Post?   @relation(fields: [postId], references: [id])
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   actorId String
   actor   UserProfile @relation("TriggeredNotifications", fields: [actorId], references: [id], onDelete: Cascade)
@@ -356,7 +356,7 @@ model Notifications {
   isRead Boolean            @default(false)
 
   userId    String
-  userNotif UserProfile @relation("ReceiverNotifications", fields: [userId], references: [id])
+  userNotif UserProfile @relation("ReceiverNotifications", fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([actorId, userId, type, postId])
   @@index([userId, createdAt])
@@ -373,7 +373,7 @@ model SearchHistory {
   query     String
 
   userId String
-  user   UserProfile @relation(fields: [userId], references: [id])
+  user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
   @@index([userId, query])
