@@ -2,7 +2,7 @@
 
 import React, { useActionState, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import Image from "next/image";
 import createProfile, { getTrackingDataForAuth } from "./_actions/actions";
 import { signIn } from "@/lib/authClient";
@@ -229,7 +229,6 @@ export default function LoginPageClient() {
                   placeholder={t("password")}
                   onChange={(e) => setPassword(e.target.value)}
                 ></input>
-                <span className={helperTextClass}>{t("forgotPassword")}</span>
               </div>
             </div>
             <button
@@ -335,6 +334,9 @@ export default function LoginPageClient() {
                   placeholder={t("password")}
                   onChange={(e) => setPassword(e.target.value)}
                 ></input>
+                <Link href="/forgot-password" className={helperTextClass}>
+                  {t("forgotPassword")}
+                </Link>
               </div>
             </div>
             <button

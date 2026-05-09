@@ -5,6 +5,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { myPrisma } from "./prisma";
 import { i18n } from "@better-auth/i18n";
 import { authTranslations } from "./auth-i18n";
+import { sendEmail } from "./mail/sendMaill";
 
 type TrackingData = {
   utm_source?: string | null;
@@ -24,7 +25,81 @@ const createAuth = () =>
     baseURL: process.env.NEXT_PUBLIC_URL ?? "http://localhost:3000",
     database: prismaAdapter(myPrisma, { provider: "postgresql" }),
     // AVEC RESEND AJOUTEZ EMAIL VERIFICATIONS //
-    emailAndPassword: { enabled: true },
+    emailAndPassword: {
+      enabled: true,
+      minPasswordLength: 8,
+      maxPasswordLength: 128,
+      resetPasswordTokenExpiresIn: 60 * 60,
+      // Déconnecte toutes les sessions après changement MDP
+
+      revokeSessionsOnPasswordReset: true,
+
+      sendResetPassword: async ({ user, url, token }, request) => {
+        const result = await sendEmail({
+          to: user.email,
+          subject: "Réinitialisation de votre mot de passe",
+          html: `
+          <div style="font-family: sans-serif; line-height: 1.6;">
+            <h1>Réinitialisation du mot de passe</h1>
+
+            <p>
+              Vous avez demandé à réinitialiser votre mot de passe.
+            </p>
+
+            <p>
+              Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe :
+            </p>
+
+            <a
+              href="${url}"
+              style="
+                display: inline-block;
+                margin-top: 16px;
+                padding: 12px 20px;
+                background: black;
+                color: white;
+                text-decoration: none;
+                border-radius: 999px;
+              "
+            >
+              Réinitialiser mon mot de passe
+            </a>
+
+            <p style="margin-top: 24px;">
+              Ce lien expire dans 1 heure.
+            </p>
+
+            <p>
+              Si vous n'êtes pas à l'origine de cette demande,
+              vous pouvez ignorer cet email.
+            </p>
+          </div>
+        `,
+          text: `
+Réinitialisation du mot de passe
+
+Ouvrez ce lien pour choisir un nouveau mot de passe :
+
+${url}
+
+Ce lien expire dans 1 heure.
+        `,
+        });
+
+        if (!result.ok) {
+          console.error(
+            "Impossible d'envoyer l'email de reset password",
+            result.error,
+          );
+
+          throw new Error("RESET_PASSWORD_EMAIL_FAILED");
+        }
+      },
+
+      onPasswordReset: async ({ user }, request) => {
+        console.log(`Password reset successful for user ${user.id}`);
+      },
+    },
 
     socialProviders: {
       google: {

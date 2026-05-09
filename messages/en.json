@@ -101,6 +101,37 @@
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in"
   },
+  "passwordReset": {
+    "request": {
+      "title": "Reset your password",
+      "description": "Enter the email address for your account. If it exists, you will receive a reset link.",
+      "success": "If an account exists with this address, a password reset email has been sent.",
+      "successDescription": "Check your inbox and open the link to choose a new password.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "emptyEmail": "Please enter your email address.",
+      "fallbackError": "Unable to send the password reset email right now.",
+      "pending": "Sending...",
+      "submit": "Send reset link",
+      "backToLogin": "Back to sign in"
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "description": "Your new password must contain at least 8 characters.",
+      "invalidTokenDescription": "The reset link is invalid or has expired.",
+      "passwordLabel": "New password",
+      "passwordPlaceholder": "Your new password",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat the password",
+      "invalidToken": "This reset link is invalid or has expired.",
+      "passwordTooShort": "The password must contain at least 8 characters.",
+      "passwordMismatch": "The two passwords do not match.",
+      "fallbackError": "Unable to update your password right now.",
+      "pending": "Updating...",
+      "submit": "Update password",
+      "requestNewLink": "Request a new link"
+    }
+  },
   "settings": {
     "title": "Settings",
     "description": "Centralize preferences and account management entry points.",

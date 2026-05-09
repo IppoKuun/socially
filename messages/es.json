@@ -101,6 +101,37 @@
     "loginPrompt": "¿Ya tienes una cuenta?",
     "loginLink": "Iniciar sesión"
   },
+  "passwordReset": {
+    "request": {
+      "title": "Restablecer la contraseña",
+      "description": "Indica el correo de tu cuenta. Si existe, recibirás un enlace de restablecimiento.",
+      "success": "Si existe una cuenta con esta dirección, se ha enviado un email de restablecimiento.",
+      "successDescription": "Revisa tu bandeja de entrada y abre el enlace para elegir una nueva contraseña.",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@ejemplo.com",
+      "emptyEmail": "Introduce tu correo electrónico.",
+      "fallbackError": "No se puede enviar el email de restablecimiento en este momento.",
+      "pending": "Enviando...",
+      "submit": "Enviar enlace",
+      "backToLogin": "Volver al inicio de sesión"
+    },
+    "reset": {
+      "title": "Elegir una nueva contraseña",
+      "description": "Tu nueva contraseña debe tener al menos 8 caracteres.",
+      "invalidTokenDescription": "El enlace de restablecimiento no es válido o ha expirado.",
+      "passwordLabel": "Nueva contraseña",
+      "passwordPlaceholder": "Tu nueva contraseña",
+      "confirmPasswordLabel": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Repite la contraseña",
+      "invalidToken": "Este enlace de restablecimiento no es válido o ha expirado.",
+      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
+      "passwordMismatch": "Las dos contraseñas no coinciden.",
+      "fallbackError": "No se puede modificar tu contraseña en este momento.",
+      "pending": "Modificando...",
+      "submit": "Modificar contraseña",
+      "requestNewLink": "Solicitar un nuevo enlace"
+    }
+  },
   "settings": {
     "title": "Settings",
     "description": "Centraliza los accesos a preferencias y gestión de la cuenta.",

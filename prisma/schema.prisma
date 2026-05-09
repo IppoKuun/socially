@@ -408,6 +408,18 @@ model SearchHistory {
   @@schema("app")
 }
 
+model EmailLog {
+  id        String   @id @default(cuid())
+  to        String
+  subject   String
+  status    EmailStatus @default(SENT)
+  error     String?
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
+  @@schema("app")
+}
+
 model StaffProfile {
   id               String    @id @default(cuid())
   displayName      String
@@ -419,6 +431,7 @@ model StaffProfile {
 
   @@schema("auth")
 }
+
 
 // CHAMPS DE BETTER AUTH //
 

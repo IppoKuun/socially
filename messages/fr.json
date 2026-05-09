@@ -101,6 +101,37 @@
     "loginPrompt": "Vous avez déjà un compte ?",
     "loginLink": "Se connecter"
   },
+  "passwordReset": {
+    "request": {
+      "title": "Réinitialiser le mot de passe",
+      "description": "Indiquez l'adresse email de votre compte. Si elle existe, vous recevrez un lien de réinitialisation.",
+      "success": "Si un compte existe avec cette adresse, un email de réinitialisation vient d'être envoyé.",
+      "successDescription": "Consultez votre boîte mail et ouvrez le lien reçu pour choisir un nouveau mot de passe.",
+      "emailLabel": "Adresse email",
+      "emailPlaceholder": "vous@exemple.com",
+      "emptyEmail": "Veuillez renseigner votre adresse email.",
+      "fallbackError": "Impossible d'envoyer l'email de réinitialisation pour le moment.",
+      "pending": "Envoi...",
+      "submit": "Envoyer le lien",
+      "backToLogin": "Retour à la connexion"
+    },
+    "reset": {
+      "title": "Choisir un nouveau mot de passe",
+      "description": "Votre nouveau mot de passe doit contenir au moins 8 caractères.",
+      "invalidTokenDescription": "Le lien de réinitialisation est invalide ou a expiré.",
+      "passwordLabel": "Nouveau mot de passe",
+      "passwordPlaceholder": "Votre nouveau mot de passe",
+      "confirmPasswordLabel": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "Répétez le mot de passe",
+      "invalidToken": "Ce lien de réinitialisation est invalide ou a expiré.",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+      "passwordMismatch": "Les deux mots de passe ne correspondent pas.",
+      "fallbackError": "Impossible de modifier votre mot de passe pour le moment.",
+      "pending": "Modification...",
+      "submit": "Modifier le mot de passe",
+      "requestNewLink": "Demander un nouveau lien"
+    }
+  },
   "settings": {
     "title": "Settings",
     "description": "Centralise les entrées vers les préférences et la gestion du compte.",
