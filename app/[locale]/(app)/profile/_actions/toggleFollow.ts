@@ -1,6 +1,7 @@
 "use server";
 import { getSession } from "@/lib/authSession";
 import { createNotificationIfMissing } from "@/lib/notifications";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 import { getTranslations } from "next-intl/server";
 
@@ -91,9 +92,27 @@ export default async function toggleFollow(username: string) {
         });
       } catch (error) {
         console.error("Unable to create follow notification", error);
+        captureAppException(error, {
+          feature: "notifications",
+          action: "create_follow_notification",
+          level: "warning",
+          extra: {
+            actorProfileId: viewer.id,
+            receiverProfileId: usernameTarget.id,
+          },
+        });
       }
     }
-  } catch {
+  } catch (error) {
+    console.error("Impossible de modifier le follow", error);
+    captureAppException(error, {
+      feature: "profile",
+      action: "toggle_follow",
+      extra: {
+        viewerProfileId: viewer.id,
+        targetProfileId: usernameTarget.id,
+      },
+    });
     return {
       ok: false,
       userMsg: t("databaseError"),

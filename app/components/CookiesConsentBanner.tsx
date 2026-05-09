@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import {
   Dialog,
   DialogContent,
@@ -75,6 +76,15 @@ export default function CookiesConsentBanner({ refere, language }: Props) {
       setOpen(false);
     } catch (error) {
       console.error("Failed to save cookie consent", error);
+      captureAppException(error, {
+        feature: "privacy",
+        action: "save_cookie_consent",
+        level: "warning",
+        extra: {
+          consent,
+          hasPayload: Boolean(consent ? payload : undefined),
+        },
+      });
       setIsSubmitting(false);
     }
   }

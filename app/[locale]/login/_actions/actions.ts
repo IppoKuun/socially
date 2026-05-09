@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import { APIError } from "better-auth";
 import { myError } from "@/lib/myError";
 import { getLocale, getTranslations } from "next-intl/server";
+import { captureAppException } from "@/lib/monitoring/sentry";
 
 export type FormState = {
   userMsg: string | null;
@@ -40,7 +41,14 @@ export async function getTrackingDataForAuth(): Promise<
     .findUnique({
       where: { visitorId },
     })
-    .catch(() => null);
+    .catch((error) => {
+      captureAppException(error, {
+        feature: "auth",
+        action: "load_tracking_data_for_auth",
+        level: "warning",
+      });
+      return null;
+    });
 
   if (!visitor) {
     return undefined;
@@ -89,6 +97,10 @@ export default async function createProfile(
     if (error instanceof myError) {
       return { ok: false, userMsg: error.message };
     } else {
+      captureAppException(error, {
+        feature: "auth",
+        action: "sign_up_email",
+      });
       return { ok: false, userMsg: t("login.error.userMsg") };
     }
   }

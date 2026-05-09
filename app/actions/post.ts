@@ -10,6 +10,39 @@ import { getSession } from "@/lib/authSession";
 import { rateLimits } from "@/lib/rateLimits";
 import { getTranslations } from "next-intl/server";
 import generateSlug from "@/lib/slug";
+import {
+  captureAppException,
+  captureAppMessage,
+} from "@/lib/monitoring/sentry";
+
+async function cleanupUploadedPostImages(
+  ids: string[],
+  action: string,
+  extra?: Record<string, unknown>,
+) {
+  if (ids.length === 0) {
+    return;
+  }
+
+  try {
+    await Promise.all(
+      ids.map((id) =>
+        cloudinary.uploader.destroy(id, { resource_type: "image" }),
+      ),
+    );
+  } catch (error) {
+    console.error("Impossible de supprimer les images Cloudinary du post", error);
+    captureAppException(error, {
+      feature: "post",
+      action,
+      level: "warning",
+      extra: {
+        imageCount: ids.length,
+        ...extra,
+      },
+    });
+  }
+}
 
 export default async function createPost(
   _prevstate: FormState,
@@ -96,15 +129,9 @@ export default async function createPost(
     { error: errorMap },
   );
   if (!parsed.success) {
-    const result = await Promise.all(
-      ids.map((id) =>
-        cloudinary.uploader.destroy(id, { resource_type: "image" }),
-      ),
-    );
-
-    if (!result) {
-      console.error("Impossible de supprimé images après ZOD");
-    }
+    await cleanupUploadedPostImages(ids, "cleanup_after_post_validation_error", {
+      userProfileId: user.id,
+    });
     return { ok: false, errors: parsed.error.flatten().fieldErrors };
   }
 
@@ -121,18 +148,20 @@ export default async function createPost(
     });
   } catch (error) {
     console.error(error);
+    captureAppException(error, {
+      feature: "post",
+      action: "moderate_post",
+      extra: {
+        userProfileId: user.id,
+        imageCount: ids.length,
+      },
+    });
   }
 
   if (!moderation) {
-    const result = await Promise.all(
-      ids.map((id) =>
-        cloudinary.uploader.destroy(id, { resource_type: "image" }),
-      ),
-    );
-
-    if (!result) {
-      console.error("Impossible de supprimé images après rejets d'IA");
-    }
+    await cleanupUploadedPostImages(ids, "cleanup_after_post_moderation_error", {
+      userProfileId: user.id,
+    });
     return {
       ok: false,
       userMsg: t("moderationUnavailable"),
@@ -140,17 +169,11 @@ export default async function createPost(
   }
 
   if (moderation.moderationStatus === "UNSAFE") {
-    const result = await Promise.all(
-      ids.map((id) =>
-        cloudinary.uploader.destroy(id, { resource_type: "image" }),
-      ),
-    );
-
     // Ici, ont logge l'erreur pour nous meme et pas pour User car aucune utilisé a ce qu'il sois
     // au courant que l'image n'est pas réussi a cloudinary Après que son poste est été jugée unsafe //
-    if (!result) {
-      console.error("Impossible de supprimé images après rejets d'IA");
-    }
+    await cleanupUploadedPostImages(ids, "cleanup_after_post_rejected_by_ai", {
+      userProfileId: user.id,
+    });
 
     return {
       ok: false,
@@ -164,30 +187,51 @@ export default async function createPost(
 
   const postSlug = await generateSlug(parsed.data.title);
 
-  const created = await myPrisma.post.create({
-    data: {
-      title: parsed.data.title,
-      moderationStatus: moderation.moderationStatus,
-      slug: String(postSlug),
-      content: parsed.data?.content,
-      imagesUrl: parsed.data.imagesUrl ?? [],
-      categories: IAcategories,
-      imagesPublicId: ids,
-      userId: user.id,
-    },
-    select: { id: true, moderationStatus: true },
-  });
+  let created;
+
+  try {
+    created = await myPrisma.post.create({
+      data: {
+        title: parsed.data.title,
+        moderationStatus: moderation.moderationStatus,
+        slug: String(postSlug),
+        content: parsed.data?.content,
+        imagesUrl: parsed.data.imagesUrl ?? [],
+        categories: IAcategories,
+        imagesPublicId: ids,
+        userId: user.id,
+      },
+      select: { id: true, moderationStatus: true },
+    });
+  } catch (error) {
+    console.error("Impossible de créer le post", error);
+    captureAppException(error, {
+      feature: "post",
+      action: "create_post",
+      extra: {
+        userProfileId: user.id,
+        imageCount: ids.length,
+        moderationStatus: moderation.moderationStatus,
+      },
+    });
+    await cleanupUploadedPostImages(ids, "cleanup_after_post_create_error", {
+      userProfileId: user.id,
+    });
+    return { ok: false, userMsg: t("createFailed") };
+  }
 
   if (!created) {
-    const result = await Promise.all(
-      ids.map((id) =>
-        cloudinary.uploader.destroy(id, { resource_type: "image" }),
-      ),
-    );
-
-    if (!result) {
-      console.error("Impossible de supprimé images après rejets d'IA");
-    }
+    captureAppMessage("Post creation returned no record", {
+      feature: "post",
+      action: "create_post_empty_result",
+      extra: {
+        userProfileId: user.id,
+        imageCount: ids.length,
+      },
+    });
+    await cleanupUploadedPostImages(ids, "cleanup_after_empty_post_create", {
+      userProfileId: user.id,
+    });
     return { ok: false, userMsg: t("createFailed") };
   }
 

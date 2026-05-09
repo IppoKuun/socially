@@ -1,6 +1,7 @@
 "use server";
 
 import { getSession } from "@/lib/authSession";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -51,6 +52,14 @@ export default async function unblockUserAction(
     }
   } catch (error) {
     console.error("Impossible de débloquer ce profil", error);
+    captureAppException(error, {
+      feature: "settings",
+      action: "unblock_user",
+      extra: {
+        viewerProfileId: viewer.id,
+        blockedProfileId,
+      },
+    });
     return {
       ok: false,
       userMsg: "Impossible de débloquer ce profil pour le moment.",

@@ -1,4 +1,5 @@
 import deleteCloudinary from "@/lib/cloudinaryConfig";
+import { captureAppException, captureAppMessage } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 
 const DELETE_GRACE_PERIOD_DAYS = 30;
@@ -113,6 +114,15 @@ async function anonymizeDeletedProfile(profile: {
         profileId: profile.id,
         error,
       });
+      captureAppException(error, {
+        feature: "account_deletion",
+        action: "delete_anonymized_profile_media",
+        level: "warning",
+        extra: {
+          profileId: profile.id,
+          mediaCount: mediaPublicIds.length,
+        },
+      });
     }
   }
 }
@@ -121,6 +131,11 @@ export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
 
   if (!process.env.CRON_SECRET) {
+    captureAppMessage("CRON_SECRET is not configured", {
+      feature: "account_deletion",
+      action: "delete_expired_users_cron_config",
+      level: "error",
+    });
     return Response.json(
       { ok: false, error: "CRON_SECRET is not configured" },
       { status: 500 },
@@ -163,6 +178,13 @@ export async function GET(request: Request) {
       console.error("Unable to anonymize expired deleted profile", {
         profileId: profile.id,
         error,
+      });
+      captureAppException(error, {
+        feature: "account_deletion",
+        action: "anonymize_expired_deleted_profile",
+        extra: {
+          profileId: profile.id,
+        },
       });
       failedProfileIds.push(profile.id);
     }

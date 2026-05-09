@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import { myPrisma } from "@/lib/prisma";
 import { createNotificationIfMissing } from "@/lib/notifications";
+import { captureAppException } from "@/lib/monitoring/sentry";
 
 export async function Like(postId: string) {
   const t = await getTranslations("post.actions.like");
@@ -67,10 +68,28 @@ export async function Like(postId: string) {
         });
       } catch (error) {
         console.error("Unable to create like notification", error);
+        captureAppException(error, {
+          feature: "notifications",
+          action: "create_like_notification",
+          level: "warning",
+          extra: {
+            actorProfileId: user.id,
+            receiverProfileId: targetPost.userId,
+            postId: targetPost.id,
+          },
+        });
       }
     }
   } catch (error) {
     console.error(error);
+    captureAppException(error, {
+      feature: "like",
+      action: "toggle_post_like",
+      extra: {
+        userProfileId: user.id,
+        postId,
+      },
+    });
     return { ok: false, userMsg: t("toggleFailed") };
   }
   return { ok: true, userMsg: "" };
@@ -136,6 +155,14 @@ export async function commentLike(commentId: string) {
     }
   } catch (error) {
     console.error(error);
+    captureAppException(error, {
+      feature: "like",
+      action: "toggle_comment_like",
+      extra: {
+        userProfileId: user.id,
+        commentId,
+      },
+    });
     return { ok: false, userMsg: t("toggleFailed") };
   }
   return { ok: true, userMsg: "" };

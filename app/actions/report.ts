@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { getSession } from "@/lib/authSession";
 import { getTranslations } from "next-intl/server";
 import { myPrisma } from "@/lib/prisma";
+import { captureAppException } from "@/lib/monitoring/sentry";
 
 export default async function report(postId: string) {
   const t = await getTranslations("post.actions.report");
@@ -30,6 +31,7 @@ export default async function report(postId: string) {
       deletedAt: null,
       author: { deletedAt: null },
     },
+    select: { id: true },
   });
   if (!post) {
     return { ok: false, userMsg: t("postNotFound") };
@@ -60,6 +62,14 @@ export default async function report(postId: string) {
     }
 
     console.error(error);
+    captureAppException(error, {
+      feature: "report",
+      action: "create_report",
+      extra: {
+        reporterProfileId: user.id,
+        postId,
+      },
+    });
     return { ok: false, userMsg: t("createFailed") };
   }
 }

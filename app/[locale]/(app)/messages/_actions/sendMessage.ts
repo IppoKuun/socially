@@ -3,6 +3,7 @@
 import { getTranslations } from "next-intl/server";
 
 import { getSession } from "@/lib/authSession";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 import { triggerMessageCreated } from "@/lib/pusher/server";
 
@@ -194,6 +195,17 @@ export async function sendMessage(
       await triggerMessageCreated(receiverId, serializedMessage);
     } catch (error) {
       console.error("Unable to trigger realtime message", error);
+      captureAppException(error, {
+        feature: "messages",
+        action: "trigger_message_created_realtime",
+        level: "warning",
+        extra: {
+          conversationId: conversation.id,
+          messageId: serializedMessage.id,
+          senderProfileId: viewer.id,
+          receiverProfileId: receiverId,
+        },
+      });
     }
 
     return {
@@ -203,6 +215,15 @@ export async function sendMessage(
     };
   } catch (error) {
     console.error("Unable to send messageQuery", error);
+    captureAppException(error, {
+      feature: "messages",
+      action: "send_message",
+      extra: {
+        conversationId: conversation.id,
+        senderProfileId: viewer.id,
+        receiverProfileId: receiverId,
+      },
+    });
 
     return {
       ok: false,

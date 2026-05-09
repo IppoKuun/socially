@@ -1,6 +1,7 @@
 "use server";
 
 import { getSession } from "@/lib/authSession";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
@@ -60,6 +61,14 @@ export default async function modifyEmailActions(
       "Erreur server impossible de modifié email better auth",
       error,
     );
+    captureAppException(error, {
+      feature: "settings",
+      action: "modify_email",
+      extra: {
+        userProfileId: user.id,
+        authUserId: session.user.id,
+      },
+    });
     return {
       ok: false,
       userMsg: "Erreur serveur, impossible de modifié votre adresse mail",

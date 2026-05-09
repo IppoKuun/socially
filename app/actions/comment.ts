@@ -8,6 +8,10 @@ import { getSession } from "@/lib/authSession";
 import { createNotificationIfMissing } from "@/lib/notifications";
 import { rateLimits } from "@/lib/rateLimits";
 import { getTranslations } from "next-intl/server";
+import {
+  captureAppException,
+  captureAppMessage,
+} from "@/lib/monitoring/sentry";
 
 export default async function createComment(
   _prevstate: FormState,
@@ -57,6 +61,14 @@ export default async function createComment(
 
   if (!mode) {
     console.error(" SERV ACTION COMMENT : LE MODE NAS PAS ETE DONNER ");
+    captureAppMessage("Comment creation submitted without mode", {
+      feature: "comment",
+      action: "missing_comment_mode",
+      extra: {
+        userProfileId: user.id,
+        postId,
+      },
+    });
     return { ok: false, userMsg: t("unexpectedError") };
   }
 
@@ -129,6 +141,16 @@ export default async function createComment(
     });
   } catch (error) {
     console.error(error);
+    captureAppException(error, {
+      feature: "comment",
+      action: "moderate_comment",
+      extra: {
+        userProfileId: user.id,
+        postId,
+        mode,
+        responseToCommentId,
+      },
+    });
   }
 
   if (!moderation) {
@@ -147,15 +169,34 @@ export default async function createComment(
     };
   }
 
-  const created = await myPrisma.comment.create({
-    data: {
-      moderationStatus: moderation.moderationStatus,
-      content: parsed.data?.content,
-      authorId: user.id,
-      responseToCommentId: commentParent?.id,
-      postId,
-    },
-  });
+  let created;
+
+  try {
+    created = await myPrisma.comment.create({
+      data: {
+        moderationStatus: moderation.moderationStatus,
+        content: parsed.data?.content,
+        authorId: user.id,
+        responseToCommentId: commentParent?.id,
+        postId,
+      },
+      select: { id: true, moderationStatus: true },
+    });
+  } catch (error) {
+    console.error("Impossible de créer le commentaire", error);
+    captureAppException(error, {
+      feature: "comment",
+      action: "create_comment",
+      extra: {
+        userProfileId: user.id,
+        postId,
+        mode,
+        responseToCommentId,
+        moderationStatus: moderation.moderationStatus,
+      },
+    });
+    return { ok: false, userMsg: t("createFailed") };
+  }
 
   if (!created) {
     return { ok: false, userMsg: t("createFailed") };
@@ -170,6 +211,17 @@ export default async function createComment(
     });
   } catch (error) {
     console.error("Unable to create comment notification", error);
+    captureAppException(error, {
+      feature: "notifications",
+      action: "create_comment_notification",
+      level: "warning",
+      extra: {
+        actorProfileId: user.id,
+        receiverProfileId: targetPost.userId,
+        postId: targetPost.id,
+        commentId: created.id,
+      },
+    });
   }
 
   if (created.moderationStatus === "UNCERTAIN") {

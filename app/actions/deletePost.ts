@@ -3,6 +3,7 @@ import { myPrisma } from "@/lib/prisma";
 import { getSession } from "@/lib/authSession";
 import deleteCloudinary from "@/lib/cloudinaryConfig";
 import { getTranslations } from "next-intl/server";
+import { captureAppException } from "@/lib/monitoring/sentry";
 
 export default async function deletePost(id: string) {
   const t = await getTranslations("post.actions.delete");
@@ -37,13 +38,37 @@ export default async function deletePost(id: string) {
       await deleteCloudinary(post.imagesPublicId);
     } catch (error) {
       console.error(error);
+      captureAppException(error, {
+        feature: "post",
+        action: "delete_post_images",
+        extra: {
+          postId: post.id,
+          userProfileId: user?.id,
+          imageCount: post.imagesPublicId.length,
+        },
+      });
       return { ok: false, userMsg: t("imageDeleteFailed") };
     }
   }
 
-  const deletePost = await myPrisma.post.delete({
-    where: { id },
-  });
+  let deletePost;
+
+  try {
+    deletePost = await myPrisma.post.delete({
+      where: { id },
+    });
+  } catch (error) {
+    console.error("Impossible de supprimer le post", error);
+    captureAppException(error, {
+      feature: "post",
+      action: "delete_post",
+      extra: {
+        postId: post.id,
+        userProfileId: user?.id,
+      },
+    });
+    return { ok: false, userMsg: t("deleteFailed") };
+  }
 
   if (!deletePost) {
     return { ok: false, userMsg: t("deleteFailed") };

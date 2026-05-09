@@ -1,5 +1,6 @@
 import Pusher from "pusher";
 
+import { captureAppMessage } from "@/lib/monitoring/sentry";
 import {
   getUserNotificationsChannel,
   getUserRealtimeChannel,
@@ -12,6 +13,7 @@ import {
 } from "@/lib/pusher/events";
 
 let pusherServer: Pusher | null = null;
+let hasReportedMissingPusherConfig = false;
 
 export function getPusherServer() {
   if (pusherServer) {
@@ -30,6 +32,20 @@ export function getPusherServer() {
       hasSecret: Boolean(secret),
       hasCluster: Boolean(cluster),
     });
+    if (process.env.NODE_ENV === "production" && !hasReportedMissingPusherConfig) {
+      hasReportedMissingPusherConfig = true;
+      captureAppMessage("Pusher server is not configured", {
+        feature: "realtime",
+        action: "pusher_server_config",
+        level: "error",
+        extra: {
+          hasAppId: Boolean(appId),
+          hasKey: Boolean(key),
+          hasSecret: Boolean(secret),
+          hasCluster: Boolean(cluster),
+        },
+      });
+    }
 
     return null;
   }

@@ -1,6 +1,7 @@
 "use server";
 
 import { getSession } from "@/lib/authSession";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -110,6 +111,14 @@ export default async function toggleBlockAction(
     };
   } catch (error) {
     console.error("Impossible de modifier le blocage", error);
+    captureAppException(error, {
+      feature: "profile",
+      action: "toggle_block",
+      extra: {
+        viewerProfileId: viewer.id,
+        targetProfileId: target.id,
+      },
+    });
     return {
       ok: false,
       userMsg: "Impossible de modifier le blocage pour le moment.",

@@ -1,5 +1,6 @@
 "use server";
 import { getSession } from "@/lib/authSession";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 import { triggerMessageRead } from "@/lib/pusher/server";
 import { getTranslations } from "next-intl/server";
@@ -75,10 +76,28 @@ export default async function markConversationAsRead(
         });
       } catch (error) {
         console.error("Impossible d'envoyer le read receipt Pusher", error);
+        captureAppException(error, {
+          feature: "messages",
+          action: "trigger_message_read_realtime",
+          level: "warning",
+          extra: {
+            conversationId: conversation.id,
+            readerProfileId: viewer.id,
+            senderProfileId: senderId,
+          },
+        });
       }
     }
   } catch (error) {
     console.error("Impossible de marqué la conversation comme read", error);
+    captureAppException(error, {
+      feature: "messages",
+      action: "mark_conversation_read",
+      extra: {
+        conversationId: conversation.id,
+        viewerProfileId: viewer.id,
+      },
+    });
     return {
       ok: false,
       userMsg: t("failedToMarkAsRead"),

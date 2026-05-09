@@ -1,6 +1,7 @@
 "use server";
 
 import { getSession } from "@/lib/authSession";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -30,6 +31,14 @@ export default async function softDeleteAction() {
     });
   } catch (error) {
     console.error("Impossible d'annulez la suppression du compte", error);
+    captureAppException(error, {
+      feature: "settings",
+      action: isRestoring ? "restore_soft_deleted_account" : "soft_delete_account",
+      extra: {
+        userProfileId: user.id,
+        authUserId: session.user.id,
+      },
+    });
     return {
       ok: false,
       userMsg: "Impossible d'annulez la suppresion du compte'",

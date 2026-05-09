@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 import { rateLimits } from "@/lib/rateLimits";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -179,6 +180,13 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Impossible d'exportez tout les données", error);
+    captureAppException(error, {
+      feature: "data_export",
+      action: "export_user_data",
+      extra: {
+        authUserId: userId,
+      },
+    });
     return new NextResponse("Impossible d'exporter vos données", {
       status: 500,
     });
