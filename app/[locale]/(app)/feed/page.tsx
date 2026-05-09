@@ -9,6 +9,7 @@ import {
   type FeedCursor,
   type ForYouFeedPage,
 } from "@/lib/feed/shared";
+import { getSession } from "@/lib/authSession";
 import { makeQueryClient } from "@/lib/query-client";
 import AppPageShell from "../_components/app-page-shell";
 import CreatePostComposer from "./_components/CreatePostComposer";
@@ -16,6 +17,8 @@ import FeedTabClient from "./_components/feedTabClient";
 
 export default async function FeedPage() {
   const t = await getTranslations("appShell.pages.feed");
+  const session = await getSession();
+  const isAuthenticated = Boolean(session);
   const queryClient = makeQueryClient();
 
   // Ont fait plusieurs promise car on a besoin du feed infini + du premier post (HEAD)
@@ -50,8 +53,8 @@ export default async function FeedPage() {
          */}
         <HydrationBoundary state={dehydrate(queryClient)}>
           <div className="flex flex-col items-center justify-center">
-            <FeedTabClient />
-            <CreatePostComposer />
+            <FeedTabClient isAuthenticated={isAuthenticated} />
+            <CreatePostComposer isAuthenticated={isAuthenticated} />
           </div>
         </HydrationBoundary>
       </QueryProvider>

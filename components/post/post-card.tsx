@@ -25,6 +25,7 @@ type PostCardProps = {
   post: FeedPost;
   variant?: PostCardVariant;
   commentHref: string;
+  isAuthenticated: boolean;
   className?: string;
   onDeleteSuccess?: (postId: string) => void;
 };
@@ -74,6 +75,7 @@ export default function PostCard({
   post,
   variant = "feed",
   commentHref,
+  isAuthenticated,
   className,
   onDeleteSuccess,
 }: PostCardProps) {
@@ -323,6 +325,7 @@ export default function PostCard({
           <PostActions
             post={post}
             commentHref={commentHref}
+            isAuthenticated={isAuthenticated}
             compact={compact}
             onDeleteSuccess={onDeleteSuccess}
           />

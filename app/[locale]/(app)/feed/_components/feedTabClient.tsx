@@ -4,7 +4,11 @@ import ForYouFeedClient from "@/components/feed/for-you-feed-client";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 
-export default function FeedTabClient() {
+type FeedTabClientProps = {
+  isAuthenticated: boolean;
+};
+
+export default function FeedTabClient({ isAuthenticated }: FeedTabClientProps) {
   const [activeTab, setActiveTab] = useState<"for-you" | "following">(
     "for-you",
   );
@@ -30,7 +34,11 @@ export default function FeedTabClient() {
         </button>
       </div>
 
-      {activeTab === "following" ? <FollowingFeed /> : <ForYouFeedClient />}
+      {activeTab === "following" ? (
+        <FollowingFeed isAuthenticated={isAuthenticated} />
+      ) : (
+        <ForYouFeedClient isAuthenticated={isAuthenticated} />
+      )}
     </main>
   );
 }

@@ -6,6 +6,7 @@ import { readPostComments, readPostDetail } from "@/app/actions/feed";
 import PostDetailClient from "@/components/post/post-detail-client";
 import AppPageShell from "@/app/[locale]/(app)/_components/app-page-shell";
 import { feedQueryKeys } from "@/lib/feed/query-keys";
+import { getSession } from "@/lib/authSession";
 import { makeQueryClient } from "@/lib/query-client";
 
 export default async function PostPage({
@@ -13,6 +14,8 @@ export default async function PostPage({
 }: PageProps<"/[locale]/post/[slug]">) {
   const { slug } = await params;
   const t = await getTranslations("postDetail");
+  const session = await getSession();
+  const isAuthenticated = Boolean(session);
   const queryClient = makeQueryClient();
 
   await Promise.all([
@@ -42,7 +45,7 @@ export default async function PostPage({
       className="max-w-[880px]"
     >
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <PostDetailClient slug={slug} />
+        <PostDetailClient slug={slug} isAuthenticated={isAuthenticated} />
       </HydrationBoundary>
     </AppPageShell>
   );

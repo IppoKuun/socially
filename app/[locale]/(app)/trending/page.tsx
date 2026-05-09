@@ -1,6 +1,6 @@
 // IA: Next.js Data Cache
 import { getTranslations } from "next-intl/server";
-import { Flame, Heart, RefreshCw, Trophy } from "lucide-react";
+import { Heart } from "lucide-react";
 
 import QueryProvider from "@/components/providers/query-provider";
 import PostCard from "@/components/post/post-card";
@@ -12,11 +12,11 @@ import {
 } from "@/lib/trending/queries";
 import AppPageShell from "../_components/app-page-shell";
 
-async function requireViewerProfile() {
+async function getViewerProfile() {
   const session = await getSession();
 
   if (!session) {
-    throw new Error("Unauthorized");
+    return null;
   }
 
   const profile = await myPrisma.userProfile.findFirst({
@@ -30,7 +30,7 @@ async function requireViewerProfile() {
   });
 
   if (!profile) {
-    throw new Error("Profile not found");
+    return null;
   }
 
   return profile;
@@ -39,14 +39,15 @@ async function requireViewerProfile() {
 export default async function TrendingPage() {
   const t = await getTranslations("appShell.pages.trending");
   const [viewer, candidates] = await Promise.all([
-    requireViewerProfile(),
+    getViewerProfile(),
     getCachedTrendingPostCandidates(),
   ]);
 
   const posts = await getTrendingFeedPostsForViewer({
     candidates,
-    viewerId: viewer.id,
+    viewerId: viewer?.id,
   });
+  const isAuthenticated = Boolean(viewer);
 
   return (
     <AppPageShell title={t("title")} description={t("description")}>
@@ -78,6 +79,7 @@ export default async function TrendingPage() {
                 <PostCard
                   post={post}
                   commentHref={`/post/${post.slug}#post-comment-compose`}
+                  isAuthenticated={isAuthenticated}
                 />
               </li>
             ))}

@@ -46,7 +46,10 @@ export default async function PublicProfilePage({
             profile={profile}
             isAuthentificated={isAuthentificated}
           />
-          <ProfileFooter profile={profile} />
+          <ProfileFooter
+            profile={profile}
+            isAuthenticated={Boolean(isAuthentificated)}
+          />
         </HydrationBoundary>
       </QueryProvider>
     </>

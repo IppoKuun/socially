@@ -20,7 +20,13 @@ import {
   type ForYouFeedPage,
 } from "@/lib/feed/shared";
 
-export default function ForYouFeedClient() {
+type ForYouFeedClientProps = {
+  isAuthenticated: boolean;
+};
+
+export default function ForYouFeedClient({
+  isAuthenticated,
+}: ForYouFeedClientProps) {
   const t = useTranslations("feed.forYou");
   const queryClient = useQueryClient();
   const [resetVersion, setResetVersion] = useState(0);
@@ -146,6 +152,7 @@ export default function ForYouFeedClient() {
             key={post.id}
             post={post}
             commentHref={`/post/${post.slug}#post-comment-compose`}
+            isAuthenticated={isAuthenticated}
             onDeleteSuccess={handleDeleteSuccess}
           />
         ))

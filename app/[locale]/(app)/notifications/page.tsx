@@ -12,6 +12,7 @@ import MarkAllAsRead from "./_components/MarkAllAsRead";
 import FollowNotifCard from "./_components/FollowNotifCard";
 import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 
 async function getFollowNotificationsForUser(userId: string) {
   return myPrisma.notifications.findMany({
@@ -171,7 +172,11 @@ export default async function NotificationsPage({
   const session = await getSession();
 
   if (!session) {
-    return <AppPageShell title={t("title")} description={t("description")} />;
+    return (
+      <AppPageShell title={t("title")} description={t("description")}>
+        <AuthRequiredPrompt />
+      </AppPageShell>
+    );
   }
 
   const userProfile = await myPrisma.userProfile.findFirst({

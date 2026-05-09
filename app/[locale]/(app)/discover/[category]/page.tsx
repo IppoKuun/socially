@@ -8,6 +8,7 @@ import AppPageShell from "../../_components/app-page-shell";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import PostCard from "@/components/post/post-card";
 import QueryProvider from "@/components/providers/query-provider";
+import { getSession } from "@/lib/authSession";
 
 interface CategoryParams {
   locale: string;
@@ -18,7 +19,9 @@ interface PageProps {
   params: Promise<CategoryParams>;
 }
 export default async function DiscoverCategoryPage({ params }: PageProps) {
-  const { locale, category } = await params;
+  const { category } = await params;
+  const session = await getSession();
+  const isAuthenticated = Boolean(session);
   const categoryValue = category.toUpperCase().replaceAll("-", "_") as Category;
 
   if (!Object.values(Category).includes(categoryValue)) {
@@ -55,6 +58,7 @@ export default async function DiscoverCategoryPage({ params }: PageProps) {
                     key={post.id}
                     post={post}
                     commentHref={`/post/${post.slug}#post-comment-compose`}
+                    isAuthenticated={isAuthenticated}
                   />
                 ))}
               </section>

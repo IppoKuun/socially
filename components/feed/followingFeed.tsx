@@ -16,7 +16,11 @@ import { Button } from "@/components/ui/button";
 import { feedQueryKeys } from "@/lib/feed/query-keys";
 import { type FeedCursor, type ForYouFeedPage } from "@/lib/feed/shared";
 
-export default function FollowingFeed() {
+type FollowingFeedProps = {
+  isAuthenticated: boolean;
+};
+
+export default function FollowingFeed({ isAuthenticated }: FollowingFeedProps) {
   const t = useTranslations("feed.Following");
   const queryClient = useQueryClient();
   const [resetVersion, setResetVersion] = useState(0);
@@ -138,6 +142,7 @@ export default function FollowingFeed() {
             key={post.id}
             post={post}
             commentHref={`/post/${post.slug}#post-comment-compose`}
+            isAuthenticated={isAuthenticated}
             onDeleteSuccess={handleDeleteSuccess}
           />
         ))

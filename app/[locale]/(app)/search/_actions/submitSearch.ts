@@ -22,13 +22,16 @@ export default async function submitSearch(formData: FormData) {
   const session = await getSession();
   const query = normalizeSearchQuery(formData.get("query"));
 
-  if (!session) {
-    redirect({ href: "/login", locale });
-    return;
-  }
-
   if (!query || query.length < SEARCH_MIN_LENGTH) {
     redirect({ href: "/search", locale });
+  }
+
+  if (!session) {
+    redirect({
+      href: `/search?q=${encodeURIComponent(query)}`,
+      locale,
+    });
+    return;
   }
 
   const user = await myPrisma.userProfile.findFirst({

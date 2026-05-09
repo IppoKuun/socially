@@ -15,9 +15,13 @@ import type { CommentSort } from "@/lib/feed/shared";
 
 type PostDetailClientProps = {
   slug: string;
+  isAuthenticated: boolean;
 };
 
-export default function PostDetailClient({ slug }: PostDetailClientProps) {
+export default function PostDetailClient({
+  slug,
+  isAuthenticated,
+}: PostDetailClientProps) {
   const t = useTranslations("postDetail");
   const router = useRouter();
   const [sort, setSort] = useState<CommentSort>("recent");
@@ -45,6 +49,7 @@ export default function PostDetailClient({ slug }: PostDetailClientProps) {
         post={post}
         variant="detail"
         commentHref="#post-comment-compose"
+        isAuthenticated={isAuthenticated}
         onDeleteSuccess={() => router.push("/feed")}
       />
 
@@ -53,6 +58,7 @@ export default function PostDetailClient({ slug }: PostDetailClientProps) {
         postSlug={post.slug}
         mode="toPost"
         anchorId="post-comment-compose"
+        isAuthenticated={isAuthenticated}
       />
 
       <section className="space-y-4">
@@ -90,6 +96,7 @@ export default function PostDetailClient({ slug }: PostDetailClientProps) {
               <CommentCard
                 key={comment.id}
                 comment={comment}
+                isAuthenticated={isAuthenticated}
                 replyHref={`/post/${slug}/c/${comment.id}#comment-reply-compose`}
                 threadHref={`/post/${slug}/c/${comment.id}#comment-reply-compose`}
               />

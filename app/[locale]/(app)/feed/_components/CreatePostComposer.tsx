@@ -15,6 +15,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import { z } from "zod";
 import createPost from "@/app/actions/post";
+import AuthRequiredDialog from "@/components/auth/AuthRequiredDialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -55,6 +56,10 @@ type LocalErrors = {
   title?: string;
   content?: string;
   images?: string;
+};
+
+type CreatePostComposerProps = {
+  isAuthenticated: boolean;
 };
 
 export const INITIAL_ACTION_STATE = {
@@ -115,12 +120,15 @@ function getDropzoneErrorMessage(
   }
 }
 
-export default function CreatePostComposer() {
+export default function CreatePostComposer({
+  isAuthenticated,
+}: CreatePostComposerProps) {
   const t = useTranslations("post.compose");
   const locale = useLocale();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
+  const [authRequiredOpen, setAuthRequiredOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState<ClientImage[]>([]);
@@ -245,6 +253,11 @@ export default function CreatePostComposer() {
 
   const handleDialogOpenChange = useCallback(
     (nextOpen: boolean) => {
+      if (nextOpen && !isAuthenticated) {
+        setAuthRequiredOpen(true);
+        return;
+      }
+
       // Si pending, impossible de fermer la modale  //
       if (isPending) {
         return; // Avvec le return JS s'arrete de lire la fonction et s'en vas //
@@ -257,7 +270,7 @@ export default function CreatePostComposer() {
 
       setOpen(nextOpen);
     },
-    [clearServerState, isPending],
+    [clearServerState, isAuthenticated, isPending],
   );
 
   const handleRemoveImage = useCallback(
@@ -340,6 +353,11 @@ export default function CreatePostComposer() {
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
+      if (!isAuthenticated) {
+        setAuthRequiredOpen(true);
+        return;
+      }
+
       clearServerState();
 
       const nextLocalErrors = validateDraft();
@@ -395,6 +413,7 @@ export default function CreatePostComposer() {
       clearServerState,
       content,
       images,
+      isAuthenticated,
       locale,
       resetComposer,
       router,
@@ -418,7 +437,14 @@ export default function CreatePostComposer() {
           "fixed right-4 sm:bottom-4 bottom-40 z-41 h-14 cursor-pointer max-h-[92svh] rounded-full border border-white/10 bg-[linear-gradient(180deg,#2f7cff_0%,#6e63ff_100%)] px-4 text-white shadow-[0_28px_60px_-28px_rgba(47,124,255,0.92)] hover:opacity-95 sm:right-6 sm:bottom-6",
           open && "pointer-events-none opacity-0",
         )}
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          if (!isAuthenticated) {
+            setAuthRequiredOpen(true);
+            return;
+          }
+
+          setOpen(true);
+        }}
       >
         <Plus className="size-5" />
         <span className="hidden sm:inline">{t("floatingButton.desktop")}</span>
@@ -714,6 +740,11 @@ export default function CreatePostComposer() {
           </form>
         </DialogContent>
       </Dialog>
+
+      <AuthRequiredDialog
+        open={authRequiredOpen}
+        onOpenChange={setAuthRequiredOpen}
+      />
     </>
   );
 }

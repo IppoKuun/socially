@@ -14,11 +14,11 @@ import CategoryCard from "./_components/CategoryCard";
 import DiscussionPostCard from "./_components/DiscussionPostCard";
 import ProfilCard from "./_components/ProfileCard";
 
-async function requireViewerProfile() {
+async function getViewerProfile() {
   const session = await getSession();
 
   if (!session) {
-    throw new Error("Unauthorized");
+    return null;
   }
 
   const profile = await myPrisma.userProfile.findFirst({
@@ -32,7 +32,7 @@ async function requireViewerProfile() {
   });
 
   if (!profile) {
-    throw new Error("Profile not found");
+    return null;
   }
 
   return profile;
@@ -41,14 +41,14 @@ async function requireViewerProfile() {
 export default async function DiscoverPage() {
   const t = await getTranslations("appShell.pages.discover");
   const [viewer, candidatesPost, candidatesProfil] = await Promise.all([
-    requireViewerProfile(),
+    getViewerProfile(),
     getCachedDiscoveryPost(),
     getCachedDiscoveryProfile(),
   ]);
 
   const [posts, profiles] = await Promise.all([
-    getDiscoveryPostForViewer(viewer.id, candidatesPost),
-    getDiscoveryProfileForViewer(viewer.id, candidatesProfil),
+    getDiscoveryPostForViewer(viewer?.id ?? null, candidatesPost),
+    getDiscoveryProfileForViewer(viewer?.id ?? null, candidatesProfil),
   ]);
 
   const mainPost = posts[0] ?? null;

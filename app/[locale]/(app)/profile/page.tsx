@@ -1,25 +1,29 @@
 import { getSession } from "@/lib/authSession";
 import { redirect } from "@/i18n/routing";
 import { myPrisma } from "@/lib/prisma";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import AppPageShell from "../_components/app-page-shell";
+import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
 
 export default async function ProfilePage() {
   const locale = await getLocale();
+  const t = await getTranslations("appShell.navigation");
   const session = await getSession();
-  const userProfile = session;
+
+  if (!session) {
+    return (
+      <AppPageShell title={t("profile")} description="">
+        <AuthRequiredPrompt />
+      </AppPageShell>
+    );
+  }
+
   const username = await myPrisma.userProfile.findFirst({
-    where: { userId: session?.user.id, deletedAt: null },
+    where: { userId: session.user.id, deletedAt: null },
     select: {
       username: true,
     },
   });
-
-  if (!userProfile) {
-    redirect({
-      href: "/login",
-      locale,
-    });
-  }
 
   const profileUsername = username?.username;
 
