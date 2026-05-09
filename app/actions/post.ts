@@ -31,7 +31,10 @@ async function cleanupUploadedPostImages(
       ),
     );
   } catch (error) {
-    console.error("Impossible de supprimer les images Cloudinary du post", error);
+    console.error(
+      "Impossible de supprimer les images Cloudinary du post",
+      error,
+    );
     captureAppException(error, {
       feature: "post",
       action,
@@ -129,9 +132,13 @@ export default async function createPost(
     { error: errorMap },
   );
   if (!parsed.success) {
-    await cleanupUploadedPostImages(ids, "cleanup_after_post_validation_error", {
-      userProfileId: user.id,
-    });
+    await cleanupUploadedPostImages(
+      ids,
+      "cleanup_after_post_validation_error",
+      {
+        userProfileId: user.id,
+      },
+    );
     return { ok: false, errors: parsed.error.flatten().fieldErrors };
   }
 
@@ -159,33 +166,31 @@ export default async function createPost(
   }
 
   if (!moderation) {
-    await cleanupUploadedPostImages(ids, "cleanup_after_post_moderation_error", {
-      userProfileId: user.id,
-    });
+    await cleanupUploadedPostImages(
+      ids,
+      "cleanup_after_post_moderation_error",
+      {
+        userProfileId: user.id,
+      },
+    );
     return {
       ok: false,
       userMsg: t("moderationUnavailable"),
     };
   }
 
-  if (moderation.moderationStatus === "UNSAFE") {
-    // Ici, ont logge l'erreur pour nous meme et pas pour User car aucune utilisé a ce qu'il sois
-    // au courant que l'image n'est pas réussi a cloudinary Après que son poste est été jugée unsafe //
-    await cleanupUploadedPostImages(ids, "cleanup_after_post_rejected_by_ai", {
-      userProfileId: user.id,
-    });
-
-    return {
-      ok: false,
-      userMsg: t("unsafeContent"),
-      reasons: moderation.reasons,
-      unsafeImages: moderation.unsafeImages,
-    };
-  }
-
   const IAcategories = moderation.categories;
 
   const postSlug = await generateSlug(parsed.data.title);
+  const isUnsafe = moderation.moderationStatus === "UNSAFE";
+  const postImageUrls = isUnsafe ? [] : (parsed.data.imagesUrl ?? []);
+  const postImagePublicIds = isUnsafe ? [] : ids;
+
+  if (isUnsafe) {
+    await cleanupUploadedPostImages(ids, "cleanup_after_post_rejected_by_ai", {
+      userProfileId: user.id,
+    });
+  }
 
   let created;
 
@@ -196,9 +201,11 @@ export default async function createPost(
         moderationStatus: moderation.moderationStatus,
         slug: String(postSlug),
         content: parsed.data?.content,
-        imagesUrl: parsed.data.imagesUrl ?? [],
+        imagesUrl: postImageUrls,
         categories: IAcategories,
-        imagesPublicId: ids,
+        imagesPublicId: postImagePublicIds,
+        moderationReason: moderation.reasons || null,
+        unsafeImages: moderation.unsafeImages,
         userId: user.id,
       },
       select: { id: true, moderationStatus: true },
@@ -214,9 +221,11 @@ export default async function createPost(
         moderationStatus: moderation.moderationStatus,
       },
     });
-    await cleanupUploadedPostImages(ids, "cleanup_after_post_create_error", {
-      userProfileId: user.id,
-    });
+    if (!isUnsafe) {
+      await cleanupUploadedPostImages(ids, "cleanup_after_post_create_error", {
+        userProfileId: user.id,
+      });
+    }
     return { ok: false, userMsg: t("createFailed") };
   }
 
@@ -229,10 +238,21 @@ export default async function createPost(
         imageCount: ids.length,
       },
     });
-    await cleanupUploadedPostImages(ids, "cleanup_after_empty_post_create", {
-      userProfileId: user.id,
-    });
+    if (!isUnsafe) {
+      await cleanupUploadedPostImages(ids, "cleanup_after_empty_post_create", {
+        userProfileId: user.id,
+      });
+    }
     return { ok: false, userMsg: t("createFailed") };
+  }
+
+  if (created.moderationStatus === "UNSAFE") {
+    return {
+      ok: false,
+      userMsg: t("unsafeContent"),
+      reasons: moderation.reasons,
+      unsafeImages: moderation.unsafeImages,
+    };
   }
 
   if (created.moderationStatus === "UNCERTAIN") {

@@ -24,6 +24,15 @@ enum ModerationStatus {
   @@schema("app")
 }
 
+enum PostAppealStatus {
+  NONE
+  PENDING
+  ACCEPTED
+  REJECTED
+
+  @@schema("app")
+}
+
 enum Category {
   TECH
   BUSINESS
@@ -171,6 +180,16 @@ model Post {
   deletedAt      DateTime?
   categories     Category[] @default([]) @map("Category")
 
+  moderationReason String?
+  unsafeImages     Int[]   @default([])
+
+  appealStatus         PostAppealStatus @default(NONE)
+  appealMessage        String?
+  appealedAt           DateTime?
+  reviewedAt           DateTime?
+  reviewedById         String?
+  reviewDecisionReason String?
+
   moderationStatus ModerationStatus
   comment          Comment[]
   likes            PostLike[]
@@ -181,6 +200,8 @@ model Post {
 
   @@index([deletedAt, createdAt, id])
   @@index([userId, createdAt])
+  @@index([moderationStatus, createdAt])
+  @@index([moderationStatus, appealStatus, appealedAt])
   @@schema("app")
 }
 
