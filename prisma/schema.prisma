@@ -139,6 +139,7 @@ model UserProfile {
 
   SearchHistory SearchHistory[]
 
+  @@index([defineltyDeleted, deletedAt])
   @@schema("app")
 }
 
@@ -178,6 +179,8 @@ model Post {
   userId           String
   author           UserProfile      @relation(fields: [userId], references: [id])
 
+  @@index([deletedAt, createdAt, id])
+  @@index([userId, createdAt])
   @@schema("app")
 }
 
@@ -192,6 +195,7 @@ model Report {
   reporter   UserProfile @relation(fields: [reporterId], references: [id])
 
   @@unique([reporterId, postId])
+  @@index([postId])
   @@schema("app")
 }
 
@@ -214,6 +218,9 @@ model Comment {
   postId   String
   post     Post          @relation(fields: [postId], references: [id])
 
+  @@index([postId, responseToCommentId, deletedAt, createdAt])
+  @@index([responseToCommentId, createdAt])
+  @@index([authorId, createdAt])
   @@schema("app")
 }
 
@@ -231,6 +238,8 @@ model PostLike {
   createdAt DateTime @default(now())
 
   @@unique([user_id, post_id])
+  @@index([post_id])
+  @@index([user_id, createdAt])
   @@schema("app")
 }
 
@@ -248,6 +257,8 @@ model CommentLike {
   createdAt DateTime @default(now())
 
   @@unique([user_id, comment_id])
+  @@index([comment_id])
+  @@index([user_id, createdAt])
   @@schema("app")
 }
 
@@ -262,6 +273,8 @@ model Follow {
   followerProfile   UserProfile @relation("FollowerProfile", fields: [followerProfileId], references: [id])
 
   @@unique([followedProfileId, followerProfileId])
+  @@index([followerProfileId, followedProfileId])
+  @@index([followerProfileId, createdAt])
   @@schema("app")
 }
 
@@ -276,18 +289,19 @@ model Block {
   createdAt DateTime @default(now())
 
   @@unique([blockerId, blockedById])
+  @@index([blockedById, blockerId])
+  @@index([blockerId, createdAt])
   @@schema("app")
 }
 
 model Conversation {
   id String @id @default(cuid())
 
-
-  directKey     String   @unique
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  directKey       String   @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   lastMessageText String?
-  lastMessageAt DateTime @default(now())
+  lastMessageAt   DateTime @default(now())
 
   creatorId String
   creator   UserProfile @relation("ConversationCreator", fields: [creatorId], references: [id])
@@ -300,8 +314,8 @@ model Conversation {
 
   messages Message[]
 
-  @@index([participantOneId])
-  @@index([participantTwoId])
+  @@index([participantOneId, lastMessageAt])
+  @@index([participantTwoId, lastMessageAt])
   @@index([lastMessageAt])
   @@schema("app")
 }
@@ -324,6 +338,7 @@ model Message {
 
   @@index([conversationId, createdAt])
   @@index([receiverId, isRead])
+  @@index([conversationId, receiverId, isRead])
   @@schema("app")
 }
 
@@ -344,6 +359,11 @@ model Notifications {
   userNotif UserProfile @relation("ReceiverNotifications", fields: [userId], references: [id])
 
   @@unique([actorId, userId, type, postId])
+  @@index([userId, createdAt])
+  @@index([userId, type, createdAt])
+  @@index([userId, isRead])
+  @@index([userId, postId, type, isRead])
+  @@index([postId])
   @@schema("app")
 }
 
@@ -355,6 +375,8 @@ model SearchHistory {
   userId String
   user   UserProfile @relation(fields: [userId], references: [id])
 
+  @@index([userId, createdAt])
+  @@index([userId, query])
   @@schema("app")
 }
 
