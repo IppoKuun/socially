@@ -436,6 +436,8 @@
       "likeError": "No es posible actualizar el me gusta ahora mismo.",
       "seeMore": "Ver más",
       "seeLess": "Ver menos",
+      "deletedTitle": "Esta publicación fue eliminada",
+      "deletedDescription": "El contenido original ya no está disponible, pero los comentarios siguen visibles.",
       "moreImages": "+{count} imagen(es)",
       "imageAlt": "Imagen de la publicación {index}",
       "imageCounter": "{current} / {total}",

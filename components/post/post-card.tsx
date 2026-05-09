@@ -88,9 +88,10 @@ export default function PostCard({
   const compact = variant === "context";
   const isProfile = variant === "profile";
   const isDetail = variant === "detail";
-  const isNavigable = !isDetail;
+  const isDeleted = Boolean(post.deletedAt);
+  const isNavigable = !isDetail && !isDeleted;
   const postHref = `/post/${post.slug}`;
-  const postContent = post.content ?? "";
+  const postContent = isDeleted ? "" : (post.content ?? "");
   const shouldShowExpand = isDetail && postContent.length > 440;
   const contentClassName = isDetail
     ? expanded
@@ -129,6 +130,32 @@ export default function PostCard({
 
     event.preventDefault();
     router.push(postHref);
+  }
+
+  if (isDeleted) {
+    return (
+      <article
+        className={cn(
+          "rounded-[4px] border border-white/8 bg-white/[0.025] px-5 py-5 sm:px-6 sm:py-6",
+          compact && "px-4 py-4",
+          className,
+        )}
+      >
+        <div className="flex items-start gap-3">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/45">
+            <TriangleAlert className="size-5" aria-hidden="true" />
+          </span>
+          <div className="min-w-0 space-y-1">
+            <h2 className="font-manrope text-base font-semibold text-white/78">
+              {t("deletedTitle")}
+            </h2>
+            <p className="text-sm leading-6 text-white/45">
+              {t("deletedDescription")}
+            </p>
+          </div>
+        </div>
+      </article>
+    );
   }
 
   const cardContent = (

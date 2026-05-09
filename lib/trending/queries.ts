@@ -22,6 +22,7 @@ function getTrendingPostSelect() {
     title: true,
     content: true,
     createdAt: true,
+    deletedAt: true,
     moderationStatus: true,
     imagesUrl: true,
     author: {
@@ -74,6 +75,7 @@ function serializeTrendingPost(
     title: post.title,
     content: post.content,
     createdAt: post.createdAt.toISOString(),
+    deletedAt: post.deletedAt?.toISOString() ?? null,
     moderationStatus: post.moderationStatus,
     images: post.imagesUrl,
     likeCount: post._count.likes,

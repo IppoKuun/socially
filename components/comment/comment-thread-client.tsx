@@ -27,6 +27,7 @@ export default function CommentThreadClient({
   });
 
   const thread = threadQuery.data;
+  const isPostDeleted = Boolean(thread?.post.deletedAt);
 
   if (!thread) {
     return null;
@@ -74,14 +75,16 @@ export default function CommentThreadClient({
           />
         </div>
 
-        <CommentComposeForm
-          postId={thread.post.id}
-          postSlug={thread.post.slug}
-          mode="toComment"
-          responseToCommentId={thread.comment.id}
-          anchorId="comment-reply-compose"
-          isAuthenticated={isAuthenticated}
-        />
+        {isPostDeleted ? null : (
+          <CommentComposeForm
+            postId={thread.post.id}
+            postSlug={thread.post.slug}
+            mode="toComment"
+            responseToCommentId={thread.comment.id}
+            anchorId="comment-reply-compose"
+            isAuthenticated={isAuthenticated}
+          />
+        )}
       </section>
 
       <section className="space-y-4">

@@ -38,6 +38,7 @@ export default function PostDetailClient({
 
   const post = postDetailQuery.data?.post;
   const comments = commentsQuery.data?.comments ?? [];
+  const isPostDeleted = Boolean(post?.deletedAt);
 
   if (!post) {
     return null;
@@ -53,13 +54,15 @@ export default function PostDetailClient({
         onDeleteSuccess={() => router.push("/feed")}
       />
 
-      <CommentComposeForm
-        postId={post.id}
-        postSlug={post.slug}
-        mode="toPost"
-        anchorId="post-comment-compose"
-        isAuthenticated={isAuthenticated}
-      />
+      {isPostDeleted ? null : (
+        <CommentComposeForm
+          postId={post.id}
+          postSlug={post.slug}
+          mode="toPost"
+          anchorId="post-comment-compose"
+          isAuthenticated={isAuthenticated}
+        />
+      )}
 
       <section className="space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

@@ -436,6 +436,8 @@
       "likeError": "Impossible de modifier le like pour le moment.",
       "seeMore": "Voir plus",
       "seeLess": "Voir moins",
+      "deletedTitle": "Ce post a été supprimé",
+      "deletedDescription": "Le contenu original n'est plus disponible, mais les commentaires restent consultables.",
       "moreImages": "+{count} image(s)",
       "imageAlt": "Image du post {index}",
       "imageCounter": "{current} / {total}",
