@@ -9,6 +9,9 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DIRECT_URL: ${{ secrets.DIRECT_URL }}
 
     steps:
       - name: Checkout du code
@@ -24,8 +27,6 @@ jobs:
 
       - name: Génération du client Prisma
         run: npx prisma generate
-        env:
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
 
       - name: Vérification du Lint (ESLint)
         run: npm run lint
@@ -41,5 +42,3 @@ jobs:
 
       - name: Run unit tests
         run: npm test
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL}}
