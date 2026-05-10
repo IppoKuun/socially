@@ -189,6 +189,16 @@
         "pending": "Updating...",
         "submit": "Update my email"
       },
+      "languagePreference": {
+        "label": "Interface language",
+        "description": "Change the language used across the application.",
+        "success": "Language updated successfully.",
+        "options": {
+          "fr": "French",
+          "en": "English",
+          "es": "Spanish"
+        }
+      },
       "delete": {
         "title": "Deletion",
         "description": "Deactivate your account before it is permanently deleted after the planned delay.",
@@ -781,6 +791,16 @@
             "success": "Email updated successfully",
             "pending": "Updating...",
             "submit": "Update my email"
+          },
+          "languagePreference": {
+            "label": "Interface language",
+            "description": "Change the language used across the application.",
+            "success": "Language updated successfully.",
+            "options": {
+              "fr": "French",
+              "en": "English",
+              "es": "Spanish"
+            }
           },
           "delete": {
             "title": "Deletion",

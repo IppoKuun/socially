@@ -189,6 +189,16 @@
         "pending": "Modification...",
         "submit": "Modifier mon mail"
       },
+      "languagePreference": {
+        "label": "Langue de l'interface",
+        "description": "Changez la langue utilisée dans l'application.",
+        "success": "Langue modifiée avec succès.",
+        "options": {
+          "fr": "Français",
+          "en": "Anglais",
+          "es": "Espagnol"
+        }
+      },
       "delete": {
         "title": "Suppression",
         "description": "Désactivez votre compte avant sa suppression définitive après le délai prévu.",
@@ -781,6 +791,16 @@
             "success": "Email modifié avec succès",
             "pending": "Modification...",
             "submit": "Modifier mon mail"
+          },
+          "languagePreference": {
+            "label": "Langue de l'interface",
+            "description": "Changez la langue utilisée dans l'application.",
+            "success": "Langue modifiée avec succès.",
+            "options": {
+              "fr": "Français",
+              "en": "Anglais",
+              "es": "Espagnol"
+            }
           },
           "delete": {
             "title": "Suppression",
