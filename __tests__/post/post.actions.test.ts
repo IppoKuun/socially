@@ -92,6 +92,7 @@ describe("app creation post", () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   (beforeEach(() => {
+    jest.resetAllMocks();
     consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
     mockGetTranslations.mockImplementation(async (namespace?: string) =>
       createTranslationMock(namespace),
@@ -108,6 +109,7 @@ describe("app creation post", () => {
     });
 
     mockRateLimit.mockResolvedValue({ success: true });
+    mockSlug.mockResolvedValue("post-slug");
 
     mockuploadCloudinary.mockResolvedValue({
       secure_url: "https://res.cloudinary.com/socially/default.png",
@@ -147,9 +149,13 @@ describe("app creation post", () => {
         content:
           "Il permet de développer à la fois le frontend ET, le backend ",
         imagesUrl: [],
+        imagesPublicId: [],
         categories: ["TECH"],
+        moderationReason: null,
+        unsafeImages: undefined,
         userId: "testUserProfile-123",
       },
+      select: { id: true, moderationStatus: true },
     });
   });
 
@@ -192,8 +198,12 @@ describe("app creation post", () => {
         categories: ["TECH"],
         moderationStatus: "UNCERTAIN",
         imagesUrl: [],
+        imagesPublicId: [],
+        moderationReason: null,
+        unsafeImages: undefined,
         userId: "testUserProfile-123",
       },
+      select: { id: true, moderationStatus: true },
     });
   });
   it("zod reject if image isnt valid", async () => {
@@ -225,6 +235,11 @@ describe("app creation post", () => {
       moderationStatus: "UNSAFE",
       reasons: "Contenu de vos images beaucoup trop violent",
       unsafeImages: [0, 2],
+      categories: ["TECH"],
+    });
+    mockCreatePost.mockResolvedValue({
+      id: "unsafe-post-123",
+      moderationStatus: "UNSAFE",
     });
     mockDeleteCloudinary
       .mockResolvedValueOnce({ result: "ok" })
@@ -253,21 +268,37 @@ describe("app creation post", () => {
     expect(state).toEqual({
       ok: false,
       userMsg: "post.actions.create.unsafeContent",
+      postId: "unsafe-post-123",
       reasons: "Contenu de vos images beaucoup trop violent",
       unsafeImages: [0, 2],
     });
     expect(mockDeleteCloudinary).toHaveBeenCalled();
-    expect(mockCreatePost).not.toHaveBeenCalled();
+    expect(mockCreatePost).toHaveBeenCalledWith({
+      data: {
+        title: "POST with unsafe image",
+        slug: "post-slug",
+        moderationStatus: "UNSAFE",
+        content: undefined,
+        imagesUrl: [],
+        imagesPublicId: [],
+        categories: ["TECH"],
+        moderationReason: "Contenu de vos images beaucoup trop violent",
+        unsafeImages: [0, 2],
+        userId: "testUserProfile-123",
+      },
+      select: { id: true, moderationStatus: true },
+    });
   });
   it("reject If AI say title / CONTENT isnt appropriates", async () => {
     mockModerationPost.mockResolvedValue({
       moderationStatus: "UNSAFE",
       reasons: "Vous etes un danger pour la civilisation",
       unsafeImages: [],
+      categories: ["TECH"],
     });
     mockCreatePost.mockResolvedValue({
-      id: "post-123",
-      moderationStatus: "UNCERTAIN",
+      id: "unsafe-post-456",
+      moderationStatus: "UNSAFE",
     });
     const state = await createPost(
       { ok: true, userMsg: "" },
@@ -283,10 +314,26 @@ describe("app creation post", () => {
     expect(state).toEqual({
       ok: false,
       userMsg: "post.actions.create.unsafeContent",
+      postId: "unsafe-post-456",
       reasons: "Vous etes un danger pour la civilisation",
       unsafeImages: [],
     });
-    expect(mockCreatePost).not.toHaveBeenCalled();
+    expect(mockCreatePost).toHaveBeenCalledWith({
+      data: {
+        title: "Le rassemblement natrional est un bon partie politique",
+        slug: "post-slug",
+        moderationStatus: "UNSAFE",
+        content:
+          "le RN est un bon partie politique, et veulent du bien de la France",
+        imagesUrl: [],
+        imagesPublicId: [],
+        categories: ["TECH"],
+        moderationReason: "Vous etes un danger pour la civilisation",
+        unsafeImages: [],
+        userId: "testUserProfile-123",
+      },
+      select: { id: true, moderationStatus: true },
+    });
   });
 
   it("reject because user rateLimits", async () => {
