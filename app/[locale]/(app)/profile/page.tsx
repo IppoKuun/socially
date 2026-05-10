@@ -4,6 +4,9 @@ import { myPrisma } from "@/lib/prisma";
 import { getLocale, getTranslations } from "next-intl/server";
 import AppPageShell from "../_components/app-page-shell";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
+import { noIndexMetadata } from "@/lib/seo";
+
+export const metadata = noIndexMetadata;
 
 export default async function ProfilePage() {
   const locale = await getLocale();

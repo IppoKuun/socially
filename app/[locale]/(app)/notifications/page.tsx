@@ -13,6 +13,9 @@ import FollowNotifCard from "./_components/FollowNotifCard";
 import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
+import { noIndexMetadata } from "@/lib/seo";
+
+export const metadata = noIndexMetadata;
 
 async function getFollowNotificationsForUser(userId: string) {
   return myPrisma.notifications.findMany({

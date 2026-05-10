@@ -8,6 +8,9 @@ import {
 import { MessagesShell } from "./_components/MessagesShell";
 import { getSession } from "@/lib/authSession";
 import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
+import { noIndexMetadata } from "@/lib/seo";
+
+export const metadata = noIndexMetadata;
 
 export default async function MessagesPage({
   children,

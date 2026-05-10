@@ -3,6 +3,9 @@ import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 import { getLocale } from "next-intl/server";
 import MyProgressBar from "./_components/MyProgressBar";
+import { noIndexMetadata } from "@/lib/seo";
+
+export const metadata = noIndexMetadata;
 
 export default async function OnboardingLayout({
   children,

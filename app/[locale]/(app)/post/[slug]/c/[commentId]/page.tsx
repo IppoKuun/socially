@@ -8,6 +8,9 @@ import CommentThreadClient from "@/components/comment/comment-thread-client";
 import { feedQueryKeys } from "@/lib/feed/query-keys";
 import { getSession } from "@/lib/authSession";
 import { makeQueryClient } from "@/lib/query-client";
+import { noIndexMetadata } from "@/lib/seo";
+
+export const metadata = noIndexMetadata;
 
 export default async function CommentThreadPage({
   params,

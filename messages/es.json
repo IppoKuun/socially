@@ -580,6 +580,16 @@
       }
     }
   },
+  "seo": {
+    "profile": {
+      "title": "{name} (@{username})",
+      "description": "Perfil público de {name} en Socially con {count, plural, one {# publicación visible} other {# publicaciones visibles}}."
+    },
+    "category": {
+      "title": "Publicaciones de {category}",
+      "description": "Descubre las publicaciones de {category} con más likes en Socially."
+    }
+  },
   "appShell": {
     "brandAlt": "Logo de Socially",
     "navigation": {

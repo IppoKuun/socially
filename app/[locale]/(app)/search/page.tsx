@@ -9,6 +9,9 @@ import SearchHistory from "./_components/SearchHistory";
 import { getSession } from "@/lib/authSession";
 import { getQueriesResult, getViewerHistory } from "@/lib/search/queries";
 import { myPrisma } from "@/lib/prisma";
+import { noIndexMetadata } from "@/lib/seo";
+
+export const metadata = noIndexMetadata;
 
 type SearchPageProps = {
   searchParams: Promise<{

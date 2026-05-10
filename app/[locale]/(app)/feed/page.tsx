@@ -11,9 +11,12 @@ import {
 } from "@/lib/feed/shared";
 import { getSession } from "@/lib/authSession";
 import { makeQueryClient } from "@/lib/query-client";
+import { noIndexMetadata } from "@/lib/seo";
 import AppPageShell from "../_components/app-page-shell";
 import CreatePostComposer from "./_components/CreatePostComposer";
 import FeedTabClient from "./_components/feedTabClient";
+
+export const metadata = noIndexMetadata;
 
 export default async function FeedPage() {
   const t = await getTranslations("appShell.pages.feed");

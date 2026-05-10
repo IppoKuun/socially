@@ -1,6 +1,7 @@
 // IA: Next.js Data Cache
 import { getTranslations } from "next-intl/server";
 import { Heart } from "lucide-react";
+import type { Metadata } from "next";
 
 import QueryProvider from "@/components/providers/query-provider";
 import PostCard from "@/components/post/post-card";
@@ -11,6 +12,29 @@ import {
   getTrendingFeedPostsForViewer,
 } from "@/lib/trending/queries";
 import AppPageShell from "../_components/app-page-shell";
+import {
+  createPublicPageMetadata,
+  getAbsoluteUrl,
+  siteConfig,
+} from "@/lib/seo";
+import JsonLd from "@/components/seo/json-ld";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/trending">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({
+    locale,
+    namespace: "appShell.pages.trending",
+  });
+
+  return createPublicPageMetadata({
+    title: t("title"),
+    description: t("description"),
+    locale,
+    pathname: "/trending",
+  });
+}
 
 async function getViewerProfile() {
   const session = await getSession();
@@ -36,7 +60,10 @@ async function getViewerProfile() {
   return profile;
 }
 
-export default async function TrendingPage() {
+export default async function TrendingPage({
+  params,
+}: PageProps<"/[locale]/trending">) {
+  const { locale } = await params;
   const t = await getTranslations("appShell.pages.trending");
   const [viewer, candidates] = await Promise.all([
     getViewerProfile(),
@@ -48,9 +75,31 @@ export default async function TrendingPage() {
     viewerId: viewer?.id,
   });
   const isAuthenticated = Boolean(viewer);
+  const trendingJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: t("title"),
+    description: t("description"),
+    url: getAbsoluteUrl(locale, "/trending"),
+    isPartOf: {
+      "@type": "WebSite",
+      name: siteConfig.name,
+      url: getAbsoluteUrl(locale, "/"),
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: posts.map((post, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: getAbsoluteUrl(locale, `/post/${post.slug}`),
+        name: post.title,
+      })),
+    },
+  };
 
   return (
     <AppPageShell title={t("title")} description={t("description")}>
+      <JsonLd data={trendingJsonLd} />
       {posts.length === 0 ? (
         <section className="rounded-lg border border-dashed border-white/12 bg-white/[0.025] px-5 py-10 text-center">
           <Heart className="mx-auto size-8 text-white/30" />
