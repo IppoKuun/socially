@@ -8,7 +8,7 @@ export async function GET() {
   const session = await getSession();
 
   if (!session?.user) {
-    return new NextResponse("Non autorisé", { status: 401 });
+    return new NextResponse("Unauthorized", { status: 401 });
   }
 
   const userId = session.user.id;
@@ -21,7 +21,7 @@ export async function GET() {
       return NextResponse.json(
         {
           error: "DATA_EXPORT_RATE_LIMITED",
-          userMsg: "Vous avez déjà exporté vos données cette semaine.",
+          userMsg: "You have already exported your data this week.",
           resetAt: new Date(rateLimitResult.reset).toISOString(),
         },
         { status: 429 },
@@ -50,7 +50,7 @@ export async function GET() {
     });
 
     if (!viewer) {
-      return new NextResponse("Profil introuvable", { status: 404 });
+      return new NextResponse("Profile not found", { status: 404 });
     }
 
     const [posts, postLikes, commentLikes, comments] = await Promise.all([
@@ -177,7 +177,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("Impossible d'exportez tout les données", error);
+    console.error("Unable to export user data", error);
     captureAppException(error, {
       feature: "data_export",
       action: "export_user_data",
@@ -185,7 +185,7 @@ export async function GET() {
         authUserId: userId,
       },
     });
-    return new NextResponse("Impossible d'exporter vos données", {
+    return new NextResponse("Unable to export your data", {
       status: 500,
     });
   }

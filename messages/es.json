@@ -89,6 +89,7 @@
       "signup": "Únete a Socially para empezar a publicar y conectar."
     },
     "email": "Correo electrónico",
+    "name": "Nombre",
     "password": "Contraseña",
     "submit": {
       "signin": "Iniciar sesión",
@@ -167,6 +168,40 @@
       "legal": {
         "title": "Documentos legales",
         "description": "Consulta las condiciones, la privacidad, las cookies y las reglas de moderación."
+      }
+    },
+    "actions": {
+      "email": {
+        "invalidSession": "La sesión ha expirado o no es válida.",
+        "profileNotFound": "No pudimos identificar tu perfil.",
+        "empty": "La dirección de email está vacía.",
+        "invalid": "La dirección de email no es válida.",
+        "alreadyUsed": "Este email ya está usado por otra cuenta.",
+        "updateError": "No se puede modificar tu email en este momento."
+      },
+      "deleteAccount": {
+        "invalidSession": "La sesión ha expirado o no es válida.",
+        "profileNotFound": "No pudimos identificar tu perfil.",
+        "restoreError": "No se pudo cancelar la eliminación de la cuenta.",
+        "deleteError": "No se puede eliminar tu cuenta en este momento.",
+        "restoreSuccess": "Eliminación cancelada correctamente.",
+        "deleteSuccess": "Tu cuenta se eliminará definitivamente en 30 días."
+      },
+      "language": {
+        "invalidSession": "La sesión ha expirado o no es válida.",
+        "invalidLocale": "Idioma no válido.",
+        "profileNotFound": "No pudimos identificar tu perfil.",
+        "updateError": "No se puede modificar el idioma en este momento.",
+        "success": "Idioma modificado correctamente."
+      },
+      "unblock": {
+        "invalidSession": "La sesión ha expirado o no es válida.",
+        "missingProfile": "No se encontró el perfil que quieres desbloquear.",
+        "profileNotFound": "No pudimos identificar tu perfil.",
+        "selfUnblock": "No puedes desbloquearte a ti mismo.",
+        "notBlocked": "Este perfil no está en tu lista de bloqueo.",
+        "error": "No se puede desbloquear este perfil en este momento.",
+        "success": "Perfil desbloqueado correctamente."
       }
     },
     "account": {
@@ -770,6 +805,40 @@
           "data": {
             "title": "Mis datos",
             "description": "Exporta los datos asociados a tu actividad en Socially."
+          }
+        },
+        "actions": {
+          "email": {
+            "invalidSession": "La sesión ha expirado o no es válida.",
+            "profileNotFound": "No pudimos identificar tu perfil.",
+            "empty": "La dirección de email está vacía.",
+            "invalid": "La dirección de email no es válida.",
+            "alreadyUsed": "Este email ya está usado por otra cuenta.",
+            "updateError": "No se puede modificar tu email en este momento."
+          },
+          "deleteAccount": {
+            "invalidSession": "La sesión ha expirado o no es válida.",
+            "profileNotFound": "No pudimos identificar tu perfil.",
+            "restoreError": "No se pudo cancelar la eliminación de la cuenta.",
+            "deleteError": "No se puede eliminar tu cuenta en este momento.",
+            "restoreSuccess": "Eliminación cancelada correctamente.",
+            "deleteSuccess": "Tu cuenta se eliminará definitivamente en 30 días."
+          },
+          "language": {
+            "invalidSession": "La sesión ha expirado o no es válida.",
+            "invalidLocale": "Idioma no válido.",
+            "profileNotFound": "No pudimos identificar tu perfil.",
+            "updateError": "No se puede modificar el idioma en este momento.",
+            "success": "Idioma modificado correctamente."
+          },
+          "unblock": {
+            "invalidSession": "La sesión ha expirado o no es válida.",
+            "missingProfile": "No se encontró el perfil que quieres desbloquear.",
+            "profileNotFound": "No pudimos identificar tu perfil.",
+            "selfUnblock": "No puedes desbloquearte a ti mismo.",
+            "notBlocked": "Este perfil no está en tu lista de bloqueo.",
+            "error": "No se puede desbloquear este perfil en este momento.",
+            "success": "Perfil desbloqueado correctamente."
           }
         },
         "account": {

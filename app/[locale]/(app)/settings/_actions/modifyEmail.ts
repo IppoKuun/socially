@@ -5,6 +5,7 @@ import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 
 export type FormServ = {
   ok: boolean;
@@ -15,10 +16,11 @@ export default async function modifyEmailActions(
   _prevstate: FormServ,
   email: string,
 ): Promise<FormServ> {
+  const t = await getTranslations("settings.actions.email");
   const session = await getSession();
 
   if (!session?.user?.id) {
-    return { ok: false, userMsg: "Session expirée ou invalide" };
+    return { ok: false, userMsg: t("invalidSession") };
   }
 
   const user = await myPrisma.userProfile.findFirst({
@@ -26,11 +28,11 @@ export default async function modifyEmailActions(
     select: { id: true },
   });
   if (!user) {
-    return { ok: false, userMsg: "Nous n'avons pas pu vous identifié" };
+    return { ok: false, userMsg: t("profileNotFound") };
   }
 
   if (!email) {
-    return { ok: false, userMsg: "Email est vide" };
+    return { ok: false, userMsg: t("empty") };
   }
 
   const cleanEmail = email.trim().toLowerCase();
@@ -38,7 +40,7 @@ export default async function modifyEmailActions(
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!emailRegex.test(cleanEmail)) {
-    return { ok: false, userMsg: "L'adresse email n'est pas valide" };
+    return { ok: false, userMsg: t("invalid") };
   }
   // modification email est faible pour l'instant c'est un choix assumé
   // Plus tard, a intégré : validationn mail //
@@ -53,7 +55,7 @@ export default async function modifyEmailActions(
       if (error.code === "P2002") {
         return {
           ok: false,
-          userMsg: "Cet email est déjà utilisé par un autre compte",
+          userMsg: t("alreadyUsed"),
         };
       }
     }
@@ -71,7 +73,7 @@ export default async function modifyEmailActions(
     });
     return {
       ok: false,
-      userMsg: "Erreur serveur, impossible de modifié votre adresse mail",
+      userMsg: t("updateError"),
     };
   }
   revalidatePath("/settings");

@@ -192,12 +192,12 @@ export default function LoginPageClient() {
             <div className={signupFieldsGridClass}>
               <div className={fieldStackClass}>
                 <label htmlFor="signup-name" className={labelClass}>
-                  Nom
+                  {t("name")}
                 </label>
                 <input
                   id="signup-name"
                   name="name"
-                  placeholder="name"
+                  placeholder={t("name")}
                   autoComplete="name"
                   className={inputClass}
                 ></input>

@@ -34,20 +34,20 @@ const createAuth = () =>
 
       revokeSessionsOnPasswordReset: true,
 
-      sendResetPassword: async ({ user, url, token }, request) => {
+      sendResetPassword: async ({ user, url }) => {
         const result = await sendEmail({
           to: user.email,
-          subject: "Réinitialisation de votre mot de passe",
+          subject: "Reset your password",
           html: `
           <div style="font-family: sans-serif; line-height: 1.6;">
-            <h1>Réinitialisation du mot de passe</h1>
+            <h1>Password reset</h1>
 
             <p>
-              Vous avez demandé à réinitialiser votre mot de passe.
+              You requested a password reset.
             </p>
 
             <p>
-              Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe :
+              Click the button below to choose a new password:
             </p>
 
             <a
@@ -62,27 +62,26 @@ const createAuth = () =>
                 border-radius: 999px;
               "
             >
-              Réinitialiser mon mot de passe
+              Reset my password
             </a>
 
             <p style="margin-top: 24px;">
-              Ce lien expire dans 1 heure.
+              This link expires in 1 hour.
             </p>
 
             <p>
-              Si vous n'êtes pas à l'origine de cette demande,
-              vous pouvez ignorer cet email.
+              If you did not request this, you can ignore this email.
             </p>
           </div>
         `,
           text: `
-Réinitialisation du mot de passe
+Password reset
 
-Ouvrez ce lien pour choisir un nouveau mot de passe :
+Open this link to choose a new password:
 
 ${url}
 
-Ce lien expire dans 1 heure.
+This link expires in 1 hour.
         `,
         });
 
@@ -96,7 +95,7 @@ Ce lien expire dans 1 heure.
         }
       },
 
-      onPasswordReset: async ({ user }, request) => {
+      onPasswordReset: async ({ user }) => {
         console.log(`Password reset successful for user ${user.id}`);
       },
     },
@@ -198,7 +197,7 @@ Ce lien expire dans 1 heure.
     plugins: [
       i18n({
         translations: authTranslations,
-        defaultLocale: "fr",
+        defaultLocale: "en",
         detection: ["header", "cookie"],
         localeCookie: "NEXT_LOCALE", // next_locale est un cookies de next-intl pour la langue"
       }),

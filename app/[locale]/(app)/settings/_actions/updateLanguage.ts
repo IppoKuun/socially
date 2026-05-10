@@ -4,6 +4,7 @@ import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 import { routing } from "@/i18n/routing";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 
 export type UpdateLanguageResult =
   | {
@@ -19,15 +20,16 @@ export type UpdateLanguageResult =
 export default async function updateLanguageAction(
   locale: string,
 ): Promise<UpdateLanguageResult> {
+  const t = await getTranslations("settings.actions.language");
   const session = await getSession();
 
   if (!session?.user?.id) {
-    return { ok: false, userMsg: "Session expirée ou invalide" };
+    return { ok: false, userMsg: t("invalidSession") };
   }
 
   // on vérifie si la langue choisis est dans notre locales //
   if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
-    return { ok: false, userMsg: "Langue invalide" };
+    return { ok: false, userMsg: t("invalidLocale") };
   }
 
   const selectedLocale = locale as (typeof routing.locales)[number];
@@ -46,14 +48,14 @@ export default async function updateLanguageAction(
     if (updatedProfile.count === 0) {
       return {
         ok: false,
-        userMsg: "Nous n'avons pas pu vous identifier.",
+        userMsg: t("profileNotFound"),
       };
     }
   } catch (error) {
     console.error("Impossible de modifier la langue", error);
     return {
       ok: false,
-      userMsg: "Impossible de modifier la langue pour le moment.",
+      userMsg: t("updateError"),
     };
   }
 
@@ -62,6 +64,6 @@ export default async function updateLanguageAction(
   return {
     ok: true,
     locale: selectedLocale,
-    userMsg: "Langue modifiée avec succès.",
+    userMsg: t("success"),
   };
 }

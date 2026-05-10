@@ -89,6 +89,7 @@
       "signup": "Rejoignez Socially pour commencer à publier et échanger."
     },
     "email": "E-mail",
+    "name": "Nom",
     "password": "Mot de passe",
     "submit": {
       "signin": "Se connecter",
@@ -167,6 +168,40 @@
       "legal": {
         "title": "Documents légaux",
         "description": "Consultez les conditions, la confidentialité, les cookies et les règles de modération."
+      }
+    },
+    "actions": {
+      "email": {
+        "invalidSession": "Session expirée ou invalide.",
+        "profileNotFound": "Nous n'avons pas pu vous identifier.",
+        "empty": "L'adresse email est vide.",
+        "invalid": "L'adresse email n'est pas valide.",
+        "alreadyUsed": "Cet email est déjà utilisé par un autre compte.",
+        "updateError": "Impossible de modifier votre adresse email pour le moment."
+      },
+      "deleteAccount": {
+        "invalidSession": "Session expirée ou invalide.",
+        "profileNotFound": "Nous n'avons pas pu vous identifier.",
+        "restoreError": "Impossible d'annuler la suppression du compte.",
+        "deleteError": "Impossible de supprimer votre compte pour le moment.",
+        "restoreSuccess": "Suppression annulée avec succès.",
+        "deleteSuccess": "Votre compte sera définitivement supprimé dans 30 jours."
+      },
+      "language": {
+        "invalidSession": "Session expirée ou invalide.",
+        "invalidLocale": "Langue invalide.",
+        "profileNotFound": "Nous n'avons pas pu vous identifier.",
+        "updateError": "Impossible de modifier la langue pour le moment.",
+        "success": "Langue modifiée avec succès."
+      },
+      "unblock": {
+        "invalidSession": "Session expirée ou invalide.",
+        "missingProfile": "Profil à débloquer introuvable.",
+        "profileNotFound": "Nous n'avons pas pu vous identifier.",
+        "selfUnblock": "Vous ne pouvez pas vous débloquer vous-même.",
+        "notBlocked": "Ce profil n'est pas dans votre liste de blocage.",
+        "error": "Impossible de débloquer ce profil pour le moment.",
+        "success": "Profil débloqué avec succès."
       }
     },
     "account": {
@@ -770,6 +805,40 @@
           "data": {
             "title": "Mes données",
             "description": "Exportez les données associées à votre activité Socially."
+          }
+        },
+        "actions": {
+          "email": {
+            "invalidSession": "Session expirée ou invalide.",
+            "profileNotFound": "Nous n'avons pas pu vous identifier.",
+            "empty": "L'adresse email est vide.",
+            "invalid": "L'adresse email n'est pas valide.",
+            "alreadyUsed": "Cet email est déjà utilisé par un autre compte.",
+            "updateError": "Impossible de modifier votre adresse email pour le moment."
+          },
+          "deleteAccount": {
+            "invalidSession": "Session expirée ou invalide.",
+            "profileNotFound": "Nous n'avons pas pu vous identifier.",
+            "restoreError": "Impossible d'annuler la suppression du compte.",
+            "deleteError": "Impossible de supprimer votre compte pour le moment.",
+            "restoreSuccess": "Suppression annulée avec succès.",
+            "deleteSuccess": "Votre compte sera définitivement supprimé dans 30 jours."
+          },
+          "language": {
+            "invalidSession": "Session expirée ou invalide.",
+            "invalidLocale": "Langue invalide.",
+            "profileNotFound": "Nous n'avons pas pu vous identifier.",
+            "updateError": "Impossible de modifier la langue pour le moment.",
+            "success": "Langue modifiée avec succès."
+          },
+          "unblock": {
+            "invalidSession": "Session expirée ou invalide.",
+            "missingProfile": "Profil à débloquer introuvable.",
+            "profileNotFound": "Nous n'avons pas pu vous identifier.",
+            "selfUnblock": "Vous ne pouvez pas vous débloquer vous-même.",
+            "notBlocked": "Ce profil n'est pas dans votre liste de blocage.",
+            "error": "Impossible de débloquer ce profil pour le moment.",
+            "success": "Profil débloqué avec succès."
           }
         },
         "account": {

@@ -89,6 +89,7 @@
       "signup": "Join Socially to start sharing and connecting."
     },
     "email": "Email",
+    "name": "Name",
     "password": "Password",
     "submit": {
       "signin": "Sign in",
@@ -167,6 +168,40 @@
       "legal": {
         "title": "Legal documents",
         "description": "Review the terms, privacy policy, cookies and moderation rules."
+      }
+    },
+    "actions": {
+      "email": {
+        "invalidSession": "Your session has expired or is invalid.",
+        "profileNotFound": "We could not identify your profile.",
+        "empty": "The email address is empty.",
+        "invalid": "The email address is not valid.",
+        "alreadyUsed": "This email address is already used by another account.",
+        "updateError": "Unable to update your email address right now."
+      },
+      "deleteAccount": {
+        "invalidSession": "Your session has expired or is invalid.",
+        "profileNotFound": "We could not identify your profile.",
+        "restoreError": "Unable to cancel account deletion.",
+        "deleteError": "Unable to delete your account right now.",
+        "restoreSuccess": "Account deletion cancelled successfully.",
+        "deleteSuccess": "Your account will be permanently deleted in 30 days."
+      },
+      "language": {
+        "invalidSession": "Your session has expired or is invalid.",
+        "invalidLocale": "Invalid language.",
+        "profileNotFound": "We could not identify your profile.",
+        "updateError": "Unable to update the language right now.",
+        "success": "Language updated successfully."
+      },
+      "unblock": {
+        "invalidSession": "Your session has expired or is invalid.",
+        "missingProfile": "The profile to unblock could not be found.",
+        "profileNotFound": "We could not identify your profile.",
+        "selfUnblock": "You cannot unblock yourself.",
+        "notBlocked": "This profile is not in your block list.",
+        "error": "Unable to unblock this profile right now.",
+        "success": "Profile unblocked successfully."
       }
     },
     "account": {
@@ -770,6 +805,40 @@
           "data": {
             "title": "My data",
             "description": "Export the data linked to your Socially activity."
+          }
+        },
+        "actions": {
+          "email": {
+            "invalidSession": "Your session has expired or is invalid.",
+            "profileNotFound": "We could not identify your profile.",
+            "empty": "The email address is empty.",
+            "invalid": "The email address is not valid.",
+            "alreadyUsed": "This email address is already used by another account.",
+            "updateError": "Unable to update your email address right now."
+          },
+          "deleteAccount": {
+            "invalidSession": "Your session has expired or is invalid.",
+            "profileNotFound": "We could not identify your profile.",
+            "restoreError": "Unable to cancel account deletion.",
+            "deleteError": "Unable to delete your account right now.",
+            "restoreSuccess": "Account deletion cancelled successfully.",
+            "deleteSuccess": "Your account will be permanently deleted in 30 days."
+          },
+          "language": {
+            "invalidSession": "Your session has expired or is invalid.",
+            "invalidLocale": "Invalid language.",
+            "profileNotFound": "We could not identify your profile.",
+            "updateError": "Unable to update the language right now.",
+            "success": "Language updated successfully."
+          },
+          "unblock": {
+            "invalidSession": "Your session has expired or is invalid.",
+            "missingProfile": "The profile to unblock could not be found.",
+            "profileNotFound": "We could not identify your profile.",
+            "selfUnblock": "You cannot unblock yourself.",
+            "notBlocked": "This profile is not in your block list.",
+            "error": "Unable to unblock this profile right now.",
+            "success": "Profile unblocked successfully."
           }
         },
         "account": {
