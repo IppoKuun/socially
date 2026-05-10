@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const POST_IMAGE_MAX_SIZE = 8_000_000;
+export const POST_IMAGE_MAX_SIZE = 8 * 1024 * 1024;
 export const POST_IMAGE_MAX_COUNT = 10;
 export const POST_ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",

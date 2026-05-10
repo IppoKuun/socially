@@ -1,11 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "@/i18n/routing";
+import { Link, usePathname, useRouter, routing } from "@/i18n/routing";
 import { getUserInfoType } from "@/lib/settings/account/queries";
 import modifyEmailActions from "../../_actions/modifyEmail";
 import { useLocale, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
+import updateLanguageAction from "../../_actions/updateLanguage";
 
 function formatDate(date: Date | undefined, locale: string) {
   return new Intl.DateTimeFormat(locale, {
@@ -25,12 +26,27 @@ type userInfoProps = {
 
 const FormServ = { ok: false, userMsg: "" };
 
+const languageOptions = [
+  { locale: "fr", labelKey: "account.languagePreference.options.fr" },
+  { locale: "en", labelKey: "account.languagePreference.options.en" },
+  { locale: "es", labelKey: "account.languagePreference.options.es" },
+] as const;
+
 export default function UserField({ userInfo }: userInfoProps) {
-  const t = useTranslations("settings");
+  const t = useTranslations("appShell.pages.settings");
   const locale = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
   const [servMsg, setServMsg] = useState<string>();
   const [email, setEmail] = useState(userInfo?.user.email ?? "");
   const [isPending, startTransition] = useTransition();
+  const [isLanguagePending, startLanguageTransition] = useTransition();
+  const currentLanguage = routing.locales.includes(
+    userInfo?.userProfile.language as (typeof routing.locales)[number],
+  )
+    ? userInfo?.userProfile.language
+    : locale;
+  const [selectedLanguage, setSelectedLanguage] = useState(currentLanguage);
 
   const fields = [
     {
@@ -43,10 +59,6 @@ export default function UserField({ userInfo }: userInfoProps) {
         userInfo?.userProfile.username,
         t("account.notProvided"),
       ),
-    },
-    {
-      label: t("account.fields.language"),
-      value: userInfo?.userProfile.language,
     },
     {
       label: t("account.fields.occupation"),
@@ -78,6 +90,25 @@ export default function UserField({ userInfo }: userInfoProps) {
       setServMsg(t("account.email.success"));
     });
   };
+
+  const handleLanguageChange = (nextLocale: string) => {
+    setSelectedLanguage(nextLocale);
+
+    startLanguageTransition(async () => {
+      const result = await updateLanguageAction(nextLocale);
+
+      if (!result.ok) {
+        setSelectedLanguage(currentLanguage);
+        setServMsg(result.userMsg);
+        return;
+      }
+
+      setServMsg(t("account.languagePreference.success"));
+      router.replace(pathname, { locale: result.locale });
+      router.refresh();
+    });
+  };
+
   return (
     <section className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
       <div className="flex flex-col gap-3 border-b border-white/10 pb-4 sm:flex-row sm:items-start sm:justify-between">
@@ -126,6 +157,39 @@ export default function UserField({ userInfo }: userInfoProps) {
           >
             {isPending ? t("account.email.pending") : t("account.email.submit")}
           </Button>
+        </div>
+      </div>
+
+      <div className="mt-4 rounded-lg border border-white/10 bg-black/20 p-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+          <div className="min-w-0 flex-1 space-y-1">
+            <label
+              htmlFor="settings-language"
+              className="text-sm font-medium text-white"
+            >
+              {t("account.languagePreference.label")}
+            </label>
+            <p className="text-sm leading-6 text-white/50">
+              {t("account.languagePreference.description")}
+            </p>
+          </div>
+          <select
+            id="settings-language"
+            value={selectedLanguage}
+            disabled={isLanguagePending}
+            onChange={(event) => handleLanguageChange(event.target.value)}
+            className="h-10 rounded-md border border-white/10 bg-white/[0.04] px-3 text-sm text-white outline-none transition-colors hover:border-white/20 focus-visible:border-white/30 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {languageOptions.map((option) => (
+              <option
+                key={option.locale}
+                value={option.locale}
+                className="bg-neutral-950 text-white"
+              >
+                {t(option.labelKey)}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 

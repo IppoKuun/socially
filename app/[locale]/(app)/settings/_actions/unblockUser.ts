@@ -1,8 +1,10 @@
 "use server";
 
 import { getSession } from "@/lib/authSession";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 
 export type UnblockUserActionResult = {
   ok: boolean;
@@ -12,14 +14,15 @@ export type UnblockUserActionResult = {
 export default async function unblockUserAction(
   blockedProfileId: string,
 ): Promise<UnblockUserActionResult> {
+  const t = await getTranslations("appShell.pages.settings.actions.unblock");
   const session = await getSession();
 
   if (!session?.user?.id) {
-    return { ok: false, userMsg: "Session expirée ou invalide" };
+    return { ok: false, userMsg: t("invalidSession") };
   }
 
   if (!blockedProfileId) {
-    return { ok: false, userMsg: "Profil à débloquer introuvable." };
+    return { ok: false, userMsg: t("missingProfile") };
   }
 
   const viewer = await myPrisma.userProfile.findFirst({
@@ -28,11 +31,11 @@ export default async function unblockUserAction(
   });
 
   if (!viewer) {
-    return { ok: false, userMsg: "Nous n'avons pas pu vous identifier." };
+    return { ok: false, userMsg: t("profileNotFound") };
   }
 
   if (viewer.id === blockedProfileId) {
-    return { ok: false, userMsg: "Vous ne pouvez pas vous débloquer vous-même." };
+    return { ok: false, userMsg: t("selfUnblock") };
   }
 
   try {
@@ -46,18 +49,26 @@ export default async function unblockUserAction(
     if (deletedBlock.count === 0) {
       return {
         ok: false,
-        userMsg: "Ce profil n'est pas dans votre liste de blocage.",
+        userMsg: t("notBlocked"),
       };
     }
   } catch (error) {
     console.error("Impossible de débloquer ce profil", error);
+    captureAppException(error, {
+      feature: "settings",
+      action: "unblock_user",
+      extra: {
+        viewerProfileId: viewer.id,
+        blockedProfileId,
+      },
+    });
     return {
       ok: false,
-      userMsg: "Impossible de débloquer ce profil pour le moment.",
+      userMsg: t("error"),
     };
   }
 
   revalidatePath("/settings/privacy/block");
 
-  return { ok: true, userMsg: "Profil débloqué avec succès." };
+  return { ok: true, userMsg: t("success") };
 }

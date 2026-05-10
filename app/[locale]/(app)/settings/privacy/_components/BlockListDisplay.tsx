@@ -22,7 +22,7 @@ const BlockItemSkeleton = () => (
 );
 
 export default function BlockListDisplay() {
-  const t = useTranslations("settings");
+  const t = useTranslations("appShell.pages.settings");
   const [unblockedIds, setUnblockedIds] = useState<Set<string>>(new Set());
 
   const [isPending, startTransition] = useTransition();

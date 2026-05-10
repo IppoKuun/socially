@@ -4,9 +4,13 @@ import type { ProfileData } from "../_actions/getProfile";
 
 type ProfileFooterProps = {
   profile: ProfileData;
+  isAuthenticated: boolean;
 };
 
-export default async function ProfileFooter({ profile }: ProfileFooterProps) {
+export default async function ProfileFooter({
+  profile,
+  isAuthenticated,
+}: ProfileFooterProps) {
   const t = await getTranslations("profilePublic");
 
   return (
@@ -37,6 +41,7 @@ export default async function ProfileFooter({ profile }: ProfileFooterProps) {
               key={p.id}
               post={p}
               commentHref={`/post/${p.slug}#post-comment-compose`}
+              isAuthenticated={isAuthenticated}
             />
           ))}
         </section>

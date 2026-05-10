@@ -24,7 +24,59 @@
     },
     "accept": "Accepter les cookies",
     "decline": "Refuser",
-    "settings": "Gérer les préférences"
+    "settings": "Gérer les préférences",
+    "learnMore": {
+      "start": "En savoir plus sur notre ",
+      "cookies": "politique cookies",
+      "middle": " et notre ",
+      "privacy": "politique de confidentialité",
+      "end": "."
+    }
+  },
+  "authRequiredDialog": {
+    "title": "Connecte-toi pour continuer",
+    "description": "Cette action est réservée aux membres connectés. Connecte-toi ou crée un compte pour interagir avec Socially.",
+    "action": "Se connecter",
+    "cancel": "Plus tard"
+  },
+  "notFound": {
+    "general": {
+      "pageTitle": "Page introuvable",
+      "pageDescription": "Cette page n'existe pas ou n'est plus disponible.",
+      "eyebrow": "Erreur 404",
+      "title": "On n'a pas trouvé cette page",
+      "description": "Le lien est peut-être incorrect, ou la ressource a été déplacée ou supprimée.",
+      "primaryAction": "Retour au feed",
+      "secondaryAction": "Rechercher"
+    },
+    "profile": {
+      "pageTitle": "Profil introuvable",
+      "pageDescription": "Ce profil n'existe pas ou n'est plus accessible.",
+      "eyebrow": "Profil indisponible",
+      "title": "Ce profil est introuvable",
+      "description": "L'utilisateur a peut-être changé de nom, supprimé son compte, ou ce profil n'est plus visible.",
+      "primaryAction": "Rechercher un profil",
+      "secondaryAction": "Retour au feed"
+    },
+    "post": {
+      "pageTitle": "Post introuvable",
+      "pageDescription": "Ce post n'existe pas ou n'est plus accessible.",
+      "eyebrow": "Post indisponible",
+      "title": "Ce post est introuvable",
+      "description": "Le post a peut-être été supprimé, modéré, ou le lien que tu as suivi n'est plus valide.",
+      "primaryAction": "Retour au feed",
+      "secondaryAction": "Voir les tendances"
+    }
+  },
+  "errorBoundary": {
+    "app": {
+      "pageTitle": "Erreur",
+      "pageDescription": "Une erreur est survenue pendant le chargement de cette section.",
+      "eyebrow": "Erreur applicative",
+      "title": "Quelque chose s'est mal passé",
+      "description": "La section n'a pas pu être affichée correctement. Tu peux réessayer sans quitter la page.",
+      "retry": "Réessayer"
+    }
   },
   "login": {
     "hero": "Là où les conversations créent du lien.",
@@ -37,6 +89,7 @@
       "signup": "Rejoignez Socially pour commencer à publier et échanger."
     },
     "email": "E-mail",
+    "name": "Nom",
     "password": "Mot de passe",
     "submit": {
       "signin": "Se connecter",
@@ -54,7 +107,45 @@
     "signupPrompt": "Vous n'avez pas encore de compte ?",
     "signupLink": "Créer un compte",
     "loginPrompt": "Vous avez déjà un compte ?",
-    "loginLink": "Se connecter"
+    "loginLink": "Se connecter",
+    "legalNotice": {
+      "start": "En créant un compte, vous déclarez avoir au moins 15 ans et acceptez les ",
+      "terms": "Conditions d'utilisation",
+      "middle": ". Consultez aussi notre ",
+      "privacy": "Politique de confidentialité",
+      "end": "."
+    }
+  },
+  "passwordReset": {
+    "request": {
+      "title": "Réinitialiser le mot de passe",
+      "description": "Indiquez l'adresse email de votre compte. Si elle existe, vous recevrez un lien de réinitialisation.",
+      "success": "Si un compte existe avec cette adresse, un email de réinitialisation vient d'être envoyé.",
+      "successDescription": "Consultez votre boîte mail et ouvrez le lien reçu pour choisir un nouveau mot de passe.",
+      "emailLabel": "Adresse email",
+      "emailPlaceholder": "vous@exemple.com",
+      "emptyEmail": "Veuillez renseigner votre adresse email.",
+      "fallbackError": "Impossible d'envoyer l'email de réinitialisation pour le moment.",
+      "pending": "Envoi...",
+      "submit": "Envoyer le lien",
+      "backToLogin": "Retour à la connexion"
+    },
+    "reset": {
+      "title": "Choisir un nouveau mot de passe",
+      "description": "Votre nouveau mot de passe doit contenir au moins 8 caractères.",
+      "invalidTokenDescription": "Le lien de réinitialisation est invalide ou a expiré.",
+      "passwordLabel": "Nouveau mot de passe",
+      "passwordPlaceholder": "Votre nouveau mot de passe",
+      "confirmPasswordLabel": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "Répétez le mot de passe",
+      "invalidToken": "Ce lien de réinitialisation est invalide ou a expiré.",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+      "passwordMismatch": "Les deux mots de passe ne correspondent pas.",
+      "fallbackError": "Impossible de modifier votre mot de passe pour le moment.",
+      "pending": "Modification...",
+      "submit": "Modifier le mot de passe",
+      "requestNewLink": "Demander un nouveau lien"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -73,6 +164,44 @@
       "data": {
         "title": "Mes données",
         "description": "Exportez les données associées à votre activité Socially."
+      },
+      "legal": {
+        "title": "Documents légaux",
+        "description": "Consultez les conditions, la confidentialité, les cookies et les règles de modération."
+      }
+    },
+    "actions": {
+      "email": {
+        "invalidSession": "Session expirée ou invalide.",
+        "profileNotFound": "Nous n'avons pas pu vous identifier.",
+        "empty": "L'adresse email est vide.",
+        "invalid": "L'adresse email n'est pas valide.",
+        "alreadyUsed": "Cet email est déjà utilisé par un autre compte.",
+        "updateError": "Impossible de modifier votre adresse email pour le moment."
+      },
+      "deleteAccount": {
+        "invalidSession": "Session expirée ou invalide.",
+        "profileNotFound": "Nous n'avons pas pu vous identifier.",
+        "restoreError": "Impossible d'annuler la suppression du compte.",
+        "deleteError": "Impossible de supprimer votre compte pour le moment.",
+        "restoreSuccess": "Suppression annulée avec succès.",
+        "deleteSuccess": "Votre compte sera définitivement supprimé dans 30 jours."
+      },
+      "language": {
+        "invalidSession": "Session expirée ou invalide.",
+        "invalidLocale": "Langue invalide.",
+        "profileNotFound": "Nous n'avons pas pu vous identifier.",
+        "updateError": "Impossible de modifier la langue pour le moment.",
+        "success": "Langue modifiée avec succès."
+      },
+      "unblock": {
+        "invalidSession": "Session expirée ou invalide.",
+        "missingProfile": "Profil à débloquer introuvable.",
+        "profileNotFound": "Nous n'avons pas pu vous identifier.",
+        "selfUnblock": "Vous ne pouvez pas vous débloquer vous-même.",
+        "notBlocked": "Ce profil n'est pas dans votre liste de blocage.",
+        "error": "Impossible de débloquer ce profil pour le moment.",
+        "success": "Profil débloqué avec succès."
       }
     },
     "account": {
@@ -94,6 +223,16 @@
         "success": "Email modifié avec succès",
         "pending": "Modification...",
         "submit": "Modifier mon mail"
+      },
+      "languagePreference": {
+        "label": "Langue de l'interface",
+        "description": "Changez la langue utilisée dans l'application.",
+        "success": "Langue modifiée avec succès.",
+        "options": {
+          "fr": "Français",
+          "en": "Anglais",
+          "es": "Espagnol"
+        }
       },
       "delete": {
         "title": "Suppression",
@@ -252,9 +391,20 @@
         "createFailed": "Impossible de créer le post. Réessayez.",
         "sensitiveWarning": "Attention, votre post a été jugé sensible."
       },
+      "appeal": {
+        "authRequired": "Veuillez vous connecter pour faire appel de cette décision.",
+        "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "postNotFound": "Impossible de retrouver ce post.",
+        "notAppealable": "Seuls les posts rejetés par la modération peuvent faire l'objet d'un appel.",
+        "alreadyPending": "Cet appel est déjà en attente de revue.",
+        "alreadyReviewed": "Cette décision de modération a déjà été revue.",
+        "createFailed": "Impossible d'envoyer l'appel. Réessayez.",
+        "created": "Votre appel a été envoyé pour revue."
+      },
       "like": {
         "authRequired": "Veuillez vous connecter pour liker.",
         "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "rateLimited": "Vous avez liké trop rapidement. Réessayez dans {minutes} minute(s).",
         "toggleFailed": "Impossible de modifier le like."
       },
       "report": {
@@ -295,6 +445,10 @@
         "previewAlt": "Image sélectionnée {index}",
         "removeImage": "Retirer l'image {index}",
         "unsafeBadge": "Image signalée",
+        "appealHint": "Vous pouvez demander une revue si vous pensez que cette décision de modération est incorrecte.",
+        "appealAction": "Faire appel",
+        "appealing": "Envoi...",
+        "appealSent": "Appel envoyé",
         "footerHint": "L'ordre des images est conservé pour la modération. Maximum : {max}.",
         "submit": "Publier",
         "submitting": "Publication...",
@@ -340,6 +494,7 @@
       "like": {
         "authRequired": "Veuillez vous connecter pour liker.",
         "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "rateLimited": "Vous avez liké trop rapidement. Réessayez dans {minutes} minute(s).",
         "toggleFailed": "Impossible de modifier le like."
       }
     },
@@ -391,6 +546,8 @@
       "likeError": "Impossible de modifier le like pour le moment.",
       "seeMore": "Voir plus",
       "seeLess": "Voir moins",
+      "deletedTitle": "Ce post a été supprimé",
+      "deletedDescription": "Le contenu original n'est plus disponible, mais les commentaires restent consultables.",
       "moreImages": "+{count} image(s)",
       "imageAlt": "Image du post {index}",
       "imageCounter": "{current} / {total}",
@@ -458,6 +615,15 @@
       "invalidImageType": "Seuls les formats .jpg, .jpeg, .png et .webp sont acceptés."
     }
   },
+  "legal": {
+    "eyebrow": "Legal beta",
+    "hubTitle": "Documents legaux",
+    "hubDescription": "Les pages legales de Socially pour cette V1 beta : informations editeur, confidentialite, cookies, conditions d'utilisation, regles communautaires et moderation.",
+    "updatedLabel": "Mis a jour le",
+    "readDocument": "Lire le document",
+    "backToIndex": "Retour aux documents legaux",
+    "documentsLabel": "Documents"
+  },
   "profilePublic": {
     "bioFallback": "Aucune bio n'a encore été ajoutée.",
     "recentPostsTitle": "Posts récents",
@@ -480,6 +646,7 @@
       "targetProfileNotFound": "Le profil que vous essayez de suivre n'a pas été trouvé.",
       "cannotFollowSelf": "Vous ne pouvez pas vous suivre vous-même.",
       "blocked": "Impossible de suivre ce profil, car l'un des deux comptes a bloqué l'autre.",
+      "rateLimited": "Vous avez modifié trop d'abonnements récemment. Réessayez dans {minutes} minute(s).",
       "databaseError": "Impossible d'enregistrer l'abonnement. Réessayez."
     },
     "stats": {
@@ -500,6 +667,16 @@
       "errors": {
         "submitFailed": "Impossible de mettre à jour votre profil. Réessayez."
       }
+    }
+  },
+  "seo": {
+    "profile": {
+      "title": "{name} (@{username})",
+      "description": "Profil public de {name} sur Socially avec {count, plural, one {# post visible} other {# posts visibles}}."
+    },
+    "category": {
+      "title": "Posts {category}",
+      "description": "Découvre les posts {category} les plus likés sur Socially."
     }
   },
   "appShell": {
@@ -523,7 +700,16 @@
       "discover": {
         "title": "Discover",
         "description": "Retrouve les surfaces de découverte éditoriale, les comptes et les temps forts au même endroit.",
-        "placeholder": "Le contenu Discover n'est pas encore implémenté. Ce placeholder garde une vraie page accessible pendant la construction."
+        "placeholder": "Le contenu Discover n'est pas encore implémenté. Ce placeholder garde une vraie page accessible pendant la construction.",
+        "profileAvatarAlt": "Avatar de {name}",
+        "mainPost": {
+          "empty": "Aucun post trouvé",
+          "postedBy": "Posté par"
+        },
+        "profiles": {
+          "title": "Meilleurs créateurs",
+          "followers": "{count, plural, one {Abonné} other {Abonnés}}"
+        }
       },
       "trending": {
         "title": "Trending",
@@ -576,6 +762,7 @@
           "messageTooLong": "Le message ne doit pas dépasser 2000 caractères.",
           "conversationNotFound": "Conversation introuvable ou inaccessible.",
           "receiverProfileUnavailable": "Ce profil n'est plus disponible.",
+          "rateLimited": "Vous avez envoyé trop de messages récemment. Réessayez dans {minutes} minute(s).",
           "sendFailed": "Impossible d'envoyer le message. Réessayez.",
           "failedToMarkAsRead": "Impossible de marquer la conversation comme lue. Réessayez."
         }
@@ -631,6 +818,44 @@
           "data": {
             "title": "Mes données",
             "description": "Exportez les données associées à votre activité Socially."
+          },
+          "legal": {
+            "title": "Documents légaux",
+            "description": "Consultez les conditions, la confidentialité, les cookies et les règles de modération."
+          }
+        },
+        "actions": {
+          "email": {
+            "invalidSession": "Session expirée ou invalide.",
+            "profileNotFound": "Nous n'avons pas pu vous identifier.",
+            "empty": "L'adresse email est vide.",
+            "invalid": "L'adresse email n'est pas valide.",
+            "alreadyUsed": "Cet email est déjà utilisé par un autre compte.",
+            "updateError": "Impossible de modifier votre adresse email pour le moment."
+          },
+          "deleteAccount": {
+            "invalidSession": "Session expirée ou invalide.",
+            "profileNotFound": "Nous n'avons pas pu vous identifier.",
+            "restoreError": "Impossible d'annuler la suppression du compte.",
+            "deleteError": "Impossible de supprimer votre compte pour le moment.",
+            "restoreSuccess": "Suppression annulée avec succès.",
+            "deleteSuccess": "Votre compte sera définitivement supprimé dans 30 jours."
+          },
+          "language": {
+            "invalidSession": "Session expirée ou invalide.",
+            "invalidLocale": "Langue invalide.",
+            "profileNotFound": "Nous n'avons pas pu vous identifier.",
+            "updateError": "Impossible de modifier la langue pour le moment.",
+            "success": "Langue modifiée avec succès."
+          },
+          "unblock": {
+            "invalidSession": "Session expirée ou invalide.",
+            "missingProfile": "Profil à débloquer introuvable.",
+            "profileNotFound": "Nous n'avons pas pu vous identifier.",
+            "selfUnblock": "Vous ne pouvez pas vous débloquer vous-même.",
+            "notBlocked": "Ce profil n'est pas dans votre liste de blocage.",
+            "error": "Impossible de débloquer ce profil pour le moment.",
+            "success": "Profil débloqué avec succès."
           }
         },
         "account": {
@@ -652,6 +877,16 @@
             "success": "Email modifié avec succès",
             "pending": "Modification...",
             "submit": "Modifier mon mail"
+          },
+          "languagePreference": {
+            "label": "Langue de l'interface",
+            "description": "Changez la langue utilisée dans l'application.",
+            "success": "Langue modifiée avec succès.",
+            "options": {
+              "fr": "Français",
+              "en": "Anglais",
+              "es": "Espagnol"
+            }
           },
           "delete": {
             "title": "Suppression",

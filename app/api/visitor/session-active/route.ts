@@ -1,8 +1,9 @@
+import { checkApiRateLimit, getRequestIp } from "@/lib/apiRateLimit";
 import { myPrisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-export async function POST() {
+export async function POST(request: Request) {
   const c = await cookies();
   const hasConsent = c.get("cookie_consent")?.value;
   const visitorId = c.get("visitorId")?.value;
@@ -10,6 +11,15 @@ export async function POST() {
 
   if (hasConsent !== "true" || !visitorId || sessionActive === "true") {
     return new NextResponse(null, { status: 204 });
+  }
+
+  const rateLimitResponse = await checkApiRateLimit(
+    "visitorSession",
+    visitorId || getRequestIp(request),
+  );
+
+  if (rateLimitResponse) {
+    return rateLimitResponse;
   }
 
   await myPrisma.anonymousVisitor.updateMany({

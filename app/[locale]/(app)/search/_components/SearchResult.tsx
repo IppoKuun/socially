@@ -11,10 +11,12 @@ import SearchFollowButton from "./SearchFollowButton";
 type SearchResultProps = {
   profiles: SearchProfile[];
   posts: FeedPost[];
+  isAuthenticated: boolean;
 };
 export default async function SearchResult({
   profiles,
   posts,
+  isAuthenticated,
 }: SearchResultProps) {
   const t = await getTranslations("appShell.pages.search.results");
   const hasResults = profiles.length > 0 || posts.length > 0;
@@ -112,6 +114,7 @@ export default async function SearchResult({
                   <SearchFollowButton
                     username={profile.username}
                     initialIsFollowing={profile.viewer.isFollower}
+                    isAuthenticated={isAuthenticated}
                     disabled={
                       profile.viewer.isOwner || profile.viewer.isBlocked
                     }
@@ -138,6 +141,7 @@ export default async function SearchResult({
                 key={post.id}
                 post={post}
                 commentHref={`/post/${post.slug}#post-comment-compose`}
+                isAuthenticated={isAuthenticated}
               />
             ))}
           </QueryProvider>

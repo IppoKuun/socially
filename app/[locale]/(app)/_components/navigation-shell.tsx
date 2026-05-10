@@ -44,7 +44,7 @@ type NavigationUser = {
   id: string | null;
   avatarUrl: string | null;
   displayName: string;
-  username: string;
+  username: string | null;
 };
 
 type NavigationItem = {
@@ -251,7 +251,7 @@ export function DesktopAppSidebar({
   const pathname = usePathname();
   const tNav = useTranslations("appShell.navigation");
   const tShell = useTranslations("appShell");
-  const profileHref = `/profile/${user.username}`;
+  const profileHref = user.username ? `/profile/${user.username}` : "/profile";
 
   return (
     <Sidebar className="sticky top-0 border-white/6 bg-[#17181d]">
@@ -323,7 +323,7 @@ export function DesktopAppSidebar({
               {user.displayName}
             </span>
             <span className="block truncate text-xs text-white/48">
-              @{user.username}
+              {user.username ? `@${user.username}` : tNav("profile")}
             </span>
           </span>
         </Link>
@@ -336,12 +336,12 @@ export function MobileBottomBar({
   username,
   unreadNotificationCount,
 }: {
-  username: string;
+  username: string | null;
   unreadNotificationCount: number;
 }) {
   const pathname = usePathname();
   const tNav = useTranslations("appShell.navigation");
-  const profileHref = `/profile/${username}`;
+  const profileHref = username ? `/profile/${username}` : "/profile";
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/8 bg-[rgba(11,12,16,0.96)] px-2 pb-[calc(env(safe-area-inset-bottom)+0.55rem)] pt-2 backdrop-blur-xl md:hidden">

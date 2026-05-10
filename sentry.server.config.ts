@@ -8,13 +8,17 @@ Sentry.init({
   dsn: "https://fc12eb56dcd34da53ec8896bb8a283f2@o4510902493118464.ingest.de.sentry.io/4511065051562064",
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-  tracesSampleRate: 1,
+  tracesSampleRate: 0.1,
 
   // Enable logs to be sent to Sentry
   enableLogs: true,
   enabled: process.env.NODE_ENV === "production",
+  // Replay : 0% pour les sessions normales (Privacy first)
+  replaysSessionSampleRate: 0,
+  // On garde 100% uniquement QUAND il y a une erreur (très utile pour débugger)
+  replaysOnErrorSampleRate: 1.0,
 
   // Enable sending user PII (Personally Identifiable Information)
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
-  sendDefaultPii: true,
+  sendDefaultPii: false,
 });

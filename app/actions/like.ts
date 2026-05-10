@@ -4,6 +4,12 @@ import { getTranslations } from "next-intl/server";
 
 import { myPrisma } from "@/lib/prisma";
 import { createNotificationIfMissing } from "@/lib/notifications";
+import { captureAppException } from "@/lib/monitoring/sentry";
+import { rateLimits } from "@/lib/rateLimits";
+
+function getRateLimitMinutes(reset: number) {
+  return Math.max(1, Math.ceil((reset - Date.now()) / (1000 * 60)));
+}
 
 export async function Like(postId: string) {
   const t = await getTranslations("post.actions.like");
@@ -15,6 +21,7 @@ export async function Like(postId: string) {
 
   const user = await myPrisma.userProfile.findFirst({
     where: { userId: session.user.id, deletedAt: null },
+    select: { id: true },
   });
 
   if (!user) {
@@ -23,6 +30,16 @@ export async function Like(postId: string) {
       userMsg: t("profileNotFound"),
     };
   }
+
+  const { success, reset } = await rateLimits.likeToggle.limit(user.id);
+
+  if (!success) {
+    return {
+      ok: false,
+      userMsg: t("rateLimited", { minutes: getRateLimitMinutes(reset) }),
+    };
+  }
+
   try {
     const isLiked = await myPrisma.postLike.findUnique({
       where: {
@@ -32,6 +49,7 @@ export async function Like(postId: string) {
           user_id: user.id,
         },
       },
+      select: { id: true },
     });
 
     if (isLiked) {
@@ -43,6 +61,7 @@ export async function Like(postId: string) {
         where: {
           id: postId,
           deletedAt: null,
+          moderationStatus: { not: "UNSAFE" },
           author: { deletedAt: null },
         },
         select: { id: true, userId: true },
@@ -65,10 +84,28 @@ export async function Like(postId: string) {
         });
       } catch (error) {
         console.error("Unable to create like notification", error);
+        captureAppException(error, {
+          feature: "notifications",
+          action: "create_like_notification",
+          level: "warning",
+          extra: {
+            actorProfileId: user.id,
+            receiverProfileId: targetPost.userId,
+            postId: targetPost.id,
+          },
+        });
       }
     }
   } catch (error) {
     console.error(error);
+    captureAppException(error, {
+      feature: "like",
+      action: "toggle_post_like",
+      extra: {
+        userProfileId: user.id,
+        postId,
+      },
+    });
     return { ok: false, userMsg: t("toggleFailed") };
   }
   return { ok: true, userMsg: "" };
@@ -84,12 +121,22 @@ export async function commentLike(commentId: string) {
 
   const user = await myPrisma.userProfile.findFirst({
     where: { userId: session.user.id, deletedAt: null },
+    select: { id: true },
   });
 
   if (!user) {
     return {
       ok: false,
       userMsg: t("profileNotFound"),
+    };
+  }
+
+  const { success, reset } = await rateLimits.likeToggle.limit(user.id);
+
+  if (!success) {
+    return {
+      ok: false,
+      userMsg: t("rateLimited", { minutes: getRateLimitMinutes(reset) }),
     };
   }
 
@@ -102,6 +149,7 @@ export async function commentLike(commentId: string) {
           user_id: user.id,
         },
       },
+      select: { id: true },
     });
 
     if (isLiked) {
@@ -116,6 +164,7 @@ export async function commentLike(commentId: string) {
           author: { deletedAt: null },
           post: {
             deletedAt: null,
+            moderationStatus: { not: "UNSAFE" },
             author: { deletedAt: null },
           },
         },
@@ -132,6 +181,14 @@ export async function commentLike(commentId: string) {
     }
   } catch (error) {
     console.error(error);
+    captureAppException(error, {
+      feature: "like",
+      action: "toggle_comment_like",
+      extra: {
+        userProfileId: user.id,
+        commentId,
+      },
+    });
     return { ok: false, userMsg: t("toggleFailed") };
   }
   return { ok: true, userMsg: "" };

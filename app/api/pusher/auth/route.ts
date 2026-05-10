@@ -7,12 +7,22 @@ import {
   getUserNotificationsChannel,
 } from "@/lib/pusher/events";
 import { myPrisma } from "@/lib/prisma";
+import { checkApiRateLimit, getRequestIp } from "@/lib/apiRateLimit";
 
 export async function POST(request: Request) {
   const session = await getSession();
 
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const rateLimitResponse = await checkApiRateLimit(
+    "pusherAuth",
+    session.user.id || getRequestIp(request),
+  );
+
+  if (rateLimitResponse) {
+    return rateLimitResponse;
   }
 
   const userProfile = await myPrisma.userProfile.findFirst({

@@ -15,9 +15,13 @@ import type { CommentSort } from "@/lib/feed/shared";
 
 type PostDetailClientProps = {
   slug: string;
+  isAuthenticated: boolean;
 };
 
-export default function PostDetailClient({ slug }: PostDetailClientProps) {
+export default function PostDetailClient({
+  slug,
+  isAuthenticated,
+}: PostDetailClientProps) {
   const t = useTranslations("postDetail");
   const router = useRouter();
   const [sort, setSort] = useState<CommentSort>("recent");
@@ -34,6 +38,7 @@ export default function PostDetailClient({ slug }: PostDetailClientProps) {
 
   const post = postDetailQuery.data?.post;
   const comments = commentsQuery.data?.comments ?? [];
+  const isPostDeleted = Boolean(post?.deletedAt);
 
   if (!post) {
     return null;
@@ -45,15 +50,19 @@ export default function PostDetailClient({ slug }: PostDetailClientProps) {
         post={post}
         variant="detail"
         commentHref="#post-comment-compose"
+        isAuthenticated={isAuthenticated}
         onDeleteSuccess={() => router.push("/feed")}
       />
 
-      <CommentComposeForm
-        postId={post.id}
-        postSlug={post.slug}
-        mode="toPost"
-        anchorId="post-comment-compose"
-      />
+      {isPostDeleted ? null : (
+        <CommentComposeForm
+          postId={post.id}
+          postSlug={post.slug}
+          mode="toPost"
+          anchorId="post-comment-compose"
+          isAuthenticated={isAuthenticated}
+        />
+      )}
 
       <section className="space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -90,6 +99,7 @@ export default function PostDetailClient({ slug }: PostDetailClientProps) {
               <CommentCard
                 key={comment.id}
                 comment={comment}
+                isAuthenticated={isAuthenticated}
                 replyHref={`/post/${slug}/c/${comment.id}#comment-reply-compose`}
                 threadHref={`/post/${slug}/c/${comment.id}#comment-reply-compose`}
               />

@@ -2,12 +2,13 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
 import { ArrowLeft, Download, Loader2 } from "lucide-react";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export default function SettingDataPage() {
-  const t = useTranslations("settings");
+  const t = useTranslations("appShell.pages.settings");
   const [status, setStatus] = useState<"idle" | "pending" | "error" | "succes">(
     "idle",
   );
@@ -54,6 +55,11 @@ export default function SettingDataPage() {
       toast.success(t("dataExport.exportDownloaded"));
     } catch (err) {
       console.error(err);
+      captureAppException(err, {
+        feature: "data_export",
+        action: "download_export_client",
+        level: "warning",
+      });
       setStatus("error");
       toast.error(t("dataExport.exportFailed"));
     }

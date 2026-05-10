@@ -3,6 +3,7 @@
 import { getTranslations } from "next-intl/server";
 
 import { getSession } from "@/lib/authSession";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 
 type CreateOrGetConversationResult =
@@ -127,6 +128,14 @@ export async function createOrGetConversation(
     return { ok: true, conversationId: conversation.id, userMsg: "" };
   } catch (error) {
     console.error("Unable to create or get conversation", error);
+    captureAppException(error, {
+      feature: "messages",
+      action: "create_or_get_conversation",
+      extra: {
+        viewerProfileId: viewer.id,
+        targetProfileId: target.id,
+      },
+    });
 
     return {
       ok: false,

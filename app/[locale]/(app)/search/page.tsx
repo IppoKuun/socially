@@ -9,6 +9,9 @@ import SearchHistory from "./_components/SearchHistory";
 import { getSession } from "@/lib/authSession";
 import { getQueriesResult, getViewerHistory } from "@/lib/search/queries";
 import { myPrisma } from "@/lib/prisma";
+import { noIndexMetadata } from "@/lib/seo";
+
+export const metadata = noIndexMetadata;
 
 type SearchPageProps = {
   searchParams: Promise<{
@@ -18,6 +21,8 @@ type SearchPageProps = {
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const t = await getTranslations("appShell.pages.search");
+  const session = await getSession();
+  const isAuthenticated = Boolean(session);
 
   const { q } = await searchParams;
   const query = typeof q === "string" ? q : "";
@@ -28,11 +33,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       // exclus de AppPageShell pour avoir une surface plus directe et dediee.
       <main className="">
         <SearchForm query={query} />
-        <SearchResult profiles={data.profiles} posts={data.posts} />
+        <SearchResult
+          profiles={data.profiles}
+          posts={data.posts}
+          isAuthenticated={isAuthenticated}
+        />
       </main>
     );
   }
-  const session = await getSession();
 
   const user = await myPrisma.userProfile.findFirst({
     where: { userId: session?.user.id, deletedAt: null },

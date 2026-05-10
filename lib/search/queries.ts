@@ -7,6 +7,7 @@ import { myPrisma } from "../prisma";
 
 const SEARCH_MIN_LENGTH = 2;
 const SEARCH_MAX_LENGTH = 50;
+const ANONYMOUS_VIEWER_ID = "__anonymous_viewer__";
 
 export type SearchProfile = {
   id: string;
@@ -43,29 +44,38 @@ export type SearchResult = {
   };
 };
 
-function getVisibleAuthorWhere(viewerId: string): Prisma.UserProfileWhereInput {
+function getVisibleAuthorWhere(
+  viewerId?: string | null,
+): Prisma.UserProfileWhereInput {
   return {
     deletedAt: null,
-    blocked: {
-      none: {
-        blockerId: viewerId,
-      },
-    },
-    blocker: {
-      none: {
-        blockedById: viewerId,
-      },
-    },
+    ...(viewerId
+      ? {
+          blocked: {
+            none: {
+              blockerId: viewerId,
+            },
+          },
+          blocker: {
+            none: {
+              blockedById: viewerId,
+            },
+          },
+        }
+      : {}),
   };
 }
 
-function getSearchPostSelect(viewerId: string) {
+function getSearchPostSelect(viewerId?: string | null) {
+  const safeViewerId = viewerId ?? ANONYMOUS_VIEWER_ID;
+
   return {
     id: true,
     title: true,
     content: true,
     slug: true,
     createdAt: true,
+    deletedAt: true,
     imagesUrl: true,
     moderationStatus: true,
     userId: true,
@@ -80,11 +90,11 @@ function getSearchPostSelect(viewerId: string) {
       },
     },
     likes: {
-      where: { user_id: viewerId },
+      where: { user_id: safeViewerId },
       select: { id: true },
     },
     reported: {
-      where: { reporterId: viewerId },
+      where: { reporterId: safeViewerId },
       select: { id: true },
     },
     _count: {
@@ -118,7 +128,7 @@ function serializeSearchAuthor(author: SearchPostRecord["author"]): FeedAuthor {
 
 function serializeSearchPost(
   post: SearchPostRecord,
-  viewerId: string,
+  viewerId?: string | null,
 ): FeedPost {
   return {
     id: post.id,
@@ -126,15 +136,16 @@ function serializeSearchPost(
     title: post.title,
     content: post.content,
     createdAt: post.createdAt.toISOString(),
+    deletedAt: post.deletedAt?.toISOString() ?? null,
     moderationStatus: post.moderationStatus,
     images: post.imagesUrl,
     likeCount: post._count.likes,
     commentCount: post._count.comment,
     author: serializeSearchAuthor(post.author),
     viewer: {
-      isOwner: post.userId === viewerId,
-      hasLiked: post.likes.length > 0,
-      hasReported: post.reported.length > 0,
+      isOwner: Boolean(viewerId && post.userId === viewerId),
+      hasLiked: Boolean(viewerId && post.likes.length > 0),
+      hasReported: Boolean(viewerId && post.reported.length > 0),
     },
   };
 }
@@ -147,21 +158,19 @@ export async function getQueriesResult(queries: string): Promise<SearchResult> {
   }
 
   const session = await getSession();
+  const user = session
+    ? await myPrisma.userProfile.findFirst({
+        where: { userId: session.user.id, deletedAt: null },
+        select: {
+          id: true,
 
-  if (!session) {
-    throw new myError("Unauthentificated");
-  }
-  const user = await myPrisma.userProfile.findFirst({
-    where: { userId: session.user.id, deletedAt: null },
-    select: {
-      id: true,
+          blocked: { select: { blockerId: true } },
+          blocker: { select: { blockedById: true } },
+        },
+      })
+    : null;
 
-      blocked: { select: { blockerId: true } },
-      blocker: { select: { blockedById: true } },
-    },
-  });
-
-  if (!user) {
+  if (session && !user) {
     throw new myError("User not found");
   }
   const [profiles, posts] = await Promise.all([
@@ -191,34 +200,37 @@ export async function getQueriesResult(queries: string): Promise<SearchResult> {
     myPrisma.post.findMany({
       where: {
         deletedAt: null,
-        author: getVisibleAuthorWhere(user.id),
+        moderationStatus: { not: "UNSAFE" },
+        author: getVisibleAuthorWhere(user?.id),
         OR: [
           { title: { contains: normalizedQuery, mode: "insensitive" } },
           { content: { contains: normalizedQuery, mode: "insensitive" } },
         ],
       },
-      select: getSearchPostSelect(user.id),
+      select: getSearchPostSelect(user?.id),
       take: 10,
     }),
   ]);
 
-  const followedProfiles = await myPrisma.follow.findMany({
-    where: {
-      followerProfileId: user.id,
-      followedProfileId: {
-        in: profiles.map((profile) => profile.id),
-      },
-    },
-    select: {
-      followedProfileId: true,
-    },
-  });
+  const followedProfiles = user
+    ? await myPrisma.follow.findMany({
+        where: {
+          followerProfileId: user.id,
+          followedProfileId: {
+            in: profiles.map((profile) => profile.id),
+          },
+        },
+        select: {
+          followedProfileId: true,
+        },
+      })
+    : [];
 
   const profilesThatBlockedViewer = new Set(
-    user.blocked.map((block) => block.blockerId),
+    user?.blocked.map((block) => block.blockerId) ?? [],
   );
   const profilesBlockedByViewer = new Set(
-    user.blocker.map((block) => block.blockedById),
+    user?.blocker.map((block) => block.blockedById) ?? [],
   );
 
   const viewerFollowId = new Set(
@@ -230,7 +242,7 @@ export async function getQueriesResult(queries: string): Promise<SearchResult> {
       profiles: profiles.map((p) => ({
         ...p,
         viewer: {
-          isOwner: p.id === user?.id,
+          isOwner: Boolean(user && p.id === user.id),
           isFollower: viewerFollowId.has(p.id),
           isBlocked:
             profilesBlockedByViewer.has(p.id) ||
@@ -238,7 +250,7 @@ export async function getQueriesResult(queries: string): Promise<SearchResult> {
             false,
         },
       })),
-      posts: posts.map((post) => serializeSearchPost(post, user.id)),
+      posts: posts.map((post) => serializeSearchPost(post, user?.id)),
     },
   };
 }

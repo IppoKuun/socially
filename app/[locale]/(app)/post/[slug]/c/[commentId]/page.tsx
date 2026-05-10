@@ -6,7 +6,11 @@ import { readCommentThread } from "@/app/actions/feed";
 import AppPageShell from "@/app/[locale]/(app)/_components/app-page-shell";
 import CommentThreadClient from "@/components/comment/comment-thread-client";
 import { feedQueryKeys } from "@/lib/feed/query-keys";
+import { getSession } from "@/lib/authSession";
 import { makeQueryClient } from "@/lib/query-client";
+import { noIndexMetadata } from "@/lib/seo";
+
+export const metadata = noIndexMetadata;
 
 export default async function CommentThreadPage({
   params,
@@ -15,6 +19,8 @@ export default async function CommentThreadPage({
 
   const { commentId, slug } = await params;
   const t = await getTranslations("commentThread");
+  const session = await getSession();
+  const isAuthenticated = Boolean(session);
   const queryClient = makeQueryClient();
 
   await queryClient.prefetchQuery({
@@ -37,7 +43,11 @@ export default async function CommentThreadPage({
       className="max-w-[880px]"
     >
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <CommentThreadClient slug={slug} commentId={commentId} />
+        <CommentThreadClient
+          slug={slug}
+          commentId={commentId}
+          isAuthenticated={isAuthenticated}
+        />
       </HydrationBoundary>
     </AppPageShell>
   );

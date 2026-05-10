@@ -2,7 +2,7 @@
 
 import React, { useActionState, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import Image from "next/image";
 import createProfile, { getTrackingDataForAuth } from "./_actions/actions";
 import { signIn } from "@/lib/authClient";
@@ -52,6 +52,8 @@ export default function LoginPageClient() {
     "mt-1 flex flex-wrap items-center justify-center gap-1.5 text-sm text-text-muted";
   const switchButtonClass =
     "font-semibold text-primary transition hover:text-primary-glow";
+  const legalLinkClass =
+    "font-medium text-primary transition hover:text-primary-glow";
 
   const initialState = { ok: false, userMsg: "" };
   const [state, formAction, isPending] = useActionState<
@@ -190,12 +192,12 @@ export default function LoginPageClient() {
             <div className={signupFieldsGridClass}>
               <div className={fieldStackClass}>
                 <label htmlFor="signup-name" className={labelClass}>
-                  Nom
+                  {t("name")}
                 </label>
                 <input
                   id="signup-name"
                   name="name"
-                  placeholder="name"
+                  placeholder={t("name")}
                   autoComplete="name"
                   className={inputClass}
                 ></input>
@@ -229,7 +231,6 @@ export default function LoginPageClient() {
                   placeholder={t("password")}
                   onChange={(e) => setPassword(e.target.value)}
                 ></input>
-                <span className={helperTextClass}>{t("forgotPassword")}</span>
               </div>
             </div>
             <button
@@ -239,6 +240,17 @@ export default function LoginPageClient() {
             >
               {t("submit.signup")}
             </button>
+            <p className="text-center text-xs leading-5 text-text-dim">
+              {t("legalNotice.start")}
+              <Link href="/legal/terms" className={legalLinkClass}>
+                {t("legalNotice.terms")}
+              </Link>
+              {t("legalNotice.middle")}
+              <Link href="/legal/privacy" className={legalLinkClass}>
+                {t("legalNotice.privacy")}
+              </Link>
+              {t("legalNotice.end")}
+            </p>
             <div className={switchRowClass}>
               <p>{t("loginPrompt")}</p>
               <button
@@ -335,6 +347,9 @@ export default function LoginPageClient() {
                   placeholder={t("password")}
                   onChange={(e) => setPassword(e.target.value)}
                 ></input>
+                <Link href="/forgot-password" className={helperTextClass}>
+                  {t("forgotPassword")}
+                </Link>
               </div>
             </div>
             <button

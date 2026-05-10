@@ -25,6 +25,7 @@ type PostCardProps = {
   post: FeedPost;
   variant?: PostCardVariant;
   commentHref: string;
+  isAuthenticated: boolean;
   className?: string;
   onDeleteSuccess?: (postId: string) => void;
 };
@@ -74,6 +75,7 @@ export default function PostCard({
   post,
   variant = "feed",
   commentHref,
+  isAuthenticated,
   className,
   onDeleteSuccess,
 }: PostCardProps) {
@@ -86,9 +88,10 @@ export default function PostCard({
   const compact = variant === "context";
   const isProfile = variant === "profile";
   const isDetail = variant === "detail";
-  const isNavigable = !isDetail;
+  const isDeleted = Boolean(post.deletedAt);
+  const isNavigable = !isDetail && !isDeleted;
   const postHref = `/post/${post.slug}`;
-  const postContent = post.content ?? "";
+  const postContent = isDeleted ? "" : (post.content ?? "");
   const shouldShowExpand = isDetail && postContent.length > 440;
   const contentClassName = isDetail
     ? expanded
@@ -129,14 +132,40 @@ export default function PostCard({
     router.push(postHref);
   }
 
+  if (isDeleted) {
+    return (
+      <article
+        className={cn(
+          "rounded-[4px] border border-white/8 bg-white/[0.025] px-5 py-5 sm:px-6 sm:py-6",
+          compact && "px-4 py-4",
+          className,
+        )}
+      >
+        <div className="flex items-start gap-3">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/45">
+            <TriangleAlert className="size-5" aria-hidden="true" />
+          </span>
+          <div className="min-w-0 space-y-1">
+            <h2 className="font-manrope text-base font-semibold text-white/78">
+              {t("deletedTitle")}
+            </h2>
+            <p className="text-sm leading-6 text-white/45">
+              {t("deletedDescription")}
+            </p>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
   const cardContent = (
     <article
       role={isNavigable ? "link" : undefined}
       tabIndex={isNavigable ? 0 : undefined}
       className={cn(
-        "relative overflow-hidden rounded-[24px] bg-[#12151c] shadow-[0_28px_80px_-54px_rgba(0,0,0,0.98)]",
+        "relative overflow-hidden rounded-[4px] border-b border-b-slate-500 bg-transparent    p-6 shadow-[0_28px_80px_-54px_rgba(0,0,0,0.98)]",
         compact
-          ? "px-4 py-4"
+          ? "px-4 py-4 border border-white/5 "
           : isProfile
             ? "px-4 py-4 sm:px-5 sm:py-5"
             : "px-5 py-5 sm:px-6 sm:py-6",
@@ -304,9 +333,7 @@ export default function PostCard({
                   alt={t("imageAlt", { index: 1 })}
                   fill
                   className="object-cover transition duration-300 group-hover:scale-[1.015]"
-                  sizes={
-                    compact ? "190px" : "(max-width: 1024px) 100vw, 240px"
-                  }
+                  sizes={compact ? "190px" : "(max-width: 1024px) 100vw, 240px"}
                 />
               </div>
 
@@ -323,6 +350,7 @@ export default function PostCard({
           <PostActions
             post={post}
             commentHref={commentHref}
+            isAuthenticated={isAuthenticated}
             compact={compact}
             onDeleteSuccess={onDeleteSuccess}
           />

@@ -14,12 +14,28 @@ enum Theme {
   @@schema("app")
 }
 
+enum EmailStatus {
+  SENT
+  FAILED
+
+  @@schema("app")
+}
+
 // ModerationStatus est le status que renvoie l'IA apres avoir placé analysé le post //
 
 enum ModerationStatus {
   SAFE
   UNCERTAIN
   UNSAFE
+
+  @@schema("app")
+}
+
+enum PostAppealStatus {
+  NONE
+  PENDING
+  ACCEPTED
+  REJECTED
 
   @@schema("app")
 }
@@ -92,7 +108,6 @@ model UserProfile {
 
   // Champs pour le tracking //
   hasAcceptedCookies    Boolean   @default(false)
-  last_login_at         DateTime?
   last_seen_at          DateTime?
   utm_source            String?
   utm_medium            String?
@@ -139,6 +154,7 @@ model UserProfile {
 
   SearchHistory SearchHistory[]
 
+  @@index([defineltyDeleted, deletedAt])
   @@schema("app")
 }
 
@@ -170,6 +186,15 @@ model Post {
   deletedAt      DateTime?
   categories     Category[] @default([]) @map("Category")
 
+  moderationReason String?
+  unsafeImages     Int[]   @default([])
+
+  appealStatus         PostAppealStatus @default(NONE)
+  appealedAt           DateTime?
+  reviewedAt           DateTime?
+  reviewedById         String?
+  reviewDecisionReason String?
+
   moderationStatus ModerationStatus
   comment          Comment[]
   likes            PostLike[]
@@ -178,6 +203,10 @@ model Post {
   userId           String
   author           UserProfile      @relation(fields: [userId], references: [id])
 
+  @@index([deletedAt, createdAt, id])
+  @@index([userId, createdAt])
+  @@index([moderationStatus, createdAt])
+  @@index([moderationStatus, appealStatus, appealedAt])
   @@schema("app")
 }
 
@@ -189,9 +218,10 @@ model Report {
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   reporterId String
-  reporter   UserProfile @relation(fields: [reporterId], references: [id])
+  reporter   UserProfile @relation(fields: [reporterId], references: [id], onDelete: Cascade)
 
   @@unique([reporterId, postId])
+  @@index([postId])
   @@schema("app")
 }
 
@@ -214,6 +244,9 @@ model Comment {
   postId   String
   post     Post          @relation(fields: [postId], references: [id])
 
+  @@index([postId, responseToCommentId, deletedAt, createdAt])
+  @@index([responseToCommentId, createdAt])
+  @@index([authorId, createdAt])
   @@schema("app")
 }
 
@@ -223,14 +256,16 @@ model PostLike {
   id String @id @default(cuid())
 
   post_id String
-  post    Post   @relation(fields: [post_id], references: [id])
+  post    Post   @relation(fields: [post_id], references: [id], onDelete: Cascade)
 
   user_id String
-  user    UserProfile @relation(fields: [user_id], references: [id])
+  user    UserProfile @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
   @@unique([user_id, post_id])
+  @@index([post_id])
+  @@index([user_id, createdAt])
   @@schema("app")
 }
 
@@ -240,14 +275,16 @@ model CommentLike {
   id String @id @default(cuid())
 
   comment_id String
-  comment    Comment @relation(fields: [comment_id], references: [id])
+  comment    Comment @relation(fields: [comment_id], references: [id], onDelete: Cascade)
 
   user_id String
-  user    UserProfile @relation(fields: [user_id], references: [id])
+  user    UserProfile @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
   @@unique([user_id, comment_id])
+  @@index([comment_id])
+  @@index([user_id, createdAt])
   @@schema("app")
 }
 
@@ -256,38 +293,41 @@ model Follow {
   createdAt DateTime @default(now())
 
   followedProfileId String
-  followedProfile   UserProfile @relation("FollowedProfile", fields: [followedProfileId], references: [id])
+  followedProfile   UserProfile @relation("FollowedProfile", fields: [followedProfileId], references: [id], onDelete: Cascade)
 
   followerProfileId String
-  followerProfile   UserProfile @relation("FollowerProfile", fields: [followerProfileId], references: [id])
+  followerProfile   UserProfile @relation("FollowerProfile", fields: [followerProfileId], references: [id], onDelete: Cascade)
 
   @@unique([followedProfileId, followerProfileId])
+  @@index([followerProfileId, followedProfileId])
+  @@index([followerProfileId, createdAt])
   @@schema("app")
 }
 
 model Block {
   id          String      @id @default(cuid())
   blockedById String
-  blocked     UserProfile @relation("blocked", fields: [blockedById], references: [id])
+  blocked     UserProfile @relation("blocked", fields: [blockedById], references: [id], onDelete: Cascade)
 
   blockerId String
-  blocker   UserProfile @relation("Blocker", fields: [blockerId], references: [id])
+  blocker   UserProfile @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
   @@unique([blockerId, blockedById])
+  @@index([blockedById, blockerId])
+  @@index([blockerId, createdAt])
   @@schema("app")
 }
 
 model Conversation {
   id String @id @default(cuid())
 
-
-  directKey     String   @unique
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  directKey       String   @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   lastMessageText String?
-  lastMessageAt DateTime @default(now())
+  lastMessageAt   DateTime @default(now())
 
   creatorId String
   creator   UserProfile @relation("ConversationCreator", fields: [creatorId], references: [id])
@@ -300,8 +340,8 @@ model Conversation {
 
   messages Message[]
 
-  @@index([participantOneId])
-  @@index([participantTwoId])
+  @@index([participantOneId, lastMessageAt])
+  @@index([participantTwoId, lastMessageAt])
   @@index([lastMessageAt])
   @@schema("app")
 }
@@ -324,6 +364,7 @@ model Message {
 
   @@index([conversationId, createdAt])
   @@index([receiverId, isRead])
+  @@index([conversationId, receiverId, isRead])
   @@schema("app")
 }
 
@@ -332,7 +373,7 @@ model Notifications {
   createdAt DateTime @default(now())
 
   postId String?
-  post   Post?   @relation(fields: [postId], references: [id])
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   actorId String
   actor   UserProfile @relation("TriggeredNotifications", fields: [actorId], references: [id], onDelete: Cascade)
@@ -341,9 +382,14 @@ model Notifications {
   isRead Boolean            @default(false)
 
   userId    String
-  userNotif UserProfile @relation("ReceiverNotifications", fields: [userId], references: [id])
+  userNotif UserProfile @relation("ReceiverNotifications", fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([actorId, userId, type, postId])
+  @@index([userId, createdAt])
+  @@index([userId, type, createdAt])
+  @@index([userId, isRead])
+  @@index([userId, postId, type, isRead])
+  @@index([postId])
   @@schema("app")
 }
 
@@ -353,8 +399,22 @@ model SearchHistory {
   query     String
 
   userId String
-  user   UserProfile @relation(fields: [userId], references: [id])
+  user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, createdAt])
+  @@index([userId, query])
+  @@schema("app")
+}
+
+model EmailLog {
+  id        String   @id @default(cuid())
+  to        String
+  subject   String
+  status    EmailStatus @default(SENT)
+  error     String?
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
   @@schema("app")
 }
 
@@ -369,6 +429,7 @@ model StaffProfile {
 
   @@schema("auth")
 }
+
 
 // CHAMPS DE BETTER AUTH //
 

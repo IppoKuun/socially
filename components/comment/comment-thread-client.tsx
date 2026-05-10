@@ -12,11 +12,13 @@ import { feedQueryKeys } from "@/lib/feed/query-keys";
 type CommentThreadClientProps = {
   slug: string;
   commentId: string;
+  isAuthenticated: boolean;
 };
 
 export default function CommentThreadClient({
   slug,
   commentId,
+  isAuthenticated,
 }: CommentThreadClientProps) {
   const t = useTranslations("commentThread");
   const threadQuery = useQuery({
@@ -25,6 +27,7 @@ export default function CommentThreadClient({
   });
 
   const thread = threadQuery.data;
+  const isPostDeleted = Boolean(thread?.post.deletedAt);
 
   if (!thread) {
     return null;
@@ -40,6 +43,7 @@ export default function CommentThreadClient({
           post={thread.post}
           variant="context"
           commentHref={`/post/${slug}#post-comment-compose`}
+          isAuthenticated={isAuthenticated}
         />
       </section>
 
@@ -51,6 +55,7 @@ export default function CommentThreadClient({
           <CommentCard
             comment={thread.parentComment}
             variant="context"
+            isAuthenticated={isAuthenticated}
             replyHref={`/post/${slug}/c/${thread.parentComment.id}#comment-reply-compose`}
             threadHref={`/post/${slug}/c/${thread.parentComment.id}#comment-reply-compose`}
           />
@@ -65,17 +70,21 @@ export default function CommentThreadClient({
           <CommentCard
             comment={thread.comment}
             highlighted
+            isAuthenticated={isAuthenticated}
             replyHref="#comment-reply-compose"
           />
         </div>
 
-        <CommentComposeForm
-          postId={thread.post.id}
-          postSlug={thread.post.slug}
-          mode="toComment"
-          responseToCommentId={thread.comment.id}
-          anchorId="comment-reply-compose"
-        />
+        {isPostDeleted ? null : (
+          <CommentComposeForm
+            postId={thread.post.id}
+            postSlug={thread.post.slug}
+            mode="toComment"
+            responseToCommentId={thread.comment.id}
+            anchorId="comment-reply-compose"
+            isAuthenticated={isAuthenticated}
+          />
+        )}
       </section>
 
       <section className="space-y-4">
@@ -93,6 +102,7 @@ export default function CommentThreadClient({
                 key={reply.id}
                 comment={reply}
                 variant="context"
+                isAuthenticated={isAuthenticated}
                 replyHref={`/post/${slug}/c/${reply.id}#comment-reply-compose`}
                 threadHref={`/post/${slug}/c/${reply.id}#comment-reply-compose`}
               />

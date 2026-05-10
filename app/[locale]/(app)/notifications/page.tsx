@@ -12,6 +12,10 @@ import MarkAllAsRead from "./_components/MarkAllAsRead";
 import FollowNotifCard from "./_components/FollowNotifCard";
 import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import AuthRequiredPrompt from "@/components/auth/AuthRequiredPrompt";
+import { noIndexMetadata } from "@/lib/seo";
+
+export const metadata = noIndexMetadata;
 
 async function getFollowNotificationsForUser(userId: string) {
   return myPrisma.notifications.findMany({
@@ -51,7 +55,11 @@ async function getPostNotificationsForUser(userId: string) {
       type: { in: ["LIKE", "COMMENT"] },
       postId: { not: null },
       actor: { deletedAt: null },
-      post: { deletedAt: null, author: { deletedAt: null } },
+      post: {
+        deletedAt: null,
+        moderationStatus: { not: "UNSAFE" },
+        author: { deletedAt: null },
+      },
     },
     orderBy: { createdAt: "desc" },
     take: 200,
@@ -171,7 +179,11 @@ export default async function NotificationsPage({
   const session = await getSession();
 
   if (!session) {
-    return <AppPageShell title={t("title")} description={t("description")} />;
+    return (
+      <AppPageShell title={t("title")} description={t("description")}>
+        <AuthRequiredPrompt />
+      </AppPageShell>
+    );
   }
 
   const userProfile = await myPrisma.userProfile.findFirst({

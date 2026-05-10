@@ -24,7 +24,59 @@
     },
     "accept": "Aceptar cookies",
     "decline": "Rechazar",
-    "settings": "Gestionar preferencias"
+    "settings": "Gestionar preferencias",
+    "learnMore": {
+      "start": "Más información en nuestra ",
+      "cookies": "política de cookies",
+      "middle": " y nuestra ",
+      "privacy": "política de privacidad",
+      "end": "."
+    }
+  },
+  "authRequiredDialog": {
+    "title": "Inicia sesión para continuar",
+    "description": "Esta acción está reservada a miembros conectados. Inicia sesión o crea una cuenta para interactuar en Socially.",
+    "action": "Iniciar sesión",
+    "cancel": "Más tarde"
+  },
+  "notFound": {
+    "general": {
+      "pageTitle": "Página no encontrada",
+      "pageDescription": "Esta página no existe o ya no está disponible.",
+      "eyebrow": "Error 404",
+      "title": "No encontramos esta página",
+      "description": "Puede que el enlace sea incorrecto, o que el recurso se haya movido o eliminado.",
+      "primaryAction": "Volver al feed",
+      "secondaryAction": "Buscar"
+    },
+    "profile": {
+      "pageTitle": "Perfil no encontrado",
+      "pageDescription": "Este perfil no existe o ya no es accesible.",
+      "eyebrow": "Perfil no disponible",
+      "title": "No se encontró este perfil",
+      "description": "El usuario puede haber cambiado su nombre, eliminado su cuenta, o este perfil ya no es visible.",
+      "primaryAction": "Buscar perfiles",
+      "secondaryAction": "Volver al feed"
+    },
+    "post": {
+      "pageTitle": "Post no encontrado",
+      "pageDescription": "Este post no existe o ya no es accesible.",
+      "eyebrow": "Post no disponible",
+      "title": "No se encontró este post",
+      "description": "El post puede haber sido eliminado, moderado, o el enlace que seguiste ya no es válido.",
+      "primaryAction": "Volver al feed",
+      "secondaryAction": "Ver tendencias"
+    }
+  },
+  "errorBoundary": {
+    "app": {
+      "pageTitle": "Error",
+      "pageDescription": "Se produjo un error al cargar esta sección.",
+      "eyebrow": "Error de aplicación",
+      "title": "Algo salió mal",
+      "description": "Esta sección no se pudo mostrar correctamente. Puedes intentarlo de nuevo sin salir de la página.",
+      "retry": "Intentar de nuevo"
+    }
   },
   "login": {
     "hero": "Donde las conversaciones conectan.",
@@ -37,6 +89,7 @@
       "signup": "Únete a Socially para empezar a publicar y conectar."
     },
     "email": "Correo electrónico",
+    "name": "Nombre",
     "password": "Contraseña",
     "submit": {
       "signin": "Iniciar sesión",
@@ -54,7 +107,45 @@
     "signupPrompt": "¿Aún no tienes una cuenta?",
     "signupLink": "Crear una cuenta",
     "loginPrompt": "¿Ya tienes una cuenta?",
-    "loginLink": "Iniciar sesión"
+    "loginLink": "Iniciar sesión",
+    "legalNotice": {
+      "start": "Al crear una cuenta, declaras tener al menos 15 años y aceptas las ",
+      "terms": "Condiciones de uso",
+      "middle": ". Consulta también nuestra ",
+      "privacy": "Política de privacidad",
+      "end": "."
+    }
+  },
+  "passwordReset": {
+    "request": {
+      "title": "Restablecer la contraseña",
+      "description": "Indica el correo de tu cuenta. Si existe, recibirás un enlace de restablecimiento.",
+      "success": "Si existe una cuenta con esta dirección, se ha enviado un email de restablecimiento.",
+      "successDescription": "Revisa tu bandeja de entrada y abre el enlace para elegir una nueva contraseña.",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@ejemplo.com",
+      "emptyEmail": "Introduce tu correo electrónico.",
+      "fallbackError": "No se puede enviar el email de restablecimiento en este momento.",
+      "pending": "Enviando...",
+      "submit": "Enviar enlace",
+      "backToLogin": "Volver al inicio de sesión"
+    },
+    "reset": {
+      "title": "Elegir una nueva contraseña",
+      "description": "Tu nueva contraseña debe tener al menos 8 caracteres.",
+      "invalidTokenDescription": "El enlace de restablecimiento no es válido o ha expirado.",
+      "passwordLabel": "Nueva contraseña",
+      "passwordPlaceholder": "Tu nueva contraseña",
+      "confirmPasswordLabel": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Repite la contraseña",
+      "invalidToken": "Este enlace de restablecimiento no es válido o ha expirado.",
+      "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
+      "passwordMismatch": "Las dos contraseñas no coinciden.",
+      "fallbackError": "No se puede modificar tu contraseña en este momento.",
+      "pending": "Modificando...",
+      "submit": "Modificar contraseña",
+      "requestNewLink": "Solicitar un nuevo enlace"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -73,6 +164,44 @@
       "data": {
         "title": "Mis datos",
         "description": "Exporta los datos asociados a tu actividad en Socially."
+      },
+      "legal": {
+        "title": "Documentos legales",
+        "description": "Consulta las condiciones, la privacidad, las cookies y las reglas de moderación."
+      }
+    },
+    "actions": {
+      "email": {
+        "invalidSession": "La sesión ha expirado o no es válida.",
+        "profileNotFound": "No pudimos identificar tu perfil.",
+        "empty": "La dirección de email está vacía.",
+        "invalid": "La dirección de email no es válida.",
+        "alreadyUsed": "Este email ya está usado por otra cuenta.",
+        "updateError": "No se puede modificar tu email en este momento."
+      },
+      "deleteAccount": {
+        "invalidSession": "La sesión ha expirado o no es válida.",
+        "profileNotFound": "No pudimos identificar tu perfil.",
+        "restoreError": "No se pudo cancelar la eliminación de la cuenta.",
+        "deleteError": "No se puede eliminar tu cuenta en este momento.",
+        "restoreSuccess": "Eliminación cancelada correctamente.",
+        "deleteSuccess": "Tu cuenta se eliminará definitivamente en 30 días."
+      },
+      "language": {
+        "invalidSession": "La sesión ha expirado o no es válida.",
+        "invalidLocale": "Idioma no válido.",
+        "profileNotFound": "No pudimos identificar tu perfil.",
+        "updateError": "No se puede modificar el idioma en este momento.",
+        "success": "Idioma modificado correctamente."
+      },
+      "unblock": {
+        "invalidSession": "La sesión ha expirado o no es válida.",
+        "missingProfile": "No se encontró el perfil que quieres desbloquear.",
+        "profileNotFound": "No pudimos identificar tu perfil.",
+        "selfUnblock": "No puedes desbloquearte a ti mismo.",
+        "notBlocked": "Este perfil no está en tu lista de bloqueo.",
+        "error": "No se puede desbloquear este perfil en este momento.",
+        "success": "Perfil desbloqueado correctamente."
       }
     },
     "account": {
@@ -94,6 +223,16 @@
         "success": "Email modificado correctamente",
         "pending": "Modificando...",
         "submit": "Modificar mi email"
+      },
+      "languagePreference": {
+        "label": "Idioma de la interfaz",
+        "description": "Cambia el idioma utilizado en la aplicación.",
+        "success": "Idioma modificado correctamente.",
+        "options": {
+          "fr": "Francés",
+          "en": "Inglés",
+          "es": "Español"
+        }
       },
       "delete": {
         "title": "Eliminación",
@@ -252,9 +391,20 @@
         "createFailed": "No se puede crear la publicación. Inténtalo de nuevo.",
         "sensitiveWarning": "Atención: tu publicación ha sido considerada sensible."
       },
+      "appeal": {
+        "authRequired": "Inicia sesión para apelar esta decisión.",
+        "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+        "postNotFound": "No se pudo encontrar esta publicación.",
+        "notAppealable": "Solo se pueden apelar las publicaciones rechazadas por moderación.",
+        "alreadyPending": "Esta apelación ya está pendiente de revisión.",
+        "alreadyReviewed": "Esta decisión de moderación ya fue revisada.",
+        "createFailed": "No se pudo enviar la apelación. Inténtalo de nuevo.",
+        "created": "Tu apelación ha sido enviada para revisión."
+      },
       "like": {
         "authRequired": "Inicia sesión para dar me gusta.",
         "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+        "rateLimited": "Has dado me gusta demasiado rápido. Inténtalo de nuevo dentro de {minutes} minuto(s).",
         "toggleFailed": "No es posible actualizar el me gusta."
       },
       "report": {
@@ -295,6 +445,10 @@
         "previewAlt": "Imagen seleccionada {index}",
         "removeImage": "Eliminar la imagen {index}",
         "unsafeBadge": "Imagen señalada",
+        "appealHint": "Puedes solicitar una revisión si crees que esta decisión de moderación es incorrecta.",
+        "appealAction": "Apelar",
+        "appealing": "Enviando...",
+        "appealSent": "Apelación enviada",
         "footerHint": "El orden de las imágenes se conserva para la moderación. Máximo: {max}.",
         "submit": "Publicar",
         "submitting": "Publicando...",
@@ -340,6 +494,7 @@
       "like": {
         "authRequired": "Inicia sesión para dar me gusta.",
         "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+        "rateLimited": "Has dado me gusta demasiado rápido. Inténtalo de nuevo dentro de {minutes} minuto(s).",
         "toggleFailed": "No es posible actualizar el me gusta."
       }
     },
@@ -391,6 +546,8 @@
       "likeError": "No es posible actualizar el me gusta ahora mismo.",
       "seeMore": "Ver más",
       "seeLess": "Ver menos",
+      "deletedTitle": "Esta publicación fue eliminada",
+      "deletedDescription": "El contenido original ya no está disponible, pero los comentarios siguen visibles.",
       "moreImages": "+{count} imagen(es)",
       "imageAlt": "Imagen de la publicación {index}",
       "imageCounter": "{current} / {total}",
@@ -458,6 +615,15 @@
       "invalidImageType": "Solo se aceptan los formatos .jpg, .jpeg, .png y .webp."
     }
   },
+  "legal": {
+    "eyebrow": "Legal beta",
+    "hubTitle": "Documentos legales",
+    "hubDescription": "Las paginas legales de Socially para esta V1 beta: informacion del editor, privacidad, cookies, condiciones de uso, reglas comunitarias y moderacion.",
+    "updatedLabel": "Actualizado el",
+    "readDocument": "Leer el documento",
+    "backToIndex": "Volver a los documentos legales",
+    "documentsLabel": "Documentos"
+  },
   "profilePublic": {
     "bioFallback": "Todavía no se ha añadido ninguna bio.",
     "recentPostsTitle": "Publicaciones recientes",
@@ -480,6 +646,7 @@
       "targetProfileNotFound": "No se pudo encontrar el perfil que intentas seguir.",
       "cannotFollowSelf": "No puedes seguirte a ti mismo.",
       "blocked": "No puedes seguir este perfil porque una de las cuentas ha bloqueado a la otra.",
+      "rateLimited": "Has actualizado demasiados seguimientos recientemente. Inténtalo de nuevo dentro de {minutes} minuto(s).",
       "databaseError": "No se pudo guardar el seguimiento. Inténtalo de nuevo."
     },
     "stats": {
@@ -500,6 +667,16 @@
       "errors": {
         "submitFailed": "No se pudo actualizar tu perfil. Inténtalo de nuevo."
       }
+    }
+  },
+  "seo": {
+    "profile": {
+      "title": "{name} (@{username})",
+      "description": "Perfil público de {name} en Socially con {count, plural, one {# publicación visible} other {# publicaciones visibles}}."
+    },
+    "category": {
+      "title": "Publicaciones de {category}",
+      "description": "Descubre las publicaciones de {category} con más likes en Socially."
     }
   },
   "appShell": {
@@ -523,7 +700,16 @@
       "discover": {
         "title": "Discover",
         "description": "Reúne superficies editoriales de descubrimiento, cuentas y destacados en un mismo lugar.",
-        "placeholder": "El contenido Discover aún no está implementado. Este placeholder mantiene una página real accesible mientras se construye."
+        "placeholder": "El contenido Discover aún no está implementado. Este placeholder mantiene una página real accesible mientras se construye.",
+        "profileAvatarAlt": "Avatar de {name}",
+        "mainPost": {
+          "empty": "No se encontró ninguna publicación",
+          "postedBy": "Publicado por"
+        },
+        "profiles": {
+          "title": "Mejores creadores",
+          "followers": "{count, plural, one {Seguidor} other {Seguidores}}"
+        }
       },
       "trending": {
         "title": "Trending",
@@ -576,6 +762,7 @@
           "messageTooLong": "El mensaje no debe superar los 2000 caracteres.",
           "conversationNotFound": "Conversación no encontrada o inaccesible.",
           "receiverProfileUnavailable": "Este perfil ya no está disponible.",
+          "rateLimited": "Has enviado demasiados mensajes recientemente. Inténtalo de nuevo dentro de {minutes} minuto(s).",
           "sendFailed": "No se pudo enviar el mensaje. Inténtalo de nuevo.",
           "failedToMarkAsRead": "No se pudo marcar la conversación como leída. Inténtalo de nuevo."
         }
@@ -631,6 +818,44 @@
           "data": {
             "title": "Mis datos",
             "description": "Exporta los datos asociados a tu actividad en Socially."
+          },
+          "legal": {
+            "title": "Documentos legales",
+            "description": "Consulta las condiciones, la privacidad, las cookies y las reglas de moderación."
+          }
+        },
+        "actions": {
+          "email": {
+            "invalidSession": "La sesión ha expirado o no es válida.",
+            "profileNotFound": "No pudimos identificar tu perfil.",
+            "empty": "La dirección de email está vacía.",
+            "invalid": "La dirección de email no es válida.",
+            "alreadyUsed": "Este email ya está usado por otra cuenta.",
+            "updateError": "No se puede modificar tu email en este momento."
+          },
+          "deleteAccount": {
+            "invalidSession": "La sesión ha expirado o no es válida.",
+            "profileNotFound": "No pudimos identificar tu perfil.",
+            "restoreError": "No se pudo cancelar la eliminación de la cuenta.",
+            "deleteError": "No se puede eliminar tu cuenta en este momento.",
+            "restoreSuccess": "Eliminación cancelada correctamente.",
+            "deleteSuccess": "Tu cuenta se eliminará definitivamente en 30 días."
+          },
+          "language": {
+            "invalidSession": "La sesión ha expirado o no es válida.",
+            "invalidLocale": "Idioma no válido.",
+            "profileNotFound": "No pudimos identificar tu perfil.",
+            "updateError": "No se puede modificar el idioma en este momento.",
+            "success": "Idioma modificado correctamente."
+          },
+          "unblock": {
+            "invalidSession": "La sesión ha expirado o no es válida.",
+            "missingProfile": "No se encontró el perfil que quieres desbloquear.",
+            "profileNotFound": "No pudimos identificar tu perfil.",
+            "selfUnblock": "No puedes desbloquearte a ti mismo.",
+            "notBlocked": "Este perfil no está en tu lista de bloqueo.",
+            "error": "No se puede desbloquear este perfil en este momento.",
+            "success": "Perfil desbloqueado correctamente."
           }
         },
         "account": {
@@ -652,6 +877,16 @@
             "success": "Email modificado correctamente",
             "pending": "Modificando...",
             "submit": "Modificar mi email"
+          },
+          "languagePreference": {
+            "label": "Idioma de la interfaz",
+            "description": "Cambia el idioma utilizado en la aplicación.",
+            "success": "Idioma modificado correctamente.",
+            "options": {
+              "fr": "Francés",
+              "en": "Inglés",
+              "es": "Español"
+            }
           },
           "delete": {
             "title": "Eliminación",

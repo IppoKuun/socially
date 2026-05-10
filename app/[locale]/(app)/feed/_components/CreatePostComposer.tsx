@@ -14,7 +14,9 @@ import { useDropzone, type FileRejection } from "react-dropzone";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import { z } from "zod";
+import { appealPostModeration } from "@/app/actions/postAppeal";
 import createPost from "@/app/actions/post";
+import AuthRequiredDialog from "@/components/auth/AuthRequiredDialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -46,6 +48,7 @@ type ServerFieldErrors = {
 type CreatePostResult = {
   ok: boolean;
   userMsg?: string;
+  postId?: string;
   errors?: string[] | ServerFieldErrors;
   reasons?: string;
   unsafeImages?: number[];
@@ -57,6 +60,10 @@ type LocalErrors = {
   images?: string;
 };
 
+type CreatePostComposerProps = {
+  isAuthenticated: boolean;
+};
+
 export const INITIAL_ACTION_STATE = {
   ok: false,
   userMsg: "",
@@ -65,6 +72,7 @@ export const INITIAL_ACTION_STATE = {
 const EMPTY_SERVER_STATE: CreatePostResult = {
   ok: false,
   userMsg: "",
+  postId: undefined,
   errors: undefined,
   reasons: "",
   unsafeImages: [],
@@ -115,18 +123,24 @@ function getDropzoneErrorMessage(
   }
 }
 
-export default function CreatePostComposer() {
+export default function CreatePostComposer({
+  isAuthenticated,
+}: CreatePostComposerProps) {
   const t = useTranslations("post.compose");
   const locale = useLocale();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
+  const [authRequiredOpen, setAuthRequiredOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState<ClientImage[]>([]);
   const [localErrors, setLocalErrors] = useState<LocalErrors>({});
   const [serverState, setServerState] =
     useState<CreatePostResult>(EMPTY_SERVER_STATE);
+  const [isAppealing, setIsAppealing] = useState(false);
+  const [appealSent, setAppealSent] = useState(false);
+  const [appealFeedback, setAppealFeedback] = useState("");
   const [isPending, startTransition] = useTransition();
   const imagesRef = useRef<ClientImage[]>([]);
 
@@ -205,6 +219,9 @@ export default function CreatePostComposer() {
 
   const clearServerState = useCallback(() => {
     setServerState(EMPTY_SERVER_STATE);
+    setIsAppealing(false);
+    setAppealSent(false);
+    setAppealFeedback("");
   }, []);
 
   const resetComposer = useCallback(() => {
@@ -217,6 +234,9 @@ export default function CreatePostComposer() {
     setImages([]);
     setLocalErrors({});
     setServerState(EMPTY_SERVER_STATE);
+    setIsAppealing(false);
+    setAppealSent(false);
+    setAppealFeedback("");
   }, []);
 
   // Ont mets cette fonction en UseCallback car elle est appelée par handleSubmit, et pour évitez que la fonction
@@ -245,6 +265,11 @@ export default function CreatePostComposer() {
 
   const handleDialogOpenChange = useCallback(
     (nextOpen: boolean) => {
+      if (nextOpen && !isAuthenticated) {
+        setAuthRequiredOpen(true);
+        return;
+      }
+
       // Si pending, impossible de fermer la modale  //
       if (isPending) {
         return; // Avvec le return JS s'arrete de lire la fonction et s'en vas //
@@ -257,7 +282,7 @@ export default function CreatePostComposer() {
 
       setOpen(nextOpen);
     },
-    [clearServerState, isPending],
+    [clearServerState, isAuthenticated, isPending],
   );
 
   const handleRemoveImage = useCallback(
@@ -340,6 +365,11 @@ export default function CreatePostComposer() {
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
+      if (!isAuthenticated) {
+        setAuthRequiredOpen(true);
+        return;
+      }
+
       clearServerState();
 
       const nextLocalErrors = validateDraft();
@@ -376,6 +406,7 @@ export default function CreatePostComposer() {
           setServerState({
             ok: false,
             userMsg: result.userMsg ?? "",
+            postId: result.postId,
             errors: result.errors,
             reasons: result.reasons ?? "",
             unsafeImages: result.unsafeImages ?? [],
@@ -384,6 +415,7 @@ export default function CreatePostComposer() {
           setServerState({
             ok: false,
             userMsg: t("errors.submitFailed"),
+            postId: undefined,
             errors: undefined,
             reasons: "",
             unsafeImages: [],
@@ -395,6 +427,7 @@ export default function CreatePostComposer() {
       clearServerState,
       content,
       images,
+      isAuthenticated,
       locale,
       resetComposer,
       router,
@@ -403,6 +436,29 @@ export default function CreatePostComposer() {
       validateDraft,
     ],
   );
+
+  const handleAppeal = useCallback(async () => {
+    if (!serverState.postId || isAppealing || appealSent) {
+      return;
+    }
+
+    setIsAppealing(true);
+    setAppealFeedback("");
+
+    try {
+      const result = await appealPostModeration(serverState.postId);
+
+      setAppealFeedback(result.userMsg);
+
+      if (result.ok) {
+        setAppealSent(true);
+      }
+    } catch {
+      setAppealFeedback(t("errors.submitFailed"));
+    } finally {
+      setIsAppealing(false);
+    }
+  }, [appealSent, isAppealing, serverState.postId, t]);
 
   const titleError = localErrors.title ?? fieldErrors?.title?.[0];
   const contentError = localErrors.content ?? fieldErrors?.content?.[0];
@@ -418,7 +474,14 @@ export default function CreatePostComposer() {
           "fixed right-4 sm:bottom-4 bottom-40 z-41 h-14 cursor-pointer max-h-[92svh] rounded-full border border-white/10 bg-[linear-gradient(180deg,#2f7cff_0%,#6e63ff_100%)] px-4 text-white shadow-[0_28px_60px_-28px_rgba(47,124,255,0.92)] hover:opacity-95 sm:right-6 sm:bottom-6",
           open && "pointer-events-none opacity-0",
         )}
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          if (!isAuthenticated) {
+            setAuthRequiredOpen(true);
+            return;
+          }
+
+          setOpen(true);
+        }}
       >
         <Plus className="size-5" />
         <span className="hidden sm:inline">{t("floatingButton.desktop")}</span>
@@ -488,6 +551,38 @@ export default function CreatePostComposer() {
                     <p className="mt-1 leading-6 text-white/78">
                       {serverState.reasons}
                     </p>
+                  )}
+                  {isUnsafe && serverState.postId && (
+                    <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      {appealFeedback ? (
+                        <p className="text-sm leading-5 text-white/72">
+                          {appealFeedback}
+                        </p>
+                      ) : (
+                        <span className="text-sm text-white/58">
+                          {t("dialog.appealHint")}
+                        </span>
+                      )}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="shrink-0 border-destructive/35 bg-destructive/10 text-white hover:bg-destructive/15"
+                        onClick={handleAppeal}
+                        disabled={isAppealing || appealSent || isPending}
+                      >
+                        {isAppealing ? (
+                          <>
+                            <LoaderCircle className="size-4 animate-spin" />
+                            {t("dialog.appealing")}
+                          </>
+                        ) : appealSent ? (
+                          t("dialog.appealSent")
+                        ) : (
+                          t("dialog.appealAction")
+                        )}
+                      </Button>
+                    </div>
                   )}
                 </div>
               )}
@@ -714,6 +809,11 @@ export default function CreatePostComposer() {
           </form>
         </DialogContent>
       </Dialog>
+
+      <AuthRequiredDialog
+        open={authRequiredOpen}
+        onOpenChange={setAuthRequiredOpen}
+      />
     </>
   );
 }

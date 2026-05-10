@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { getSession } from "@/lib/authSession";
 import { getTranslations } from "next-intl/server";
 import { myPrisma } from "@/lib/prisma";
+import { captureAppException } from "@/lib/monitoring/sentry";
 
 export default async function report(postId: string) {
   const t = await getTranslations("post.actions.report");
@@ -14,6 +15,7 @@ export default async function report(postId: string) {
 
   const user = await myPrisma.userProfile.findFirst({
     where: { userId: session.user.id, deletedAt: null },
+    select: { id: true },
   });
 
   if (!user) {
@@ -27,8 +29,10 @@ export default async function report(postId: string) {
     where: {
       id: postId,
       deletedAt: null,
+      moderationStatus: { not: "UNSAFE" },
       author: { deletedAt: null },
     },
+    select: { id: true },
   });
   if (!post) {
     return { ok: false, userMsg: t("postNotFound") };
@@ -37,6 +41,7 @@ export default async function report(postId: string) {
   try {
     const createReport = await myPrisma.report.create({
       data: { reporterId: user.id, postId },
+      select: { id: true },
     });
 
     if (!createReport) {
@@ -58,6 +63,14 @@ export default async function report(postId: string) {
     }
 
     console.error(error);
+    captureAppException(error, {
+      feature: "report",
+      action: "create_report",
+      extra: {
+        reporterProfileId: user.id,
+        postId,
+      },
+    });
     return { ok: false, userMsg: t("createFailed") };
   }
 }

@@ -2,6 +2,7 @@
 import { uploadCloudinary } from "@/lib/cloudinaryConfig";
 import { getSession } from "@/lib/authSession";
 import { getZodErrorMapForRequest } from "@/lib/i18n/zod";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 import { UploadApiResponse } from "cloudinary";
 import { getTranslations } from "next-intl/server";
@@ -44,6 +45,7 @@ export async function verifyUsername(
 
   const username = await myPrisma.userProfile.findUnique({
     where: { username: usernameInput },
+    select: { userId: true },
   });
 
   if (username && username.userId !== session?.user.id) {
@@ -127,6 +129,15 @@ export async function uploadImage(
     });
   } catch (error) {
     console.error(error);
+    captureAppException(error, {
+      feature: "onboarding",
+      action: "upload_onboarding_media",
+      extra: {
+        authUserId: session?.user.id,
+        hasAvatar: avatar instanceof File && avatar.size > 0,
+        hasBanner: banner instanceof File && banner.size > 0,
+      },
+    });
     return {
       ok: false,
       userMsg: t("unexpectedError"),
@@ -175,6 +186,13 @@ export async function stepOneValidOnboarding(
     return { ok: true, userMsg: "" };
   } catch (error) {
     console.error(error);
+    captureAppException(error, {
+      feature: "onboarding",
+      action: "save_step_one",
+      extra: {
+        authUserId: session?.user.id,
+      },
+    });
 
     return {
       ok: false,
@@ -222,6 +240,13 @@ export async function stepThreeValidOnboarding(
     return { ok: true, userMsg: "" };
   } catch (error) {
     console.error(error);
+    captureAppException(error, {
+      feature: "onboarding",
+      action: "save_step_three",
+      extra: {
+        authUserId: session?.user.id,
+      },
+    });
 
     return {
       ok: false,
@@ -269,6 +294,13 @@ export async function stepTwoValidOnboarding(
     return { ok: true, userMsg: "" };
   } catch (error) {
     console.error(error);
+    captureAppException(error, {
+      feature: "onboarding",
+      action: "save_step_two",
+      extra: {
+        authUserId: session?.user.id,
+      },
+    });
 
     return {
       ok: false,

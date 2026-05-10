@@ -5,6 +5,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { myPrisma } from "./prisma";
 import { i18n } from "@better-auth/i18n";
 import { authTranslations } from "./auth-i18n";
+import { sendEmail } from "./mail/sendMaill";
 
 type TrackingData = {
   utm_source?: string | null;
@@ -24,7 +25,80 @@ const createAuth = () =>
     baseURL: process.env.NEXT_PUBLIC_URL ?? "http://localhost:3000",
     database: prismaAdapter(myPrisma, { provider: "postgresql" }),
     // AVEC RESEND AJOUTEZ EMAIL VERIFICATIONS //
-    emailAndPassword: { enabled: true },
+    emailAndPassword: {
+      enabled: true,
+      minPasswordLength: 8,
+      maxPasswordLength: 128,
+      resetPasswordTokenExpiresIn: 60 * 60,
+      // Déconnecte toutes les sessions après changement MDP
+
+      revokeSessionsOnPasswordReset: true,
+
+      sendResetPassword: async ({ user, url }) => {
+        const result = await sendEmail({
+          to: user.email,
+          subject: "Reset your password",
+          html: `
+          <div style="font-family: sans-serif; line-height: 1.6;">
+            <h1>Password reset</h1>
+
+            <p>
+              You requested a password reset.
+            </p>
+
+            <p>
+              Click the button below to choose a new password:
+            </p>
+
+            <a
+              href="${url}"
+              style="
+                display: inline-block;
+                margin-top: 16px;
+                padding: 12px 20px;
+                background: black;
+                color: white;
+                text-decoration: none;
+                border-radius: 999px;
+              "
+            >
+              Reset my password
+            </a>
+
+            <p style="margin-top: 24px;">
+              This link expires in 1 hour.
+            </p>
+
+            <p>
+              If you did not request this, you can ignore this email.
+            </p>
+          </div>
+        `,
+          text: `
+Password reset
+
+Open this link to choose a new password:
+
+${url}
+
+This link expires in 1 hour.
+        `,
+        });
+
+        if (!result.ok) {
+          console.error(
+            "Impossible d'envoyer l'email de reset password",
+            result.error,
+          );
+
+          throw new Error("RESET_PASSWORD_EMAIL_FAILED");
+        }
+      },
+
+      onPasswordReset: async ({ user }) => {
+        console.log(`Password reset successful for user ${user.id}`);
+      },
+    },
 
     socialProviders: {
       google: {
@@ -123,7 +197,7 @@ const createAuth = () =>
     plugins: [
       i18n({
         translations: authTranslations,
-        defaultLocale: "fr",
+        defaultLocale: "en",
         detection: ["header", "cookie"],
         localeCookie: "NEXT_LOCALE", // next_locale est un cookies de next-intl pour la langue"
       }),

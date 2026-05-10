@@ -36,7 +36,7 @@ export const rateLimits = {
   postPublish: new Ratelimit({
     redis,
     prefix: "ratelimit:post-publish",
-    limiter: Ratelimit.slidingWindow(30, "15 m"),
+    limiter: Ratelimit.slidingWindow(20, "35 m"),
   }),
   comment: new Ratelimit({
     redis,
@@ -47,6 +47,42 @@ export const rateLimits = {
     redis,
     prefix: "ratelimit:data-export",
     limiter: Ratelimit.slidingWindow(1, "7 d"),
+    analytics: true,
+  }),
+  pusherAuth: new Ratelimit({
+    redis,
+    prefix: "ratelimit:pusher-auth",
+    limiter: Ratelimit.slidingWindow(120, "5 m"),
+    analytics: true,
+  }),
+  visitorSession: new Ratelimit({
+    redis,
+    prefix: "ratelimit:visitor-session",
+    limiter: Ratelimit.slidingWindow(5, "10 m"),
+    analytics: true,
+  }),
+  cron: new Ratelimit({
+    redis,
+    prefix: "ratelimit:cron",
+    limiter: Ratelimit.slidingWindow(10, "1 h"),
+    analytics: true,
+  }),
+  likeToggle: new Ratelimit({
+    redis,
+    prefix: "ratelimit:like-toggle",
+    limiter: Ratelimit.slidingWindow(100, "5 m"),
+    analytics: true,
+  }),
+  followToggle: new Ratelimit({
+    redis,
+    prefix: "ratelimit:follow-toggle",
+    limiter: Ratelimit.slidingWindow(40, "10 m"),
+    analytics: true,
+  }),
+  messageSend: new Ratelimit({
+    redis,
+    prefix: "ratelimit:message-send",
+    limiter: Ratelimit.slidingWindow(60, "5 m"),
     analytics: true,
   }),
 } as const;

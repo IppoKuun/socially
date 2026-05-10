@@ -1,5 +1,6 @@
 import { myPrisma } from "@/lib/prisma";
 import { triggerNotificationCreated } from "@/lib/pusher/server";
+import { captureAppException } from "@/lib/monitoring/sentry";
 
 type NotificationType = "LIKE" | "COMMENT" | "FOLLOW";
 
@@ -74,6 +75,17 @@ export async function createNotificationIfMissing({
       );
     } catch (error) {
       console.error("Unable to trigger realtime notification", error);
+      captureAppException(error, {
+        feature: "notifications",
+        action: "trigger_existing_notification_realtime",
+        level: "warning",
+        extra: {
+          receiverProfileId: userId,
+          notificationId: notification.id,
+          notificationType: notification.type,
+          postId: notification.postId,
+        },
+      });
     }
 
     return;
@@ -97,5 +109,16 @@ export async function createNotificationIfMissing({
     await triggerRealtimeNotification(userId, notification, 1);
   } catch (error) {
     console.error("Unable to trigger realtime notification", error);
+    captureAppException(error, {
+      feature: "notifications",
+      action: "trigger_new_notification_realtime",
+      level: "warning",
+      extra: {
+        receiverProfileId: userId,
+        notificationId: notification.id,
+        notificationType: notification.type,
+        postId: notification.postId,
+      },
+    });
   }
 }

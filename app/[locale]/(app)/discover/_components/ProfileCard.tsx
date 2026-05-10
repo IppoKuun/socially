@@ -1,15 +1,18 @@
 import { Link } from "@/i18n/routing";
 import { DiscoverProfileCandidate } from "@/lib/discover/queries";
 import { User2Icon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 type ProfilCardProps = {
   profiles: DiscoverProfileCandidate[];
 };
 export default function ProfilCard({ profiles }: ProfilCardProps) {
+  const t = useTranslations("appShell.pages.discover");
+
   return (
     <section className="flex flex-col w-full h-full min-h-[150px]">
-      <h1 className=" font-manrope text-2xl">Meuilleur Créateur</h1>
+      <h1 className=" font-manrope text-2xl">{t("profiles.title")}</h1>
       <section className="flex flex-col space-y-3 p-4 mb-5">
         {profiles.map((p) => (
           <Link key={p.id} href={`/profile/${p.username}`}>
@@ -21,11 +24,14 @@ export default function ProfilCard({ profiles }: ProfilCardProps) {
                     height={50}
                     sizes="50px"
                     className="rounded-full object-cover"
-                    alt="photo_profile"
+                    alt={t("profileAvatarAlt", { name: p.displayname })}
                     src={p.avatarUrl}
                   />
                 ) : (
-                  <div className=" w-full h-full bg-white/5 rounded-full flex items-center justify-center">
+                  <div
+                    className=" w-full h-full bg-white/5 rounded-full flex items-center justify-center"
+                    aria-hidden="true"
+                  >
                     <User2Icon size={24} />
                   </div>
                 )}
@@ -39,7 +45,11 @@ export default function ProfilCard({ profiles }: ProfilCardProps) {
                 <span className="font-sora text-xl">
                   {p._count.relationWhereUserIsFollowed}
                 </span>
-                <span className="font-light text-xs">Abonné</span>
+                <span className="font-light text-xs">
+                  {t("profiles.followers", {
+                    count: p._count.relationWhereUserIsFollowed,
+                  })}
+                </span>
               </div>
             </article>
           </Link>

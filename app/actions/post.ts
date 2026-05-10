@@ -10,6 +10,42 @@ import { getSession } from "@/lib/authSession";
 import { rateLimits } from "@/lib/rateLimits";
 import { getTranslations } from "next-intl/server";
 import generateSlug from "@/lib/slug";
+import {
+  captureAppException,
+  captureAppMessage,
+} from "@/lib/monitoring/sentry";
+
+async function cleanupUploadedPostImages(
+  ids: string[],
+  action: string,
+  extra?: Record<string, unknown>,
+) {
+  if (ids.length === 0) {
+    return;
+  }
+
+  try {
+    await Promise.all(
+      ids.map((id) =>
+        cloudinary.uploader.destroy(id, { resource_type: "image" }),
+      ),
+    );
+  } catch (error) {
+    console.error(
+      "Impossible de supprimer les images Cloudinary du post",
+      error,
+    );
+    captureAppException(error, {
+      feature: "post",
+      action,
+      level: "warning",
+      extra: {
+        imageCount: ids.length,
+        ...extra,
+      },
+    });
+  }
+}
 
 export default async function createPost(
   _prevstate: FormState,
@@ -24,6 +60,7 @@ export default async function createPost(
   }
   const user = await myPrisma.userProfile.findFirst({
     where: { userId: session.user.id, deletedAt: null },
+    select: { id: true },
   });
   if (!user) {
     return { ok: false, userMsg: t("profileNotFound") };
@@ -95,15 +132,13 @@ export default async function createPost(
     { error: errorMap },
   );
   if (!parsed.success) {
-    const result = await Promise.all(
-      ids.map((id) =>
-        cloudinary.uploader.destroy(id, { resource_type: "image" }),
-      ),
+    await cleanupUploadedPostImages(
+      ids,
+      "cleanup_after_post_validation_error",
+      {
+        userProfileId: user.id,
+      },
     );
-
-    if (!result) {
-      console.error("Impossible de supprimé images après ZOD");
-    }
     return { ok: false, errors: parsed.error.flatten().fieldErrors };
   }
 
@@ -120,72 +155,105 @@ export default async function createPost(
     });
   } catch (error) {
     console.error(error);
+    captureAppException(error, {
+      feature: "post",
+      action: "moderate_post",
+      extra: {
+        userProfileId: user.id,
+        imageCount: ids.length,
+      },
+    });
   }
 
   if (!moderation) {
-    const result = await Promise.all(
-      ids.map((id) =>
-        cloudinary.uploader.destroy(id, { resource_type: "image" }),
-      ),
+    await cleanupUploadedPostImages(
+      ids,
+      "cleanup_after_post_moderation_error",
+      {
+        userProfileId: user.id,
+      },
     );
-
-    if (!result) {
-      console.error("Impossible de supprimé images après rejets d'IA");
-    }
     return {
       ok: false,
       userMsg: t("moderationUnavailable"),
     };
   }
 
-  if (moderation.moderationStatus === "UNSAFE") {
-    const result = await Promise.all(
-      ids.map((id) =>
-        cloudinary.uploader.destroy(id, { resource_type: "image" }),
-      ),
-    );
-
-    // Ici, ont logge l'erreur pour nous meme et pas pour User car aucune utilisé a ce qu'il sois
-    // au courant que l'image n'est pas réussi a cloudinary Après que son poste est été jugée unsafe //
-    if (!result) {
-      console.error("Impossible de supprimé images après rejets d'IA");
-    }
-
-    return {
-      ok: false,
-      userMsg: t("unsafeContent"),
-      reasons: moderation.reasons,
-      unsafeImages: moderation.unsafeImages,
-    };
-  }
-
   const IAcategories = moderation.categories;
 
   const postSlug = await generateSlug(parsed.data.title);
+  const isUnsafe = moderation.moderationStatus === "UNSAFE";
+  const postImageUrls = isUnsafe ? [] : (parsed.data.imagesUrl ?? []);
+  const postImagePublicIds = isUnsafe ? [] : ids;
 
-  const created = await myPrisma.post.create({
-    data: {
-      title: parsed.data.title,
-      moderationStatus: moderation.moderationStatus,
-      slug: String(postSlug),
-      content: parsed.data?.content,
-      imagesUrl: parsed.data.imagesUrl ?? [],
-      categories: IAcategories,
-      userId: user.id,
-    },
-  });
+  if (isUnsafe) {
+    await cleanupUploadedPostImages(ids, "cleanup_after_post_rejected_by_ai", {
+      userProfileId: user.id,
+    });
+  }
 
-  if (!created) {
-    const result = await Promise.all(
-      ids.map((id) =>
-        cloudinary.uploader.destroy(id, { resource_type: "image" }),
-      ),
-    );
+  let created;
 
-    if (!result) {
-      console.error("Impossible de supprimé images après rejets d'IA");
+  try {
+    created = await myPrisma.post.create({
+      data: {
+        title: parsed.data.title,
+        moderationStatus: moderation.moderationStatus,
+        slug: String(postSlug),
+        content: parsed.data?.content,
+        imagesUrl: postImageUrls,
+        categories: IAcategories,
+        imagesPublicId: postImagePublicIds,
+        moderationReason: moderation.reasons || null,
+        unsafeImages: moderation.unsafeImages,
+        userId: user.id,
+      },
+      select: { id: true, moderationStatus: true },
+    });
+  } catch (error) {
+    console.error("Impossible de créer le post", error);
+    captureAppException(error, {
+      feature: "post",
+      action: "create_post",
+      extra: {
+        userProfileId: user.id,
+        imageCount: ids.length,
+        moderationStatus: moderation.moderationStatus,
+      },
+    });
+    if (!isUnsafe) {
+      await cleanupUploadedPostImages(ids, "cleanup_after_post_create_error", {
+        userProfileId: user.id,
+      });
     }
     return { ok: false, userMsg: t("createFailed") };
+  }
+
+  if (!created) {
+    captureAppMessage("Post creation returned no record", {
+      feature: "post",
+      action: "create_post_empty_result",
+      extra: {
+        userProfileId: user.id,
+        imageCount: ids.length,
+      },
+    });
+    if (!isUnsafe) {
+      await cleanupUploadedPostImages(ids, "cleanup_after_empty_post_create", {
+        userProfileId: user.id,
+      });
+    }
+    return { ok: false, userMsg: t("createFailed") };
+  }
+
+  if (created.moderationStatus === "UNSAFE") {
+    return {
+      ok: false,
+      userMsg: t("unsafeContent"),
+      postId: created.id,
+      reasons: moderation.reasons,
+      unsafeImages: moderation.unsafeImages,
+    };
   }
 
   if (created.moderationStatus === "UNCERTAIN") {

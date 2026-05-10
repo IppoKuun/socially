@@ -24,7 +24,59 @@
     },
     "accept": "Accept cookies",
     "decline": "Decline",
-    "settings": "Manage preferences"
+    "settings": "Manage preferences",
+    "learnMore": {
+      "start": "Learn more in our ",
+      "cookies": "cookie policy",
+      "middle": " and ",
+      "privacy": "privacy policy",
+      "end": "."
+    }
+  },
+  "authRequiredDialog": {
+    "title": "Sign in to continue",
+    "description": "This action is reserved for signed-in members. Sign in or create an account to interact on Socially.",
+    "action": "Sign in",
+    "cancel": "Later"
+  },
+  "notFound": {
+    "general": {
+      "pageTitle": "Page not found",
+      "pageDescription": "This page does not exist or is no longer available.",
+      "eyebrow": "Error 404",
+      "title": "We could not find this page",
+      "description": "The link may be incorrect, or the resource may have been moved or deleted.",
+      "primaryAction": "Back to feed",
+      "secondaryAction": "Search"
+    },
+    "profile": {
+      "pageTitle": "Profile not found",
+      "pageDescription": "This profile does not exist or is no longer accessible.",
+      "eyebrow": "Profile unavailable",
+      "title": "This profile could not be found",
+      "description": "The user may have changed their username, deleted their account, or this profile may no longer be visible.",
+      "primaryAction": "Search profiles",
+      "secondaryAction": "Back to feed"
+    },
+    "post": {
+      "pageTitle": "Post not found",
+      "pageDescription": "This post does not exist or is no longer accessible.",
+      "eyebrow": "Post unavailable",
+      "title": "This post could not be found",
+      "description": "The post may have been deleted, moderated, or the link you followed may no longer be valid.",
+      "primaryAction": "Back to feed",
+      "secondaryAction": "View trending"
+    }
+  },
+  "errorBoundary": {
+    "app": {
+      "pageTitle": "Error",
+      "pageDescription": "An error occurred while loading this section.",
+      "eyebrow": "Application error",
+      "title": "Something went wrong",
+      "description": "This section could not be displayed correctly. You can retry without leaving the page.",
+      "retry": "Try again"
+    }
   },
   "login": {
     "hero": "Where conversations connect.",
@@ -37,6 +89,7 @@
       "signup": "Join Socially to start sharing and connecting."
     },
     "email": "Email",
+    "name": "Name",
     "password": "Password",
     "submit": {
       "signin": "Sign in",
@@ -54,7 +107,45 @@
     "signupPrompt": "Don't have an account yet?",
     "signupLink": "Create one",
     "loginPrompt": "Already have an account?",
-    "loginLink": "Sign in"
+    "loginLink": "Sign in",
+    "legalNotice": {
+      "start": "By creating an account, you confirm that you are at least 15 and accept the ",
+      "terms": "Terms of use",
+      "middle": ". Also review our ",
+      "privacy": "Privacy policy",
+      "end": "."
+    }
+  },
+  "passwordReset": {
+    "request": {
+      "title": "Reset your password",
+      "description": "Enter the email address for your account. If it exists, you will receive a reset link.",
+      "success": "If an account exists with this address, a password reset email has been sent.",
+      "successDescription": "Check your inbox and open the link to choose a new password.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "emptyEmail": "Please enter your email address.",
+      "fallbackError": "Unable to send the password reset email right now.",
+      "pending": "Sending...",
+      "submit": "Send reset link",
+      "backToLogin": "Back to sign in"
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "description": "Your new password must contain at least 8 characters.",
+      "invalidTokenDescription": "The reset link is invalid or has expired.",
+      "passwordLabel": "New password",
+      "passwordPlaceholder": "Your new password",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat the password",
+      "invalidToken": "This reset link is invalid or has expired.",
+      "passwordTooShort": "The password must contain at least 8 characters.",
+      "passwordMismatch": "The two passwords do not match.",
+      "fallbackError": "Unable to update your password right now.",
+      "pending": "Updating...",
+      "submit": "Update password",
+      "requestNewLink": "Request a new link"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -73,6 +164,44 @@
       "data": {
         "title": "My data",
         "description": "Export the data linked to your Socially activity."
+      },
+      "legal": {
+        "title": "Legal documents",
+        "description": "Review the terms, privacy policy, cookies and moderation rules."
+      }
+    },
+    "actions": {
+      "email": {
+        "invalidSession": "Your session has expired or is invalid.",
+        "profileNotFound": "We could not identify your profile.",
+        "empty": "The email address is empty.",
+        "invalid": "The email address is not valid.",
+        "alreadyUsed": "This email address is already used by another account.",
+        "updateError": "Unable to update your email address right now."
+      },
+      "deleteAccount": {
+        "invalidSession": "Your session has expired or is invalid.",
+        "profileNotFound": "We could not identify your profile.",
+        "restoreError": "Unable to cancel account deletion.",
+        "deleteError": "Unable to delete your account right now.",
+        "restoreSuccess": "Account deletion cancelled successfully.",
+        "deleteSuccess": "Your account will be permanently deleted in 30 days."
+      },
+      "language": {
+        "invalidSession": "Your session has expired or is invalid.",
+        "invalidLocale": "Invalid language.",
+        "profileNotFound": "We could not identify your profile.",
+        "updateError": "Unable to update the language right now.",
+        "success": "Language updated successfully."
+      },
+      "unblock": {
+        "invalidSession": "Your session has expired or is invalid.",
+        "missingProfile": "The profile to unblock could not be found.",
+        "profileNotFound": "We could not identify your profile.",
+        "selfUnblock": "You cannot unblock yourself.",
+        "notBlocked": "This profile is not in your block list.",
+        "error": "Unable to unblock this profile right now.",
+        "success": "Profile unblocked successfully."
       }
     },
     "account": {
@@ -94,6 +223,16 @@
         "success": "Email updated successfully",
         "pending": "Updating...",
         "submit": "Update my email"
+      },
+      "languagePreference": {
+        "label": "Interface language",
+        "description": "Change the language used across the application.",
+        "success": "Language updated successfully.",
+        "options": {
+          "fr": "French",
+          "en": "English",
+          "es": "Spanish"
+        }
       },
       "delete": {
         "title": "Deletion",
@@ -252,9 +391,20 @@
         "createFailed": "Unable to create the post. Please try again.",
         "sensitiveWarning": "Warning: your post has been flagged as sensitive."
       },
+      "appeal": {
+        "authRequired": "Please sign in to appeal this decision.",
+        "profileNotFound": "We could not find your profile. Please try again later.",
+        "postNotFound": "We could not find this post.",
+        "notAppealable": "Only posts rejected by moderation can be appealed.",
+        "alreadyPending": "This appeal is already pending review.",
+        "alreadyReviewed": "This moderation decision has already been reviewed.",
+        "createFailed": "Unable to submit the appeal. Please try again.",
+        "created": "Your appeal has been submitted for review."
+      },
       "like": {
         "authRequired": "Please sign in to like.",
         "profileNotFound": "We could not find your profile. Please try again later.",
+        "rateLimited": "You have liked too quickly. Please try again in {minutes} minute(s).",
         "toggleFailed": "Unable to update the like."
       },
       "report": {
@@ -295,6 +445,10 @@
         "previewAlt": "Selected image {index}",
         "removeImage": "Remove image {index}",
         "unsafeBadge": "Flagged image",
+        "appealHint": "You can request a review if you think this moderation decision is wrong.",
+        "appealAction": "Appeal",
+        "appealing": "Sending...",
+        "appealSent": "Appeal sent",
         "footerHint": "Image order is preserved for moderation. Maximum: {max}.",
         "submit": "Post",
         "submitting": "Posting...",
@@ -340,6 +494,7 @@
       "like": {
         "authRequired": "Please sign in to like.",
         "profileNotFound": "We could not find your profile. Please try again later.",
+        "rateLimited": "You have liked too quickly. Please try again in {minutes} minute(s).",
         "toggleFailed": "Unable to update the like."
       }
     },
@@ -391,6 +546,8 @@
       "likeError": "Unable to update the like right now.",
       "seeMore": "See more",
       "seeLess": "See less",
+      "deletedTitle": "This post was deleted",
+      "deletedDescription": "The original content is no longer available, but comments remain visible.",
       "moreImages": "+{count} image(s)",
       "imageAlt": "Post image {index}",
       "imageCounter": "{current} / {total}",
@@ -458,6 +615,15 @@
       "invalidImageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted."
     }
   },
+  "legal": {
+    "eyebrow": "Legal beta",
+    "hubTitle": "Legal documents",
+    "hubDescription": "Socially legal pages for this beta V1: publisher information, privacy, cookies, terms of use, community rules and moderation.",
+    "updatedLabel": "Updated on",
+    "readDocument": "Read document",
+    "backToIndex": "Back to legal documents",
+    "documentsLabel": "Documents"
+  },
   "profilePublic": {
     "bioFallback": "No bio has been added yet.",
     "recentPostsTitle": "Recent posts",
@@ -480,6 +646,7 @@
       "targetProfileNotFound": "The profile you are trying to follow could not be found.",
       "cannotFollowSelf": "You cannot follow yourself.",
       "blocked": "You cannot follow this profile because one of the accounts has blocked the other.",
+      "rateLimited": "You have updated too many follows recently. Please try again in {minutes} minute(s).",
       "databaseError": "Unable to save the follow status. Please try again."
     },
     "stats": {
@@ -500,6 +667,16 @@
       "errors": {
         "submitFailed": "Unable to update your profile. Please try again."
       }
+    }
+  },
+  "seo": {
+    "profile": {
+      "title": "{name} (@{username})",
+      "description": "{name}'s public profile on Socially with {count, plural, one {# visible post} other {# visible posts}}."
+    },
+    "category": {
+      "title": "{category} posts",
+      "description": "Discover the most liked {category} posts on Socially."
     }
   },
   "appShell": {
@@ -523,7 +700,16 @@
       "discover": {
         "title": "Discover",
         "description": "Surface editorial discovery blocks, accounts and highlights from one place.",
-        "placeholder": "Discover content is not implemented yet. This placeholder keeps the navigation fully functional while the real page is built."
+        "placeholder": "Discover content is not implemented yet. This placeholder keeps the navigation fully functional while the real page is built.",
+        "profileAvatarAlt": "{name}'s avatar",
+        "mainPost": {
+          "empty": "No post found",
+          "postedBy": "Posted by"
+        },
+        "profiles": {
+          "title": "Top creators",
+          "followers": "{count, plural, one {Follower} other {Followers}}"
+        }
       },
       "trending": {
         "title": "Trending",
@@ -576,6 +762,7 @@
           "messageTooLong": "The message must not exceed 2000 characters.",
           "conversationNotFound": "Conversation not found or inaccessible.",
           "receiverProfileUnavailable": "This profile is no longer available.",
+          "rateLimited": "You have sent too many messages recently. Please try again in {minutes} minute(s).",
           "sendFailed": "Unable to send the message. Please try again.",
           "failedToMarkAsRead": "Unable to mark the conversation as read. Please try again."
         }
@@ -631,6 +818,44 @@
           "data": {
             "title": "My data",
             "description": "Export the data linked to your Socially activity."
+          },
+          "legal": {
+            "title": "Legal documents",
+            "description": "Review the terms, privacy policy, cookies and moderation rules."
+          }
+        },
+        "actions": {
+          "email": {
+            "invalidSession": "Your session has expired or is invalid.",
+            "profileNotFound": "We could not identify your profile.",
+            "empty": "The email address is empty.",
+            "invalid": "The email address is not valid.",
+            "alreadyUsed": "This email address is already used by another account.",
+            "updateError": "Unable to update your email address right now."
+          },
+          "deleteAccount": {
+            "invalidSession": "Your session has expired or is invalid.",
+            "profileNotFound": "We could not identify your profile.",
+            "restoreError": "Unable to cancel account deletion.",
+            "deleteError": "Unable to delete your account right now.",
+            "restoreSuccess": "Account deletion cancelled successfully.",
+            "deleteSuccess": "Your account will be permanently deleted in 30 days."
+          },
+          "language": {
+            "invalidSession": "Your session has expired or is invalid.",
+            "invalidLocale": "Invalid language.",
+            "profileNotFound": "We could not identify your profile.",
+            "updateError": "Unable to update the language right now.",
+            "success": "Language updated successfully."
+          },
+          "unblock": {
+            "invalidSession": "Your session has expired or is invalid.",
+            "missingProfile": "The profile to unblock could not be found.",
+            "profileNotFound": "We could not identify your profile.",
+            "selfUnblock": "You cannot unblock yourself.",
+            "notBlocked": "This profile is not in your block list.",
+            "error": "Unable to unblock this profile right now.",
+            "success": "Profile unblocked successfully."
           }
         },
         "account": {
@@ -652,6 +877,16 @@
             "success": "Email updated successfully",
             "pending": "Updating...",
             "submit": "Update my email"
+          },
+          "languagePreference": {
+            "label": "Interface language",
+            "description": "Change the language used across the application.",
+            "success": "Language updated successfully.",
+            "options": {
+              "fr": "French",
+              "en": "English",
+              "es": "Spanish"
+            }
           },
           "delete": {
             "title": "Deletion",

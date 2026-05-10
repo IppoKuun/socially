@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { useImageColors } from "@/app/hooks/useImageColors";
+import AuthRequiredDialog from "@/components/auth/AuthRequiredDialog";
 import type { ProfileData } from "../_actions/getProfile";
 import toggleFollow from "../_actions/toggleFollow";
 import ModifyProfilDialog from "./ModifyProfilDialog";
@@ -130,6 +131,7 @@ export default function ProfileHeader({
     profile._count.relationWhereUserIsFollowed,
   );
   const [actionError, setActionError] = useState<string | null>(null);
+  const [authRequiredOpen, setAuthRequiredOpen] = useState(false);
   const username = profile.username ?? "";
   const connectionsBaseHref = username
     ? `/profile/${username}/connections`
@@ -141,7 +143,12 @@ export default function ProfileHeader({
   } as CSSProperties;
 
   function handleFollowToggle() {
-    if (isOwner || !isAuthentificated || !username || isPending) {
+    if (!isAuthentificated) {
+      setAuthRequiredOpen(true);
+      return;
+    }
+
+    if (isOwner || !username || isPending) {
       return;
     }
 
@@ -165,7 +172,12 @@ export default function ProfileHeader({
   }
 
   function handleStartConversation() {
-    if (isOwner || !isAuthentificated || !profile.id || isMessagePending) {
+    if (!isAuthentificated) {
+      setAuthRequiredOpen(true);
+      return;
+    }
+
+    if (isOwner || !profile.id || isMessagePending) {
       return;
     }
 
@@ -271,7 +283,7 @@ export default function ProfileHeader({
                   type="button"
                   size="lg"
                   onClick={handleFollowToggle}
-                  disabled={!isAuthentificated || !username || isPending}
+                  disabled={!username || isPending}
                   className={cn(
                     "h-10 rounded-full border border-primary/40 bg-[linear-gradient(135deg,var(--primary),var(--primary-glow))] px-6 font-semibold text-white shadow-[0_20px_44px_-24px_rgba(47,124,255,0.9)] hover:brightness-110",
                     isFollowing &&
@@ -293,7 +305,7 @@ export default function ProfileHeader({
                   variant="outline"
                   size="lg"
                   onClick={handleStartConversation}
-                  disabled={!isAuthentificated || isMessagePending}
+                  disabled={isMessagePending}
                   className="h-10 rounded-full border-white/14 bg-white/[0.04] px-6 text-white/76 hover:bg-white/[0.10] hover:text-white"
                 >
                   {isMessagePending ? (
@@ -342,6 +354,11 @@ export default function ProfileHeader({
           />
         </div>
       </section>
+
+      <AuthRequiredDialog
+        open={authRequiredOpen}
+        onOpenChange={setAuthRequiredOpen}
+      />
     </header>
   );
 }

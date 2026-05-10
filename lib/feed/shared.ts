@@ -24,6 +24,7 @@ export type FeedPost = {
   title: string;
   content: string | null;
   createdAt: string;
+  deletedAt: string | null;
   moderationStatus: ModerationStatus;
   images: string[];
   likeCount: number;

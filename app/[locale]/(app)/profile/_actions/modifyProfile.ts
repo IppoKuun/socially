@@ -7,6 +7,10 @@ import { getZodErrorMapForRequest } from "@/lib/i18n/zod";
 import { myPrisma } from "@/lib/prisma";
 import { rateLimits } from "@/lib/rateLimits";
 import {
+  captureAppException,
+  captureAppMessage,
+} from "@/lib/monitoring/sentry";
+import {
   modifyProfileSchema,
   uploadProfilImage,
 } from "@/lib/validations.ts/profile";
@@ -88,7 +92,14 @@ export default async function modifyProfil(
     let uploadAvatar;
     try {
       uploadAvatar = await uploadCloudinary(avatar);
-    } catch {
+    } catch (error) {
+      captureAppException(error, {
+        feature: "profile",
+        action: "upload_profile_avatar",
+        extra: {
+          userProfileId: user.id,
+        },
+      });
       return { ok: false, userMsg: t("uploadFailed") };
     }
 
@@ -110,12 +121,31 @@ export default async function modifyProfil(
 
   if (!parsed.success) {
     if (finalAvatarPublicId) {
-      const deleteUploadedAvatar = await deleteCloudinary([
-        finalAvatarPublicId,
-      ]);
+      try {
+        const deleteUploadedAvatar = await deleteCloudinary([
+          finalAvatarPublicId,
+        ]);
 
-      if (!deleteUploadedAvatar) {
-        console.error("Impossible de supprimé image Cloudinary invalide");
+        if (!deleteUploadedAvatar) {
+          console.error("Impossible de supprimé image Cloudinary invalide");
+          captureAppMessage("Unable to cleanup invalid uploaded profile avatar", {
+            feature: "profile",
+            action: "cleanup_invalid_profile_avatar",
+            extra: {
+              userProfileId: user.id,
+            },
+          });
+        }
+      } catch (error) {
+        console.error("Impossible de supprimé image Cloudinary invalide", error);
+        captureAppException(error, {
+          feature: "profile",
+          action: "cleanup_invalid_profile_avatar",
+          level: "warning",
+          extra: {
+            userProfileId: user.id,
+          },
+        });
       }
     }
 
@@ -147,21 +177,67 @@ export default async function modifyProfil(
       previousAvatarPublicId &&
       previousAvatarPublicId !== finalAvatarPublicId
     ) {
-      const deletePreviousAvatar = await deleteCloudinary([
-        previousAvatarPublicId,
-      ]);
+      try {
+        const deletePreviousAvatar = await deleteCloudinary([
+          previousAvatarPublicId,
+        ]);
 
-      if (!deletePreviousAvatar) {
-        console.error("Impossible de supprimé l'ancien avatar Cloudinary");
+        if (!deletePreviousAvatar) {
+          console.error("Impossible de supprimé l'ancien avatar Cloudinary");
+          captureAppMessage("Unable to cleanup previous profile avatar", {
+            feature: "profile",
+            action: "cleanup_previous_profile_avatar",
+            extra: {
+              userProfileId: user.id,
+            },
+          });
+        }
+      } catch (error) {
+        console.error("Impossible de supprimé l'ancien avatar Cloudinary", error);
+        captureAppException(error, {
+          feature: "profile",
+          action: "cleanup_previous_profile_avatar",
+          level: "warning",
+          extra: {
+            userProfileId: user.id,
+          },
+        });
       }
     }
   } catch (error) {
     console.error(`Impossible de modifié profile : ${error}`);
+    captureAppException(error, {
+      feature: "profile",
+      action: "modify_profile",
+      extra: {
+        userProfileId: user.id,
+        hasNewAvatar,
+      },
+    });
     if (finalAvatarPublicId) {
-      const deleteAvatar = await deleteCloudinary([finalAvatarPublicId]);
+      try {
+        const deleteAvatar = await deleteCloudinary([finalAvatarPublicId]);
 
-      if (!deleteAvatar) {
-        console.error("Impossible de supprimé image Cloudinary");
+        if (!deleteAvatar) {
+          console.error("Impossible de supprimé image Cloudinary");
+          captureAppMessage("Unable to cleanup profile avatar after DB error", {
+            feature: "profile",
+            action: "cleanup_profile_avatar_after_update_error",
+            extra: {
+              userProfileId: user.id,
+            },
+          });
+        }
+      } catch (cleanupError) {
+        console.error("Impossible de supprimé image Cloudinary", cleanupError);
+        captureAppException(cleanupError, {
+          feature: "profile",
+          action: "cleanup_profile_avatar_after_update_error",
+          level: "warning",
+          extra: {
+            userProfileId: user.id,
+          },
+        });
       }
     }
     return {

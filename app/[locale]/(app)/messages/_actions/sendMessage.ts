@@ -3,10 +3,16 @@
 import { getTranslations } from "next-intl/server";
 
 import { getSession } from "@/lib/authSession";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 import { triggerMessageCreated } from "@/lib/pusher/server";
+import { rateLimits } from "@/lib/rateLimits";
 
 const MESSAGE_MAX_LENGTH = 2000;
+
+function getRateLimitMinutes(reset: number) {
+  return Math.max(1, Math.ceil((reset - Date.now()) / (1000 * 60)));
+}
 
 type SendMessageInput = {
   conversationId: string;
@@ -73,6 +79,16 @@ export async function sendMessage(
       ok: false,
       messageQuery: null,
       userMsg: t("viewerProfileNotFound"),
+    };
+  }
+
+  const { success, reset } = await rateLimits.messageSend.limit(viewer.id);
+
+  if (!success) {
+    return {
+      ok: false,
+      messageQuery: null,
+      userMsg: t("rateLimited", { minutes: getRateLimitMinutes(reset) }),
     };
   }
 
@@ -194,6 +210,17 @@ export async function sendMessage(
       await triggerMessageCreated(receiverId, serializedMessage);
     } catch (error) {
       console.error("Unable to trigger realtime message", error);
+      captureAppException(error, {
+        feature: "messages",
+        action: "trigger_message_created_realtime",
+        level: "warning",
+        extra: {
+          conversationId: conversation.id,
+          messageId: serializedMessage.id,
+          senderProfileId: viewer.id,
+          receiverProfileId: receiverId,
+        },
+      });
     }
 
     return {
@@ -203,6 +230,15 @@ export async function sendMessage(
     };
   } catch (error) {
     console.error("Unable to send messageQuery", error);
+    captureAppException(error, {
+      feature: "messages",
+      action: "send_message",
+      extra: {
+        conversationId: conversation.id,
+        senderProfileId: viewer.id,
+        receiverProfileId: receiverId,
+      },
+    });
 
     return {
       ok: false,
