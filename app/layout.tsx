@@ -15,12 +15,18 @@ import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import { getSiteUrl, siteConfig } from "@/lib/seo";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Socially",
-  description: "A social app built with Next.js",
+  metadataBase: new URL(getSiteUrl()),
+  applicationName: siteConfig.name,
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
 };
 
 export default async function RootLayout(props: LayoutProps<"/">) {
