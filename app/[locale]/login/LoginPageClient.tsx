@@ -52,6 +52,8 @@ export default function LoginPageClient() {
     "mt-1 flex flex-wrap items-center justify-center gap-1.5 text-sm text-text-muted";
   const switchButtonClass =
     "font-semibold text-primary transition hover:text-primary-glow";
+  const legalLinkClass =
+    "font-medium text-primary transition hover:text-primary-glow";
 
   const initialState = { ok: false, userMsg: "" };
   const [state, formAction, isPending] = useActionState<
@@ -238,6 +240,17 @@ export default function LoginPageClient() {
             >
               {t("submit.signup")}
             </button>
+            <p className="text-center text-xs leading-5 text-text-dim">
+              {t("legalNotice.start")}
+              <Link href="/legal/terms" className={legalLinkClass}>
+                {t("legalNotice.terms")}
+              </Link>
+              {t("legalNotice.middle")}
+              <Link href="/legal/privacy" className={legalLinkClass}>
+                {t("legalNotice.privacy")}
+              </Link>
+              {t("legalNotice.end")}
+            </p>
             <div className={switchRowClass}>
               <p>{t("loginPrompt")}</p>
               <button

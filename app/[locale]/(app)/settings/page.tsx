@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
 import AppPageShell from "../_components/app-page-shell";
-import { ArrowRight, Database, Shield, User } from "lucide-react";
+import { ArrowRight, Database, FileText, Shield, User } from "lucide-react";
 import { Link } from "@/i18n/routing";
 
 const settingsSections = [
@@ -25,6 +25,13 @@ const settingsSections = [
     descriptionKey: "menu.data.description",
     href: "/settings/data",
     icon: Database,
+  },
+  {
+    key: "legal",
+    titleKey: "menu.legal.title",
+    descriptionKey: "menu.legal.description",
+    href: "/legal",
+    icon: FileText,
   },
 ] as const;
 

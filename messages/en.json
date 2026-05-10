@@ -24,7 +24,14 @@
     },
     "accept": "Accept cookies",
     "decline": "Decline",
-    "settings": "Manage preferences"
+    "settings": "Manage preferences",
+    "learnMore": {
+      "start": "Learn more in our ",
+      "cookies": "cookie policy",
+      "middle": " and ",
+      "privacy": "privacy policy",
+      "end": "."
+    }
   },
   "authRequiredDialog": {
     "title": "Sign in to continue",
@@ -99,7 +106,14 @@
     "signupPrompt": "Don't have an account yet?",
     "signupLink": "Create one",
     "loginPrompt": "Already have an account?",
-    "loginLink": "Sign in"
+    "loginLink": "Sign in",
+    "legalNotice": {
+      "start": "By creating an account, you confirm that you are at least 15 and accept the ",
+      "terms": "Terms of use",
+      "middle": ". Also review our ",
+      "privacy": "Privacy policy",
+      "end": "."
+    }
   },
   "passwordReset": {
     "request": {
@@ -149,6 +163,10 @@
       "data": {
         "title": "My data",
         "description": "Export the data linked to your Socially activity."
+      },
+      "legal": {
+        "title": "Legal documents",
+        "description": "Review the terms, privacy policy, cookies and moderation rules."
       }
     },
     "account": {
@@ -549,6 +567,15 @@
       "imageTooLarge": "The image must not exceed {{maximum}} MB.",
       "invalidImageType": "Only .jpg, .jpeg, .png, and .webp formats are accepted."
     }
+  },
+  "legal": {
+    "eyebrow": "Legal beta",
+    "hubTitle": "Legal documents",
+    "hubDescription": "Socially legal pages for this beta V1: publisher information, privacy, cookies, terms of use, community rules and moderation.",
+    "updatedLabel": "Updated on",
+    "readDocument": "Read document",
+    "backToIndex": "Back to legal documents",
+    "documentsLabel": "Documents"
   },
   "profilePublic": {
     "bioFallback": "No bio has been added yet.",

@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { captureAppException } from "@/lib/monitoring/sentry";
+import { Link } from "@/i18n/routing";
 import {
   Dialog,
   DialogContent,
@@ -111,6 +112,23 @@ export default function CookiesConsentBanner({ refere, language }: Props) {
           <DialogDescription className="max-w-2xl text-sm leading-6 text-text-muted sm:text-[0.95rem]">
             {t("description")}
           </DialogDescription>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-text-muted sm:text-[0.95rem]">
+            {t("learnMore.start")}
+            <Link
+              href="/legal/cookies"
+              className="font-medium text-primary-glow transition hover:text-primary"
+            >
+              {t("learnMore.cookies")}
+            </Link>
+            {t("learnMore.middle")}
+            <Link
+              href="/legal/privacy"
+              className="font-medium text-primary-glow transition hover:text-primary"
+            >
+              {t("learnMore.privacy")}
+            </Link>
+            {t("learnMore.end")}
+          </p>
         </DialogHeader>
         <div className="max-h-[min(52vh,34rem)] overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
           <div className="grid gap-3 sm:gap-4 lg:grid-cols-3">

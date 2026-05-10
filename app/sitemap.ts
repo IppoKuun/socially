@@ -5,6 +5,7 @@ import {
   DISCOVER_CATEGORIES,
   getCategorySlug,
 } from "@/lib/discover/categories";
+import { LEGAL_DOCUMENT_SLUGS } from "@/lib/legal/documents";
 import { myPrisma } from "@/lib/prisma";
 import { getAbsoluteUrl, getLanguageAlternates } from "@/lib/seo";
 
@@ -60,6 +61,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   const staticEntries = [
+    ...createLocalizedEntries({
+      pathname: "/legal",
+      changeFrequency: "monthly",
+      priority: 0.5,
+    }),
+    ...LEGAL_DOCUMENT_SLUGS.flatMap((document) =>
+      createLocalizedEntries({
+        pathname: `/legal/${document}`,
+        changeFrequency: "monthly",
+        priority: 0.5,
+      }),
+    ),
     ...createLocalizedEntries({
       pathname: "/discover",
       changeFrequency: "daily",

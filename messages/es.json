@@ -24,7 +24,14 @@
     },
     "accept": "Aceptar cookies",
     "decline": "Rechazar",
-    "settings": "Gestionar preferencias"
+    "settings": "Gestionar preferencias",
+    "learnMore": {
+      "start": "Más información en nuestra ",
+      "cookies": "política de cookies",
+      "middle": " y nuestra ",
+      "privacy": "política de privacidad",
+      "end": "."
+    }
   },
   "authRequiredDialog": {
     "title": "Inicia sesión para continuar",
@@ -99,7 +106,14 @@
     "signupPrompt": "¿Aún no tienes una cuenta?",
     "signupLink": "Crear una cuenta",
     "loginPrompt": "¿Ya tienes una cuenta?",
-    "loginLink": "Iniciar sesión"
+    "loginLink": "Iniciar sesión",
+    "legalNotice": {
+      "start": "Al crear una cuenta, declaras tener al menos 15 años y aceptas las ",
+      "terms": "Condiciones de uso",
+      "middle": ". Consulta también nuestra ",
+      "privacy": "Política de privacidad",
+      "end": "."
+    }
   },
   "passwordReset": {
     "request": {
@@ -149,6 +163,10 @@
       "data": {
         "title": "Mis datos",
         "description": "Exporta los datos asociados a tu actividad en Socially."
+      },
+      "legal": {
+        "title": "Documentos legales",
+        "description": "Consulta las condiciones, la privacidad, las cookies y las reglas de moderación."
       }
     },
     "account": {
@@ -549,6 +567,15 @@
       "imageTooLarge": "La imagen no debe superar {{maximum}} MB.",
       "invalidImageType": "Solo se aceptan los formatos .jpg, .jpeg, .png y .webp."
     }
+  },
+  "legal": {
+    "eyebrow": "Legal beta",
+    "hubTitle": "Documentos legales",
+    "hubDescription": "Las paginas legales de Socially para esta V1 beta: informacion del editor, privacidad, cookies, condiciones de uso, reglas comunitarias y moderacion.",
+    "updatedLabel": "Actualizado el",
+    "readDocument": "Leer el documento",
+    "backToIndex": "Volver a los documentos legales",
+    "documentsLabel": "Documentos"
   },
   "profilePublic": {
     "bioFallback": "Todavía no se ha añadido ninguna bio.",

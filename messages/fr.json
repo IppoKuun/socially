@@ -24,7 +24,14 @@
     },
     "accept": "Accepter les cookies",
     "decline": "Refuser",
-    "settings": "Gérer les préférences"
+    "settings": "Gérer les préférences",
+    "learnMore": {
+      "start": "En savoir plus sur notre ",
+      "cookies": "politique cookies",
+      "middle": " et notre ",
+      "privacy": "politique de confidentialité",
+      "end": "."
+    }
   },
   "authRequiredDialog": {
     "title": "Connecte-toi pour continuer",
@@ -99,7 +106,14 @@
     "signupPrompt": "Vous n'avez pas encore de compte ?",
     "signupLink": "Créer un compte",
     "loginPrompt": "Vous avez déjà un compte ?",
-    "loginLink": "Se connecter"
+    "loginLink": "Se connecter",
+    "legalNotice": {
+      "start": "En créant un compte, vous déclarez avoir au moins 15 ans et acceptez les ",
+      "terms": "Conditions d'utilisation",
+      "middle": ". Consultez aussi notre ",
+      "privacy": "Politique de confidentialité",
+      "end": "."
+    }
   },
   "passwordReset": {
     "request": {
@@ -149,6 +163,10 @@
       "data": {
         "title": "Mes données",
         "description": "Exportez les données associées à votre activité Socially."
+      },
+      "legal": {
+        "title": "Documents légaux",
+        "description": "Consultez les conditions, la confidentialité, les cookies et les règles de modération."
       }
     },
     "account": {
@@ -549,6 +567,15 @@
       "imageTooLarge": "L'image ne doit pas dépasser {{maximum}} Mo.",
       "invalidImageType": "Seuls les formats .jpg, .jpeg, .png et .webp sont acceptés."
     }
+  },
+  "legal": {
+    "eyebrow": "Legal beta",
+    "hubTitle": "Documents legaux",
+    "hubDescription": "Les pages legales de Socially pour cette V1 beta : informations editeur, confidentialite, cookies, conditions d'utilisation, regles communautaires et moderation.",
+    "updatedLabel": "Mis a jour le",
+    "readDocument": "Lire le document",
+    "backToIndex": "Retour aux documents legaux",
+    "documentsLabel": "Documents"
   },
   "profilePublic": {
     "bioFallback": "Aucune bio n'a encore été ajoutée.",
