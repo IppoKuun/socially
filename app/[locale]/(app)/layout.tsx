@@ -4,12 +4,39 @@ import { getSession } from "@/lib/authSession";
 import { myPrisma } from "@/lib/prisma";
 import { RestoreAccountModal } from "@/app/components/RestoreAccountModal";
 import { touchUserLastSeen } from "@/lib/user-activity";
+import { redirect, routing } from "@/i18n/routing";
+import { headers } from "next/headers";
+
+type AppLocale = (typeof routing.locales)[number];
+
+function isAppLocale(value: string | null | undefined): value is AppLocale {
+  return routing.locales.includes(value as AppLocale);
+}
+
+function getPathnameWithoutLocale(pathname: string, locale: string) {
+  const localePrefix = `/${locale}`;
+
+  if (pathname === localePrefix) {
+    return "/";
+  }
+
+  if (pathname.startsWith(`${localePrefix}/`)) {
+    return pathname.slice(localePrefix.length);
+  }
+
+  return pathname;
+}
 
 export default async function AuthenticatedAppLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+  const h = await headers();
+  const pathname = h.get("x-pathname");
   const session = await getSession();
 
   const userProfile = session
@@ -22,9 +49,26 @@ export default async function AuthenticatedAppLayout({
           username: true,
           deletedAt: true,
           last_seen_at: true,
+          hasOnboarded: true,
+          language: true,
         },
       })
     : null;
+
+  const preferredLocale = isAppLocale(userProfile?.language)
+    ? userProfile.language
+    : null;
+
+  if (pathname && preferredLocale && preferredLocale !== locale) {
+    redirect({
+      href: getPathnameWithoutLocale(pathname, locale),
+      locale: preferredLocale,
+    });
+  }
+
+  if (session && !userProfile?.hasOnboarded) {
+    redirect({ href: "/onboarding", locale: preferredLocale ?? locale });
+  }
 
   const isSoftDelete = userProfile?.deletedAt;
 
