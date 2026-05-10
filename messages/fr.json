@@ -328,6 +328,16 @@
         "createFailed": "Impossible de créer le post. Réessayez.",
         "sensitiveWarning": "Attention, votre post a été jugé sensible."
       },
+      "appeal": {
+        "authRequired": "Veuillez vous connecter pour faire appel de cette décision.",
+        "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "postNotFound": "Impossible de retrouver ce post.",
+        "notAppealable": "Seuls les posts rejetés par la modération peuvent faire l'objet d'un appel.",
+        "alreadyPending": "Cet appel est déjà en attente de revue.",
+        "alreadyReviewed": "Cette décision de modération a déjà été revue.",
+        "createFailed": "Impossible d'envoyer l'appel. Réessayez.",
+        "created": "Votre appel a été envoyé pour revue."
+      },
       "like": {
         "authRequired": "Veuillez vous connecter pour liker.",
         "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
@@ -371,6 +381,10 @@
         "previewAlt": "Image sélectionnée {index}",
         "removeImage": "Retirer l'image {index}",
         "unsafeBadge": "Image signalée",
+        "appealHint": "Vous pouvez demander une revue si vous pensez que cette décision de modération est incorrecte.",
+        "appealAction": "Faire appel",
+        "appealing": "Envoi...",
+        "appealSent": "Appel envoyé",
         "footerHint": "L'ordre des images est conservé pour la modération. Maximum : {max}.",
         "submit": "Publier",
         "submitting": "Publication...",

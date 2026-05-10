@@ -14,6 +14,7 @@ import { useDropzone, type FileRejection } from "react-dropzone";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import { z } from "zod";
+import { appealPostModeration } from "@/app/actions/postAppeal";
 import createPost from "@/app/actions/post";
 import AuthRequiredDialog from "@/components/auth/AuthRequiredDialog";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,7 @@ type ServerFieldErrors = {
 type CreatePostResult = {
   ok: boolean;
   userMsg?: string;
+  postId?: string;
   errors?: string[] | ServerFieldErrors;
   reasons?: string;
   unsafeImages?: number[];
@@ -70,6 +72,7 @@ export const INITIAL_ACTION_STATE = {
 const EMPTY_SERVER_STATE: CreatePostResult = {
   ok: false,
   userMsg: "",
+  postId: undefined,
   errors: undefined,
   reasons: "",
   unsafeImages: [],
@@ -135,6 +138,9 @@ export default function CreatePostComposer({
   const [localErrors, setLocalErrors] = useState<LocalErrors>({});
   const [serverState, setServerState] =
     useState<CreatePostResult>(EMPTY_SERVER_STATE);
+  const [isAppealing, setIsAppealing] = useState(false);
+  const [appealSent, setAppealSent] = useState(false);
+  const [appealFeedback, setAppealFeedback] = useState("");
   const [isPending, startTransition] = useTransition();
   const imagesRef = useRef<ClientImage[]>([]);
 
@@ -213,6 +219,9 @@ export default function CreatePostComposer({
 
   const clearServerState = useCallback(() => {
     setServerState(EMPTY_SERVER_STATE);
+    setIsAppealing(false);
+    setAppealSent(false);
+    setAppealFeedback("");
   }, []);
 
   const resetComposer = useCallback(() => {
@@ -225,6 +234,9 @@ export default function CreatePostComposer({
     setImages([]);
     setLocalErrors({});
     setServerState(EMPTY_SERVER_STATE);
+    setIsAppealing(false);
+    setAppealSent(false);
+    setAppealFeedback("");
   }, []);
 
   // Ont mets cette fonction en UseCallback car elle est appelée par handleSubmit, et pour évitez que la fonction
@@ -394,6 +406,7 @@ export default function CreatePostComposer({
           setServerState({
             ok: false,
             userMsg: result.userMsg ?? "",
+            postId: result.postId,
             errors: result.errors,
             reasons: result.reasons ?? "",
             unsafeImages: result.unsafeImages ?? [],
@@ -402,6 +415,7 @@ export default function CreatePostComposer({
           setServerState({
             ok: false,
             userMsg: t("errors.submitFailed"),
+            postId: undefined,
             errors: undefined,
             reasons: "",
             unsafeImages: [],
@@ -422,6 +436,29 @@ export default function CreatePostComposer({
       validateDraft,
     ],
   );
+
+  const handleAppeal = useCallback(async () => {
+    if (!serverState.postId || isAppealing || appealSent) {
+      return;
+    }
+
+    setIsAppealing(true);
+    setAppealFeedback("");
+
+    try {
+      const result = await appealPostModeration(serverState.postId);
+
+      setAppealFeedback(result.userMsg);
+
+      if (result.ok) {
+        setAppealSent(true);
+      }
+    } catch {
+      setAppealFeedback(t("errors.submitFailed"));
+    } finally {
+      setIsAppealing(false);
+    }
+  }, [appealSent, isAppealing, serverState.postId, t]);
 
   const titleError = localErrors.title ?? fieldErrors?.title?.[0];
   const contentError = localErrors.content ?? fieldErrors?.content?.[0];
@@ -514,6 +551,38 @@ export default function CreatePostComposer({
                     <p className="mt-1 leading-6 text-white/78">
                       {serverState.reasons}
                     </p>
+                  )}
+                  {isUnsafe && serverState.postId && (
+                    <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      {appealFeedback ? (
+                        <p className="text-sm leading-5 text-white/72">
+                          {appealFeedback}
+                        </p>
+                      ) : (
+                        <span className="text-sm text-white/58">
+                          {t("dialog.appealHint")}
+                        </span>
+                      )}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="shrink-0 border-destructive/35 bg-destructive/10 text-white hover:bg-destructive/15"
+                        onClick={handleAppeal}
+                        disabled={isAppealing || appealSent || isPending}
+                      >
+                        {isAppealing ? (
+                          <>
+                            <LoaderCircle className="size-4 animate-spin" />
+                            {t("dialog.appealing")}
+                          </>
+                        ) : appealSent ? (
+                          t("dialog.appealSent")
+                        ) : (
+                          t("dialog.appealAction")
+                        )}
+                      </Button>
+                    </div>
                   )}
                 </div>
               )}

@@ -328,6 +328,16 @@
         "createFailed": "Unable to create the post. Please try again.",
         "sensitiveWarning": "Warning: your post has been flagged as sensitive."
       },
+      "appeal": {
+        "authRequired": "Please sign in to appeal this decision.",
+        "profileNotFound": "We could not find your profile. Please try again later.",
+        "postNotFound": "We could not find this post.",
+        "notAppealable": "Only posts rejected by moderation can be appealed.",
+        "alreadyPending": "This appeal is already pending review.",
+        "alreadyReviewed": "This moderation decision has already been reviewed.",
+        "createFailed": "Unable to submit the appeal. Please try again.",
+        "created": "Your appeal has been submitted for review."
+      },
       "like": {
         "authRequired": "Please sign in to like.",
         "profileNotFound": "We could not find your profile. Please try again later.",
@@ -371,6 +381,10 @@
         "previewAlt": "Selected image {index}",
         "removeImage": "Remove image {index}",
         "unsafeBadge": "Flagged image",
+        "appealHint": "You can request a review if you think this moderation decision is wrong.",
+        "appealAction": "Appeal",
+        "appealing": "Sending...",
+        "appealSent": "Appeal sent",
         "footerHint": "Image order is preserved for moderation. Maximum: {max}.",
         "submit": "Post",
         "submitting": "Posting...",

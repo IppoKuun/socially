@@ -328,6 +328,16 @@
         "createFailed": "No se puede crear la publicación. Inténtalo de nuevo.",
         "sensitiveWarning": "Atención: tu publicación ha sido considerada sensible."
       },
+      "appeal": {
+        "authRequired": "Inicia sesión para apelar esta decisión.",
+        "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+        "postNotFound": "No se pudo encontrar esta publicación.",
+        "notAppealable": "Solo se pueden apelar las publicaciones rechazadas por moderación.",
+        "alreadyPending": "Esta apelación ya está pendiente de revisión.",
+        "alreadyReviewed": "Esta decisión de moderación ya fue revisada.",
+        "createFailed": "No se pudo enviar la apelación. Inténtalo de nuevo.",
+        "created": "Tu apelación ha sido enviada para revisión."
+      },
       "like": {
         "authRequired": "Inicia sesión para dar me gusta.",
         "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
@@ -371,6 +381,10 @@
         "previewAlt": "Imagen seleccionada {index}",
         "removeImage": "Eliminar la imagen {index}",
         "unsafeBadge": "Imagen señalada",
+        "appealHint": "Puedes solicitar una revisión si crees que esta decisión de moderación es incorrecta.",
+        "appealAction": "Apelar",
+        "appealing": "Enviando...",
+        "appealSent": "Apelación enviada",
         "footerHint": "El orden de las imágenes se conserva para la moderación. Máximo: {max}.",
         "submit": "Publicar",
         "submitting": "Publicando...",

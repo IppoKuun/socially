@@ -190,7 +190,6 @@ model Post {
   unsafeImages     Int[]   @default([])
 
   appealStatus         PostAppealStatus @default(NONE)
-  appealMessage        String?
   appealedAt           DateTime?
   reviewedAt           DateTime?
   reviewedById         String?
