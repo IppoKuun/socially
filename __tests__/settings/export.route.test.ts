@@ -63,7 +63,7 @@ describe("GET /api/export", () => {
     expect(response.status).toBe(429);
     expect(body).toEqual({
       error: "DATA_EXPORT_RATE_LIMITED",
-      userMsg: "Vous avez déjà exporté vos données cette semaine.",
+      userMsg: "You have already exported your data this week.",
       resetAt: new Date(reset).toISOString(),
     });
     expect(mockUserProfileFindUnique).not.toHaveBeenCalled();

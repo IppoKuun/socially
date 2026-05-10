@@ -135,6 +135,7 @@ describe("onboarding server actions", () => {
 
       expect(mockUserProfileFindUnique).toHaveBeenCalledWith({
         where: { username: "existing_user" },
+        select: { userId: true },
       });
       expect(result).toEqual({
         ok: false,
