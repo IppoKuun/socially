@@ -250,6 +250,7 @@ export default async function createPost(
     return {
       ok: false,
       userMsg: t("unsafeContent"),
+      postId: created.id,
       reasons: moderation.reasons,
       unsafeImages: moderation.unsafeImages,
     };
