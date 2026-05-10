@@ -1,6 +1,7 @@
 import deleteCloudinary from "@/lib/cloudinaryConfig";
 import { captureAppException, captureAppMessage } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
+import { checkApiRateLimit, getRequestIp } from "@/lib/apiRateLimit";
 
 const DELETE_GRACE_PERIOD_DAYS = 30;
 const DELETE_BATCH_SIZE = 20;
@@ -127,6 +128,15 @@ async function anonymizeDeletedProfile(profile: {
 }
 
 export async function GET(request: Request) {
+  const rateLimitResponse = await checkApiRateLimit(
+    "cron",
+    getRequestIp(request),
+  );
+
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   const authHeader = request.headers.get("authorization");
 
   if (!process.env.CRON_SECRET) {
