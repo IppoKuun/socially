@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/routing";
 import { DiscoverPostCandidate } from "@/lib/discover/queries";
 import { User2Icon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 type MainPostCardProps = {
@@ -8,8 +9,10 @@ type MainPostCardProps = {
 };
 
 export default function MainPostCard({ mainPost }: MainPostCardProps) {
+  const t = useTranslations("appShell.pages.discover");
+
   if (!mainPost) {
-    return <p className="">Aucun post trouvé</p>;
+    return <p className="">{t("mainPost.empty")}</p>;
   }
 
   const hasImage = Boolean(mainPost.imagesUrl[0]);
@@ -51,11 +54,16 @@ export default function MainPostCard({ mainPost }: MainPostCardProps) {
                 height={50}
                 sizes="50px"
                 className="rounded-full object-cover"
-                alt="photo_profile"
+                alt={t("profileAvatarAlt", {
+                  name: mainPost.author.displayname,
+                })}
                 src={mainPost.author.avatarUrl}
               ></Image>
             ) : (
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white">
+              <div
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white"
+                aria-hidden="true"
+              >
                 <User2Icon className="h-5 w-5" />
               </div>
             )}
@@ -63,7 +71,9 @@ export default function MainPostCard({ mainPost }: MainPostCardProps) {
               <p className="truncate text-sm font-medium font-light">
                 @{mainPost.author.username}
               </p>
-              <span className="text-xs font-extralight ">Posté par</span>
+              <span className="text-xs font-extralight ">
+                {t("mainPost.postedBy")}
+              </span>
             </div>
           </div>
         </div>
