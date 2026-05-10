@@ -2,10 +2,13 @@
   "name": "socially",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "next dev --turbo",
     "clean": "rm -rf .next .turbo node_modules/.cache",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "typecheck": "next typegen && tsc --noEmit",
     "seed:discover": "node scripts/seed-discover-dev.mjs",
     "start": "next start",
