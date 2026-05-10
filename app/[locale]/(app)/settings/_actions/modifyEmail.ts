@@ -16,7 +16,7 @@ export default async function modifyEmailActions(
   _prevstate: FormServ,
   email: string,
 ): Promise<FormServ> {
-  const t = await getTranslations("settings.actions.email");
+  const t = await getTranslations("appShell.pages.settings.actions.email");
   const session = await getSession();
 
   if (!session?.user?.id) {

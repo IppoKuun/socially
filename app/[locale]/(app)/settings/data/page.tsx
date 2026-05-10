@@ -8,7 +8,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 export default function SettingDataPage() {
-  const t = useTranslations("settings");
+  const t = useTranslations("appShell.pages.settings");
   const [status, setStatus] = useState<"idle" | "pending" | "error" | "succes">(
     "idle",
   );

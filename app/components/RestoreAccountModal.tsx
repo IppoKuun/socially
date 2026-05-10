@@ -8,7 +8,7 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 export function RestoreAccountModal() {
-  const t = useTranslations("settings");
+  const t = useTranslations("appShell.pages.settings");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isSigningOut, setIsSigningOut] = useState(false);

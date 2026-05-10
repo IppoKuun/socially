@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog";
 
 export default function UserDeleteArea() {
-  const t = useTranslations("settings");
+  const t = useTranslations("appShell.pages.settings");
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 

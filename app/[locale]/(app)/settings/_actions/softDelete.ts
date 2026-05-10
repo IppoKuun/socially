@@ -8,7 +8,9 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
 export default async function softDeleteAction() {
-  const t = await getTranslations("settings.actions.deleteAccount");
+  const t = await getTranslations(
+    "appShell.pages.settings.actions.deleteAccount",
+  );
   const session = await getSession();
 
   if (!session?.user?.id) {

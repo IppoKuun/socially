@@ -20,7 +20,7 @@ export type UpdateLanguageResult =
 export default async function updateLanguageAction(
   locale: string,
 ): Promise<UpdateLanguageResult> {
-  const t = await getTranslations("settings.actions.language");
+  const t = await getTranslations("appShell.pages.settings.actions.language");
   const session = await getSession();
 
   if (!session?.user?.id) {

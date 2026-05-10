@@ -805,6 +805,10 @@
           "data": {
             "title": "My data",
             "description": "Export the data linked to your Socially activity."
+          },
+          "legal": {
+            "title": "Legal documents",
+            "description": "Review the terms, privacy policy, cookies and moderation rules."
           }
         },
         "actions": {

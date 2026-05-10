@@ -9,7 +9,7 @@ import { ArrowLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 export default async function settingsBlocksPage() {
-  const t = await getTranslations("settings");
+  const t = await getTranslations("appShell.pages.settings");
   const queryclient = makeQueryClient();
 
   await queryclient.fetchInfiniteQuery({

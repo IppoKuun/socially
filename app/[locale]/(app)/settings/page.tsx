@@ -36,7 +36,7 @@ const settingsSections = [
 ] as const;
 
 export default async function SettingsPage() {
-  const t = await getTranslations("settings");
+  const t = await getTranslations("appShell.pages.settings");
 
   return (
     <AppPageShell title={t("title")} description={t("description")}>

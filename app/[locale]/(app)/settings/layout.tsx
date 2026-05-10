@@ -15,7 +15,7 @@ export default async function SettingsLayout({
   const session = await getSession();
 
   if (!session) {
-    const t = await getTranslations("settings");
+    const t = await getTranslations("appShell.pages.settings");
 
     return (
       <AppPageShell title={t("title")} description={t("description")}>

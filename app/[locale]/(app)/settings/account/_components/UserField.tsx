@@ -33,7 +33,7 @@ const languageOptions = [
 ] as const;
 
 export default function UserField({ userInfo }: userInfoProps) {
-  const t = useTranslations("settings");
+  const t = useTranslations("appShell.pages.settings");
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();

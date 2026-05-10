@@ -14,7 +14,7 @@ export type UnblockUserActionResult = {
 export default async function unblockUserAction(
   blockedProfileId: string,
 ): Promise<UnblockUserActionResult> {
-  const t = await getTranslations("settings.actions.unblock");
+  const t = await getTranslations("appShell.pages.settings.actions.unblock");
   const session = await getSession();
 
   if (!session?.user?.id) {

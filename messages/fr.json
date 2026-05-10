@@ -805,6 +805,10 @@
           "data": {
             "title": "Mes données",
             "description": "Exportez les données associées à votre activité Socially."
+          },
+          "legal": {
+            "title": "Documents légaux",
+            "description": "Consultez les conditions, la confidentialité, les cookies et les règles de modération."
           }
         },
         "actions": {
