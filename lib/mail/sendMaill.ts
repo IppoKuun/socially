@@ -1,5 +1,5 @@
 // src/lib/mail/sendEmail.ts
-import { resend } from "@/lib/resend";
+import { getResendClient } from "@/lib/resend";
 
 type SendEmailParams = {
   to: string;
@@ -9,6 +9,8 @@ type SendEmailParams = {
 };
 
 export async function sendEmail({ to, subject, html, text }: SendEmailParams) {
+  const resend = getResendClient();
+
   const { data, error } = await resend.emails.send({
     from: process.env.RESEND_FROM_EMAIL!,
     to,

@@ -6,6 +6,7 @@ import {
   getCategorySlug,
 } from "@/lib/discover/categories";
 import { LEGAL_DOCUMENT_SLUGS } from "@/lib/legal/documents";
+import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
 import { getAbsoluteUrl, getLanguageAlternates } from "@/lib/seo";
 
@@ -28,38 +29,70 @@ function createLocalizedEntries(input: {
   }));
 }
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [posts, profiles] = await Promise.all([
-    myPrisma.post.findMany({
-      where: {
-        deletedAt: null,
-        moderationStatus: { not: "UNSAFE" },
-        author: {
+async function getDynamicSitemapEntries(): Promise<MetadataRoute.Sitemap> {
+  try {
+    const [posts, profiles] = await Promise.all([
+      myPrisma.post.findMany({
+        where: {
+          deletedAt: null,
+          moderationStatus: { not: "UNSAFE" },
+          author: {
+            deletedAt: null,
+            username: { not: null },
+          },
+        },
+        select: {
+          slug: true,
+          createdAt: true,
+        },
+        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+        take: 5000,
+      }),
+      myPrisma.userProfile.findMany({
+        where: {
           deletedAt: null,
           username: { not: null },
         },
-      },
-      select: {
-        slug: true,
-        createdAt: true,
-      },
-      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-      take: 5000,
-    }),
-    myPrisma.userProfile.findMany({
-      where: {
-        deletedAt: null,
-        username: { not: null },
-      },
-      select: {
-        username: true,
-        createdAt: true,
-      },
-      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-      take: 5000,
-    }),
-  ]);
+        select: {
+          username: true,
+          createdAt: true,
+        },
+        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+        take: 5000,
+      }),
+    ]);
 
+    const postEntries = posts.flatMap((post) =>
+      createLocalizedEntries({
+        pathname: `/post/${post.slug}`,
+        lastModified: post.createdAt,
+        changeFrequency: "weekly",
+        priority: 0.7,
+      }),
+    );
+
+    const profileEntries = profiles.flatMap((profile) =>
+      createLocalizedEntries({
+        pathname: `/profile/${profile.username}`,
+        lastModified: profile.createdAt,
+        changeFrequency: "weekly",
+        priority: 0.6,
+      }),
+    );
+
+    return [...postEntries, ...profileEntries];
+  } catch (error) {
+    console.error("Unable to generate dynamic sitemap entries", error);
+    captureAppException(error, {
+      feature: "seo",
+      action: "generate_dynamic_sitemap_entries",
+    });
+
+    return [];
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries = [
     ...createLocalizedEntries({
       pathname: "/legal",
@@ -92,23 +125,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ),
   ];
 
-  const postEntries = posts.flatMap((post) =>
-    createLocalizedEntries({
-      pathname: `/post/${post.slug}`,
-      lastModified: post.createdAt,
-      changeFrequency: "weekly",
-      priority: 0.7,
-    }),
-  );
+  const dynamicEntries = await getDynamicSitemapEntries();
 
-  const profileEntries = profiles.flatMap((profile) =>
-    createLocalizedEntries({
-      pathname: `/profile/${profile.username}`,
-      lastModified: profile.createdAt,
-      changeFrequency: "weekly",
-      priority: 0.6,
-    }),
-  );
-
-  return [...staticEntries, ...postEntries, ...profileEntries];
+  return [...staticEntries, ...dynamicEntries];
 }
