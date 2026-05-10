@@ -11,6 +11,26 @@ import AnonymousSessionTracker from "../components/AnonymousSessionTracker";
 
 import { getSession } from "@/lib/authSession";
 
+type AppLocale = (typeof routing.locales)[number];
+
+function isAppLocale(value: string | null | undefined): value is AppLocale {
+  return routing.locales.includes(value as AppLocale);
+}
+
+function getPathnameWithoutLocale(pathname: string, locale: string) {
+  const localePrefix = `/${locale}`;
+
+  if (pathname === localePrefix) {
+    return "/";
+  }
+
+  if (pathname.startsWith(`${localePrefix}/`)) {
+    return pathname.slice(localePrefix.length);
+  }
+
+  return pathname;
+}
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -33,11 +53,20 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
     const id = session.user.id;
     const user = await myPrisma.userProfile.findUnique({
       where: { userId: id },
-      select: { hasOnboarded: true },
+      select: { hasOnboarded: true, language: true },
     });
 
+    const preferredLocale = isAppLocale(user?.language) ? user.language : null;
+
+    if (pathname && preferredLocale && preferredLocale !== locale) {
+      redirect({
+        href: getPathnameWithoutLocale(pathname, locale),
+        locale: preferredLocale,
+      });
+    }
+
     if (!user?.hasOnboarded && !pathname?.includes("/onboarding")) {
-      redirect({ href: "/onboarding", locale });
+      redirect({ href: "/onboarding", locale: preferredLocale ?? locale });
     }
   }
 
