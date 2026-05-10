@@ -36,7 +36,7 @@ export const rateLimits = {
   postPublish: new Ratelimit({
     redis,
     prefix: "ratelimit:post-publish",
-    limiter: Ratelimit.slidingWindow(30, "15 m"),
+    limiter: Ratelimit.slidingWindow(20, "35 m"),
   }),
   comment: new Ratelimit({
     redis,
