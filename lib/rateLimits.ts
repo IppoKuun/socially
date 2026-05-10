@@ -49,6 +49,24 @@ export const rateLimits = {
     limiter: Ratelimit.slidingWindow(1, "7 d"),
     analytics: true,
   }),
+  pusherAuth: new Ratelimit({
+    redis,
+    prefix: "ratelimit:pusher-auth",
+    limiter: Ratelimit.slidingWindow(120, "5 m"),
+    analytics: true,
+  }),
+  visitorSession: new Ratelimit({
+    redis,
+    prefix: "ratelimit:visitor-session",
+    limiter: Ratelimit.slidingWindow(5, "10 m"),
+    analytics: true,
+  }),
+  cron: new Ratelimit({
+    redis,
+    prefix: "ratelimit:cron",
+    limiter: Ratelimit.slidingWindow(10, "1 h"),
+    analytics: true,
+  }),
 } as const;
 
 export type RateLimitKey = keyof typeof rateLimits;
