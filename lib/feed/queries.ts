@@ -62,6 +62,7 @@ function getVisiblePostWhere(viewerId?: string | null): Prisma.PostWhereInput {
 function getPostDetailWhere(viewerId?: string | null): Prisma.PostWhereInput {
   return {
     moderationStatus: { not: "UNSAFE" },
+    deletedAt: null,
     author: getVisibleAuthorWhere(viewerId),
   };
 }
@@ -145,6 +146,7 @@ function getCommentSelect(viewerId?: string | null) {
 
   return {
     id: true,
+    deletedAt: true,
     postId: true,
     responseToCommentId: true,
     content: true,

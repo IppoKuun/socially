@@ -37,6 +37,7 @@ async function getPostDiscoverCandidate() {
     select: {
       author: {
         select: {
+          deletedAt: true,
           displayname: true,
           username: true,
           avatarUrl: true,
