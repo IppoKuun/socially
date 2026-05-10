@@ -3,7 +3,12 @@ import { getSession } from "@/lib/authSession";
 import { createNotificationIfMissing } from "@/lib/notifications";
 import { captureAppException } from "@/lib/monitoring/sentry";
 import { myPrisma } from "@/lib/prisma";
+import { rateLimits } from "@/lib/rateLimits";
 import { getTranslations } from "next-intl/server";
+
+function getRateLimitMinutes(reset: number) {
+  return Math.max(1, Math.ceil((reset - Date.now()) / (1000 * 60)));
+}
 
 export default async function toggleFollow(username: string) {
   const t = await getTranslations("profilePublic.actions");
@@ -21,6 +26,15 @@ export default async function toggleFollow(username: string) {
     return {
       ok: false,
       userMsg: t("viewerProfileNotFound"),
+    };
+  }
+
+  const { success, reset } = await rateLimits.followToggle.limit(viewer.id);
+
+  if (!success) {
+    return {
+      ok: false,
+      userMsg: t("rateLimited", { minutes: getRateLimitMinutes(reset) }),
     };
   }
 

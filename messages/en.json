@@ -404,6 +404,7 @@
       "like": {
         "authRequired": "Please sign in to like.",
         "profileNotFound": "We could not find your profile. Please try again later.",
+        "rateLimited": "You have liked too quickly. Please try again in {minutes} minute(s).",
         "toggleFailed": "Unable to update the like."
       },
       "report": {
@@ -493,6 +494,7 @@
       "like": {
         "authRequired": "Please sign in to like.",
         "profileNotFound": "We could not find your profile. Please try again later.",
+        "rateLimited": "You have liked too quickly. Please try again in {minutes} minute(s).",
         "toggleFailed": "Unable to update the like."
       }
     },
@@ -644,6 +646,7 @@
       "targetProfileNotFound": "The profile you are trying to follow could not be found.",
       "cannotFollowSelf": "You cannot follow yourself.",
       "blocked": "You cannot follow this profile because one of the accounts has blocked the other.",
+      "rateLimited": "You have updated too many follows recently. Please try again in {minutes} minute(s).",
       "databaseError": "Unable to save the follow status. Please try again."
     },
     "stats": {
@@ -697,7 +700,16 @@
       "discover": {
         "title": "Discover",
         "description": "Surface editorial discovery blocks, accounts and highlights from one place.",
-        "placeholder": "Discover content is not implemented yet. This placeholder keeps the navigation fully functional while the real page is built."
+        "placeholder": "Discover content is not implemented yet. This placeholder keeps the navigation fully functional while the real page is built.",
+        "profileAvatarAlt": "{name}'s avatar",
+        "mainPost": {
+          "empty": "No post found",
+          "postedBy": "Posted by"
+        },
+        "profiles": {
+          "title": "Top creators",
+          "followers": "{count, plural, one {Follower} other {Followers}}"
+        }
       },
       "trending": {
         "title": "Trending",
@@ -750,6 +762,7 @@
           "messageTooLong": "The message must not exceed 2000 characters.",
           "conversationNotFound": "Conversation not found or inaccessible.",
           "receiverProfileUnavailable": "This profile is no longer available.",
+          "rateLimited": "You have sent too many messages recently. Please try again in {minutes} minute(s).",
           "sendFailed": "Unable to send the message. Please try again.",
           "failedToMarkAsRead": "Unable to mark the conversation as read. Please try again."
         }

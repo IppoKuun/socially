@@ -67,6 +67,24 @@ export const rateLimits = {
     limiter: Ratelimit.slidingWindow(10, "1 h"),
     analytics: true,
   }),
+  likeToggle: new Ratelimit({
+    redis,
+    prefix: "ratelimit:like-toggle",
+    limiter: Ratelimit.slidingWindow(100, "5 m"),
+    analytics: true,
+  }),
+  followToggle: new Ratelimit({
+    redis,
+    prefix: "ratelimit:follow-toggle",
+    limiter: Ratelimit.slidingWindow(40, "10 m"),
+    analytics: true,
+  }),
+  messageSend: new Ratelimit({
+    redis,
+    prefix: "ratelimit:message-send",
+    limiter: Ratelimit.slidingWindow(60, "5 m"),
+    analytics: true,
+  }),
 } as const;
 
 export type RateLimitKey = keyof typeof rateLimits;

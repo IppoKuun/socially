@@ -404,6 +404,7 @@
       "like": {
         "authRequired": "Veuillez vous connecter pour liker.",
         "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "rateLimited": "Vous avez liké trop rapidement. Réessayez dans {minutes} minute(s).",
         "toggleFailed": "Impossible de modifier le like."
       },
       "report": {
@@ -493,6 +494,7 @@
       "like": {
         "authRequired": "Veuillez vous connecter pour liker.",
         "profileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",
+        "rateLimited": "Vous avez liké trop rapidement. Réessayez dans {minutes} minute(s).",
         "toggleFailed": "Impossible de modifier le like."
       }
     },
@@ -644,6 +646,7 @@
       "targetProfileNotFound": "Le profil que vous essayez de suivre n'a pas été trouvé.",
       "cannotFollowSelf": "Vous ne pouvez pas vous suivre vous-même.",
       "blocked": "Impossible de suivre ce profil, car l'un des deux comptes a bloqué l'autre.",
+      "rateLimited": "Vous avez modifié trop d'abonnements récemment. Réessayez dans {minutes} minute(s).",
       "databaseError": "Impossible d'enregistrer l'abonnement. Réessayez."
     },
     "stats": {
@@ -697,7 +700,16 @@
       "discover": {
         "title": "Discover",
         "description": "Retrouve les surfaces de découverte éditoriale, les comptes et les temps forts au même endroit.",
-        "placeholder": "Le contenu Discover n'est pas encore implémenté. Ce placeholder garde une vraie page accessible pendant la construction."
+        "placeholder": "Le contenu Discover n'est pas encore implémenté. Ce placeholder garde une vraie page accessible pendant la construction.",
+        "profileAvatarAlt": "Avatar de {name}",
+        "mainPost": {
+          "empty": "Aucun post trouvé",
+          "postedBy": "Posté par"
+        },
+        "profiles": {
+          "title": "Meilleurs créateurs",
+          "followers": "{count, plural, one {Abonné} other {Abonnés}}"
+        }
       },
       "trending": {
         "title": "Trending",
@@ -750,6 +762,7 @@
           "messageTooLong": "Le message ne doit pas dépasser 2000 caractères.",
           "conversationNotFound": "Conversation introuvable ou inaccessible.",
           "receiverProfileUnavailable": "Ce profil n'est plus disponible.",
+          "rateLimited": "Vous avez envoyé trop de messages récemment. Réessayez dans {minutes} minute(s).",
           "sendFailed": "Impossible d'envoyer le message. Réessayez.",
           "failedToMarkAsRead": "Impossible de marquer la conversation comme lue. Réessayez."
         }

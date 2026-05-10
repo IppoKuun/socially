@@ -5,6 +5,11 @@ import { getTranslations } from "next-intl/server";
 import { myPrisma } from "@/lib/prisma";
 import { createNotificationIfMissing } from "@/lib/notifications";
 import { captureAppException } from "@/lib/monitoring/sentry";
+import { rateLimits } from "@/lib/rateLimits";
+
+function getRateLimitMinutes(reset: number) {
+  return Math.max(1, Math.ceil((reset - Date.now()) / (1000 * 60)));
+}
 
 export async function Like(postId: string) {
   const t = await getTranslations("post.actions.like");
@@ -25,6 +30,16 @@ export async function Like(postId: string) {
       userMsg: t("profileNotFound"),
     };
   }
+
+  const { success, reset } = await rateLimits.likeToggle.limit(user.id);
+
+  if (!success) {
+    return {
+      ok: false,
+      userMsg: t("rateLimited", { minutes: getRateLimitMinutes(reset) }),
+    };
+  }
+
   try {
     const isLiked = await myPrisma.postLike.findUnique({
       where: {
@@ -113,6 +128,15 @@ export async function commentLike(commentId: string) {
     return {
       ok: false,
       userMsg: t("profileNotFound"),
+    };
+  }
+
+  const { success, reset } = await rateLimits.likeToggle.limit(user.id);
+
+  if (!success) {
+    return {
+      ok: false,
+      userMsg: t("rateLimited", { minutes: getRateLimitMinutes(reset) }),
     };
   }
 

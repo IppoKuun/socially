@@ -404,6 +404,7 @@
       "like": {
         "authRequired": "Inicia sesión para dar me gusta.",
         "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+        "rateLimited": "Has dado me gusta demasiado rápido. Inténtalo de nuevo dentro de {minutes} minuto(s).",
         "toggleFailed": "No es posible actualizar el me gusta."
       },
       "report": {
@@ -493,6 +494,7 @@
       "like": {
         "authRequired": "Inicia sesión para dar me gusta.",
         "profileNotFound": "No se pudo encontrar tu perfil. Inténtalo de nuevo más tarde.",
+        "rateLimited": "Has dado me gusta demasiado rápido. Inténtalo de nuevo dentro de {minutes} minuto(s).",
         "toggleFailed": "No es posible actualizar el me gusta."
       }
     },
@@ -644,6 +646,7 @@
       "targetProfileNotFound": "No se pudo encontrar el perfil que intentas seguir.",
       "cannotFollowSelf": "No puedes seguirte a ti mismo.",
       "blocked": "No puedes seguir este perfil porque una de las cuentas ha bloqueado a la otra.",
+      "rateLimited": "Has actualizado demasiados seguimientos recientemente. Inténtalo de nuevo dentro de {minutes} minuto(s).",
       "databaseError": "No se pudo guardar el seguimiento. Inténtalo de nuevo."
     },
     "stats": {
@@ -697,7 +700,16 @@
       "discover": {
         "title": "Discover",
         "description": "Reúne superficies editoriales de descubrimiento, cuentas y destacados en un mismo lugar.",
-        "placeholder": "El contenido Discover aún no está implementado. Este placeholder mantiene una página real accesible mientras se construye."
+        "placeholder": "El contenido Discover aún no está implementado. Este placeholder mantiene una página real accesible mientras se construye.",
+        "profileAvatarAlt": "Avatar de {name}",
+        "mainPost": {
+          "empty": "No se encontró ninguna publicación",
+          "postedBy": "Publicado por"
+        },
+        "profiles": {
+          "title": "Mejores creadores",
+          "followers": "{count, plural, one {Seguidor} other {Seguidores}}"
+        }
       },
       "trending": {
         "title": "Trending",
@@ -750,6 +762,7 @@
           "messageTooLong": "El mensaje no debe superar los 2000 caracteres.",
           "conversationNotFound": "Conversación no encontrada o inaccesible.",
           "receiverProfileUnavailable": "Este perfil ya no está disponible.",
+          "rateLimited": "Has enviado demasiados mensajes recientemente. Inténtalo de nuevo dentro de {minutes} minuto(s).",
           "sendFailed": "No se pudo enviar el mensaje. Inténtalo de nuevo.",
           "failedToMarkAsRead": "No se pudo marcar la conversación como leída. Inténtalo de nuevo."
         }
