@@ -71,7 +71,7 @@ export default function StepFinal() {
     <main className=" flex w-full  h-full p-4 flex-col items-center">
       <form
         action={formAction}
-        className="flex min-h-[530px] relative h-full w-full max-w-[520px] flex-col justify-center items-center rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] px-4 py-2 backdrop-blur-md"
+        className="flex min-h-[530px] relative h-full w-full max-w-[520px] flex-col justify-center items-center rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] px-4 py-12 backdrop-blur-md"
       >
         {intent && <input type="hidden" name="intent" value={intent} />}
         <div className="flex w-full max-w-[480px] flex-col items-center">
@@ -154,7 +154,7 @@ export default function StepFinal() {
         <button
           type="submit"
           formAction={formAction}
-          className="btn-primary mt-6 mb-4 lg:-right-80 absolute -bottom-0 right-30"
+          className="btn-primary mt-8 w-full justify-center sm:w-auto lg:absolute lg:-right-80 lg:bottom-0"
           disabled={isPending || !intent}
         >
           {t("submit")}

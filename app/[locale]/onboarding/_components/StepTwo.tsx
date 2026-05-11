@@ -44,11 +44,7 @@ export default function StepTwo() {
     <main className="flex flex-col  items-center py-4 px-4">
       <form
         action={formAction}
-        className=" flex flex-col px-4 py-2  relative  rounded-2xl items-center bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))]
-border border-white/6
-backdrop-blur-md
-
-  min-h-[450px] h-full w-full max-w-[520px]"
+        className="flex min-h-[450px] h-full w-full max-w-[520px] flex-col items-center rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] px-4 py-2 pb-8 backdrop-blur-md lg:relative"
       >
         <div className="flex flex-row">
           <div className="flex flex-col items-center w-full max-w-[480px]">
@@ -66,13 +62,14 @@ backdrop-blur-md
               }}
               className="w-full"
             >
-              <section className="grid grid-cols-3 w-fit mx-auto mt-5 py-2 gap-6">
+              <section className="mt-5 grid w-full grid-cols-2 gap-3 py-2 sm:grid-cols-3 sm:gap-6">
+                {" "}
                 {Object.entries(categoryIcons).map(([key, CatIcons]) => (
                   <ToggleGroupItem
                     key={key}
                     value={key}
                     className={`flex flex-col items-center justify-center cursor-pointer 
-  rounded-2xl px-2 py-8 transition-all duration-300 group ${
+  rounded-2xl px-2 py-12 sm:py-8 transition-all duration-300 group ${
     categories.includes(key)
       ? "bg-blue-600/20 ring-2 ring-blue-500 shadow-[0_0_30px_-10px_rgba(59,130,246,0.5)] scale-105 z-10"
       : "bg-white/[0.03] border border-white/10 hover:bg-white/[0.07] hover:scale-102"
@@ -93,7 +90,7 @@ backdrop-blur-md
         <button
           type="submit"
           formAction={formAction}
-          className="btn-primary mt-6 lg:-right-80 absolute -bottom-15 right-30"
+          className="btn-primary mt-8 w-full justify-center sm:w-auto lg:absolute lg:-right-80 lg:bottom-0"
           disabled={isPending || categories.length === 0}
         >
           {t("submit")}
