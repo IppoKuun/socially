@@ -92,7 +92,7 @@ function StatItem({
       <span className="block font-sora text-xl font-semibold leading-none text-white sm:text-2xl">
         {value}
       </span>
-      <span className="mt-1 block text-xs font-medium uppercase tracking-[0.18em] text-white/48">
+      <span className="mt-1 block whitespace-normal break-words text-xs font-medium uppercase leading-4 tracking-[0.12em] text-white/48">
         {label}
       </span>
     </>
