@@ -8,8 +8,9 @@ export default async function MyProgressBar({
 }) {
   const t = await getTranslations("onboarding.progress");
   const totalSteps = 3;
-  const progressValue = ((currentStep + 1) / totalSteps) * 100;
+  const safeStep = Math.max(0, Math.min(currentStep, totalSteps - 1));
 
+  const progressValue = ((safeStep + 1) / totalSteps) * 100;
   return (
     <div className="mx-auto mt-4 mb-4 flex w-full max-w-[700px] px-4 flex-col">
       {" "}
