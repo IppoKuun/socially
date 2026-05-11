@@ -105,12 +105,12 @@ export default async function DiscoverPage({
   return (
     <AppPageShell title={t("title")} description={t("description")}>
       <JsonLd data={discoverJsonLd} />
-      <section className="space-y-8 ">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
+      <section className="min-w-0 space-y-4 flex flex-col gap-4">
+        <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
           <MainPostCard mainPost={mainPost} />
           <CategoryCard />
         </div>
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,1fr)]  min-w-0">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,1fr)]">
           <DiscussionPostCard discussionPost={discussionPost} />
           <ProfilCard profiles={profiles} />
         </div>

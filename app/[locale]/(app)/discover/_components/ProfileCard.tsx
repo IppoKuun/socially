@@ -11,13 +11,13 @@ export default function ProfilCard({ profiles }: ProfilCardProps) {
   const t = useTranslations("appShell.pages.discover");
 
   return (
-    <section className="flex flex-col w-full h-full min-h-[150px]">
+    <section className="flex h-full min-h-[150px] w-full min-w-0 flex-col">
       <h1 className=" font-manrope text-2xl">{t("profiles.title")}</h1>
-      <section className="flex flex-col space-y-3 p-4 mb-5">
+      <section className="mb-5 flex min-w-0 flex-col space-y-3 py-4 sm:p-4">
         {profiles.map((p) => (
-          <Link key={p.id} href={`/profile/${p.username}`}>
-            <article className="w-full flex flex-row  bg-white/10 p-4 rounded-xl overflow-hidden">
-              <div className="w-[50px] h-[50px] flex-shrink-0">
+          <Link key={p.id} href={`/profile/${p.username}`} className="min-w-0">
+            <article className="flex w-full min-w-0 flex-row items-center gap-3 overflow-hidden rounded-xl bg-white/10 p-4">
+              <div className="h-[50px] w-[50px] flex-shrink-0">
                 {p.avatarUrl ? (
                   <Image
                     width={50}
@@ -36,12 +36,12 @@ export default function ProfilCard({ profiles }: ProfilCardProps) {
                   </div>
                 )}
               </div>
-              <div className="flex flex-col w-[70%] ml-4">
-                <h2 className="">{p.displayname}</h2>
-                <h3 className="text-xs"> @{p.username} </h3>
+              <div className="flex min-w-0 flex-1 flex-col">
+                <h2 className="truncate">{p.displayname}</h2>
+                <h3 className="truncate text-xs"> @{p.username} </h3>
                 <p className="truncate text-xs">{p.bio ?? ""}</p>
               </div>
-              <div className="flex flex-col ml-auto items-center justify-center ">
+              <div className="ml-auto flex shrink-0 flex-col items-center justify-center">
                 <span className="font-sora text-xl">
                   {p._count.relationWhereUserIsFollowed}
                 </span>

@@ -22,9 +22,9 @@ export default function MainPostCard({ mainPost }: MainPostCardProps) {
     : "linear-gradient(135deg, #1f2937, #111827)";
 
   return (
-    <Link href={`/post/${mainPost.slug}`} className="block">
+    <Link href={`/post/${mainPost.slug}`} className="block min-w-0">
       <section
-        className="flex relative flex-col rounded-lg justify-end min-h-[340px] p-4 h-[45svh] overflow-hidden"
+        className="relative flex h-[45svh] min-h-[340px] min-w-0 flex-col justify-end overflow-hidden rounded-lg p-4"
         style={
           backgroundImage
             ? {
@@ -37,17 +37,17 @@ export default function MainPostCard({ mainPost }: MainPostCardProps) {
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10" />
 
-        <div className="relative z-10 ">
+        <div className="relative z-10 min-w-0">
           {!hasImage && mainPost.content ? (
             <p className="mb-4 line-clamp-3 max-w-xl text-sm leading-6 text-white/70">
               {mainPost.content}
             </p>
           ) : null}
 
-          <h1 className="font-bold text-4xl leading-tight tracking-wide font-manrope ">
+          <h1 className="break-words font-manrope text-2xl font-bold leading-tight tracking-wide sm:text-4xl">
             {mainPost.title}
           </h1>
-          <div className="flex flex-row gap-3">
+          <div className="flex min-w-0 flex-row gap-3">
             {mainPost.author.avatarUrl ? (
               <Image
                 width={50}
