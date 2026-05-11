@@ -380,13 +380,13 @@
   width: 100%;
 }
 .form-field-text {
-  margin-left: 40px;
+  margin-left: 0;
 }
 .form-field-card {
-  flex-direction: column;
   display: flex;
-  gap: 4px;
-  align-items: stretch;
+  flex-direction: row;
+  gap: 14px;
+  align-items: center;
   width: 100%;
   background-color: #12151c;
   max-height: 68px;
@@ -446,6 +446,7 @@
 }
 
 .form-field-label {
+  padding-top: 10px;
   font-size: 0.95rem;
   line-height: 1;
   color: #93a0b8;
@@ -455,7 +456,6 @@
   width: 100%;
   padding: 0;
   margin: 0;
-  padding-left: 32px;
   color: var(--text-main);
   background: transparent;
   border: none;

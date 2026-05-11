@@ -85,7 +85,8 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
     displayname.trim().length === 0 || username.trim().length < 3 || isPending;
 
   return (
-    <main className="flex flex-col items-center py-4 px-4">
+    <main className="flex w-full flex-col items-center px-4 py-4">
+      {" "}
       <form
         ref={formRef}
         action={formAction}
@@ -97,7 +98,7 @@ export default function StepOne({ user, providerImage }: stepOneProps) {
 
           e.preventDefault();
         }}
-        className=" flex flex-col px-4 py-2 rounded-2xl items-center bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))]
+        className=" flex w-full max-w-md flex-col rounded-2xl px-3 py-6 sm:max-w-[700px] sm:px-4  items-center bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))]
 border border-white/6
 backdrop-blur-md
 
@@ -158,51 +159,50 @@ backdrop-blur-md
           <p className="form-error">{uploadProfileState.userMsg}</p>
         ) : null}
         <div className="w-full flex flex-col gap-4 mt-5">
-          <div className=" form-field-card relative ">
-            <label className="self-start form-field-text form-label">
-              {t("fields.displayNameLabel")}
-            </label>
-
-            <User2 className="absolute left-5 top-7 " />
-            <input
-              name="displayname"
-              placeholder={t("fields.displayNamePlaceholder")}
-              value={displayname}
-              className={`input-ghost form-field-control form-field-control-lg form-field-text ${
-                state.errors?.displayname ? "input-ghost-error" : ""
-              }`}
-              onChange={(e) => setDisplayname(e.target.value)}
-            ></input>
+          <div className="form-field-card">
+            <User2 className="form-field-icon" />
+            <div className="form-field-main mt-3">
+              <label className="form-label">
+                {t("fields.displayNameLabel")}
+              </label>
+              <input
+                name="displayname"
+                placeholder={t("fields.displayNamePlaceholder")}
+                value={displayname}
+                className={`input-ghost  form-field-control form-field-control-lg ${
+                  state.errors?.displayname ? "input-ghost-error" : ""
+                }`}
+                onChange={(e) => setDisplayname(e.target.value)}
+              ></input>
+            </div>
           </div>
           <p className="form-error">{state.errors?.displayname?.[0]}</p>
 
-          <div className="relative form-field-card">
+          <div className="relative form-field-card mt-3">
             {userNamePending && (
               <LoaderCircle
                 className="absolute z-50 right-5 top-10 -translate-y-1/2 animate-spin text-white/30"
                 size={26}
               />
             )}
-            <label className="self-start form-field-text form-label">
-              {t("fields.usernameLabel")}
-            </label>
-
-            <AtSign className="absolute left-5 top-7" />
-            <input
-              name="username"
-              placeholder={t("fields.username")}
-              value={username}
-              className={`input-ghost form-field-control form-field-text font-extralight text-sm ${
-                state.errors?.username
-                  ? "input-ghost-error"
-                  : "text-muted-foreground/60"
-              }`}
-              onChange={(e) => {
-                setUsername(e.target.value);
-                debouncedUsernameCheck();
-              }}
-              // PETIT INDICATIONS VISUEL A METTRE POUR COMPRENDRE QUE ça CHERCHE //
-            />
+            <AtSign className="form-field-icon" />
+            <div className="form-field-main">
+              <label className="form-label">{t("fields.usernameLabel")}</label>
+              <input
+                name="username"
+                placeholder={t("fields.username")}
+                value={username}
+                className={`input-ghost form-field-control font-extralight text-sm ${
+                  state.errors?.username
+                    ? "input-ghost-error"
+                    : "text-muted-foreground/60"
+                }`}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  debouncedUsernameCheck();
+                }}
+              />
+            </div>
           </div>
           <button
             ref={usernameSubmitterRef}
@@ -218,37 +218,39 @@ backdrop-blur-md
             </p>
           ) : null}
           <p className="form-error">{state.errors?.username?.[0]}</p>
-          <div className=" form-field-card form-field-card-bio relative ">
-            <Quote className="absolute left-5 top-7" />
-            <label className="form-label form-field-text">
-              {t("fields.bioLabel")}
-            </label>
-            <TextareaAutosize
-              name="bio"
-              placeholder={t("fields.bio")}
-              value={bio}
-              maxLength={160}
-              maxRows={3}
-              className={`form-field-control form-field-text form-field-textarea text-sm appearance-none resize-none outline-none ring-0
+          <div className="form-field-card form-field-card-bio ">
+            <Quote className="form-field-icon" />
+            <div className="form-field-main mb-1">
+              <label className="form-label ">{t("fields.bioLabel")}</label>
+              <TextareaAutosize
+                name="bio"
+                placeholder={t("fields.bio")}
+                value={bio}
+                maxLength={160}
+                maxRows={3}
+                className={`form-field-control form-field-textarea text-sm appearance-none resize-none outline-none ring-0
                            transition-all duration-200 ${state.errors?.bio ? "input-ghost-error" : ""}`}
-              onChange={(e) => setBio(e.target.value)}
-            />
+                onChange={(e) => setBio(e.target.value)}
+              />
+            </div>
           </div>
           <p className="form-error">{state.errors?.bio?.[0]}</p>
-          <div className=" form-field-card relative ">
-            <label className="form-field-text form-label">
-              {t("fields.occupationLabel")}
-            </label>
-            <BriefcaseBusiness className="absolute left-5 top-7" />
-            <input
-              value={occupation}
-              className={`input-ghost form-field-control form-field-text ${
-                state.errors?.occupation ? "input-ghost-error" : ""
-              }`}
-              placeholder={t("fields.occupation")}
-              name="occupation"
-              onChange={(e) => setOccupation(e.target.value)}
-            ></input>
+          <div className="form-field-card">
+            <BriefcaseBusiness className="form-field-icon" />
+            <div className="form-field-main">
+              <label className="form-label">
+                {t("fields.occupationLabel")}
+              </label>
+              <input
+                value={occupation}
+                className={`input-ghost form-field-control ${
+                  state.errors?.occupation ? "input-ghost-error" : ""
+                }`}
+                placeholder={t("fields.occupation")}
+                name="occupation"
+                onChange={(e) => setOccupation(e.target.value)}
+              ></input>
+            </div>
           </div>
           <p className="form-error">{state.errors?.occupation?.[0]}</p>
 
@@ -257,7 +259,7 @@ backdrop-blur-md
         <button
           type="submit"
           formAction={formAction}
-          className="btn-primary mt-4 self-center md:absolute md:bottom-3 md:-right-80"
+          className="btn-primary mt-4 self-center md:absolute md:bottom-3  md:-right-80"
           disabled={isInvalid}
         >
           {t("submit")}
