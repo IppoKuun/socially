@@ -77,11 +77,7 @@ export default function CategoryCard() {
         const Icon = cat.Icon;
 
         return (
-          <Link
-            href={cat.href}
-            className="h-full min-w-0"
-            key={cat.category}
-          >
+          <Link href={cat.href} className="h-full min-w-0" key={cat.category}>
             <div
               className="flex h-[112px] w-full min-w-0 flex-col items-center border border-white/10 px-2 text-center shadow-[0_18px_45px_-32px_rgba(0,0,0,0.9)]
   transition duration-200 ease-out
