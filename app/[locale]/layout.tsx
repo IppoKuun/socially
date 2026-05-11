@@ -1,7 +1,7 @@
 import { routing } from "@/i18n/routing";
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { cookies, headers } from "next/headers";
 
@@ -22,7 +22,9 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
     notFound();
   }
 
-  const messages = await getMessages();
+  setRequestLocale(locale);
+
+  const messages = await getMessages({ locale });
   let cookiesBanner: React.ReactNode = null;
   let anonymousSessionTracker: React.ReactNode = null;
 
