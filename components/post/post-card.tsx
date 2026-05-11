@@ -163,7 +163,7 @@ export default function PostCard({
       role={isNavigable ? "link" : undefined}
       tabIndex={isNavigable ? 0 : undefined}
       className={cn(
-        "relative overflow-hidden rounded-[4px] border-b border-b-slate-500 bg-transparent    p-6 shadow-[0_28px_80px_-54px_rgba(0,0,0,0.98)]",
+        "relative overflow-hidden rounded-[4px] border-b border-b-slate-500 bg-[#12151c] p-6 shadow-[0_28px_80px_-54px_rgba(0,0,0,0.98)]",
         compact
           ? "px-4 py-4 border border-white/5 "
           : isProfile
@@ -371,6 +371,6 @@ export default function PostCard({
   }
 
   return (
-    <div className="premium-card-frame rounded-[31px] p-px">{cardContent}</div>
+    <div className="premium-card-frame rounded-[6px] p-px">{cardContent}</div>
   );
 }
