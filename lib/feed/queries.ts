@@ -72,6 +72,7 @@ function getVisiblePostWhereFollowingFeed(
 ): Prisma.PostWhereInput {
   return {
     deletedAt: null,
+    moderationStatus: { not: "UNSAFE" },
     author: {
       ...getVisibleAuthorWhere(viewerId),
       relationWhereUserIsFollower: { some: { followerProfileId: viewerId } },
