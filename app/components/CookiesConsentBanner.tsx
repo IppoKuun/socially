@@ -97,22 +97,22 @@ export default function CookiesConsentBanner({ refere, language }: Props) {
   return (
     <Dialog open={open}>
       <DialogContent
-        className="w-full max-w-[calc(100%-1.25rem)]  overflow-hidden border  border-white/10 bg-[linear-gradient(180deg,rgba(18,21,28,0.98)_0%,rgba(11,15,22,0.98)_100%)] p-0 text-foreground shadow-[0_32px_90px_-38px_rgba(0,0,0,0.92)] sm:max-w-2xl lg:max-w-[880px]"
+        className="max-h-[calc(100svh-1rem)] w-full max-w-[calc(100%-1.25rem)] overflow-y-auto border border-white/10 bg-[linear-gradient(180deg,rgba(18,21,28,0.98)_0%,rgba(11,15,22,0.98)_100%)] p-0 text-foreground shadow-[0_32px_90px_-38px_rgba(0,0,0,0.92)] sm:max-h-[calc(100svh-3rem)] sm:max-w-2xl lg:max-w-[880px]"
         showCloseButton={false}
         onEscapeKeyDown={(event) => event.preventDefault()}
         onInteractOutside={(event) => event.preventDefault()}
       >
-        <DialogHeader className="border-b border-white/10 px-5 py-5 sm:px-6 sm:py-6">
+        <DialogHeader className="border-b border-white/10 px-4 py-4 sm:px-6 sm:py-6">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary-glow">
             Socially
           </p>
-          <DialogTitle className="mt-2 text-[1.55rem] leading-none text-white sm:text-[1.85rem]">
+          <DialogTitle className="mt-2 text-[1.35rem] leading-none text-white sm:text-[1.85rem]">
             {t("title")}
           </DialogTitle>
-          <DialogDescription className="max-w-2xl text-sm leading-6 text-text-muted sm:text-[0.95rem]">
+          <DialogDescription className="max-w-2xl text-sm leading-5 text-text-muted sm:text-[0.95rem] sm:leading-6">
             {t("description")}
           </DialogDescription>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-text-muted sm:text-[0.95rem]">
+          <p className="mt-2 max-w-2xl text-sm leading-5 text-text-muted sm:mt-3 sm:text-[0.95rem] sm:leading-6">
             {t("learnMore.start")}
             <Link
               href="/legal/cookies"
@@ -130,12 +130,12 @@ export default function CookiesConsentBanner({ refere, language }: Props) {
             {t("learnMore.end")}
           </p>
         </DialogHeader>
-        <div className="max-h-[min(52vh,34rem)] overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
+        <div className="px-4 py-4 sm:px-6 sm:py-6">
           <div className="grid gap-3 sm:gap-4 lg:grid-cols-3">
             {sections.map((s) => (
               <section
                 key={s.title}
-                className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]"
+                className="rounded-xl border border-white/8 bg-white/[0.03] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] sm:rounded-2xl sm:p-4"
               >
                 <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-primary-glow">
                   {s.title}
@@ -154,7 +154,7 @@ export default function CookiesConsentBanner({ refere, language }: Props) {
             ))}
           </div>
         </div>
-        <DialogFooter className="flex-row items-center justify-center gap-3 border-t border-white/10 bg-white/[0.02] px-6 py-8 sm:justify-center sm:px-6">
+        <DialogFooter className="flex-row items-center justify-center gap-3 border-t border-white/10 bg-white/[0.02] px-4 py-4 sm:justify-center sm:px-6 sm:py-8">
           <Button
             variant="outline"
             className="h-11 min-w-32 cursor-pointer rounded-xl border-white/10 bg-white/[0.03] text-foreground hover:bg-white/[0.06] hover:text-white"
