@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
+import { ArrowLeft } from "lucide-react";
 
 import { readPostComments, readPostDetail } from "@/app/actions/feed";
 import CommentCard from "@/components/comment/comment-card";
@@ -44,8 +45,27 @@ export default function PostDetailClient({
     return null;
   }
 
+  function handleBack() {
+    if (window.history.length > 1) {
+      router.back();
+      return;
+    }
+
+    router.push("/feed");
+  }
+
   return (
     <div className="space-y-6">
+      <Button
+        type="button"
+        variant="ghost"
+        className="rounded-full border border-white/10 bg-white/[0.03] text-white/76 hover:bg-white/[0.08] hover:text-white"
+        onClick={handleBack}
+      >
+        <ArrowLeft className="size-4" />
+        {t("back")}
+      </Button>
+
       <PostCard
         post={post}
         variant="detail"
