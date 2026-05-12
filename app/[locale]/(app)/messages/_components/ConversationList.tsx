@@ -10,8 +10,8 @@ import {
   PUSHER_MESSAGE_CREATED_EVENT,
   type MessageCreatedEvent,
 } from "@/lib/pusher/events";
-import { CircleUserRound } from "lucide-react";
-import { useLocale } from "next-intl";
+import { CircleUserRound, MessageCircleMore } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -96,6 +96,7 @@ export function ConversationList({
   viewerId,
 }: ConversationListProps) {
   const locale = useLocale();
+  const t = useTranslations("appShell.pages.messages");
   const params = useParams<{ conversationId?: string }>();
   const [conversations, setConversations] = useState(initialConversations);
   const activeConversationId =
@@ -200,60 +201,79 @@ export function ConversationList({
   return (
     <section className="flex min-h-[620px] flex-col gap-5 bg-white/[0.035] p-4">
       <div className="min-h-0 flex-1 space-y-5 overflow-y-auto pr-1">
-        {conversations.map((conv) => {
-          const isActive = conv.id === activeConversationId;
-          const profileLabel = conv.otherParticipant.username
-            ? `@${conv.otherParticipant.username}`
-            : "@profile";
+        {conversations.length === 0 ? (
+          <div className="flex min-h-[520px] flex-col items-center justify-center px-4 text-center">
+            <span className="flex size-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.06] text-white/55">
+              <MessageCircleMore className="size-5" />
+            </span>
+            <p className="mt-4 font-sora text-xl font-semibold text-white">
+              {t("emptyList.title")}
+            </p>
+            <p className="mt-2 max-w-60 text-sm leading-6 text-white/48">
+              {t("emptyList.description")}
+            </p>
+          </div>
+        ) : (
+          conversations.map((conv) => {
+            const isActive = conv.id === activeConversationId;
+            const profileLabel = conv.otherParticipant.username
+              ? `@${conv.otherParticipant.username}`
+              : "@profile";
 
-          return (
-            <Link key={conv.id} className="block" href={`/messages/${conv.id}`}>
-              <article
-                className={[
-                  "group flex min-h-24 flex-row items-center gap-3 rounded-[1.25rem] border px-3 py-3 transition",
-                  isActive
-                    ? "border-white/18 bg-white/[0.16] shadow-[0_18px_44px_-32px_rgba(0,0,0,0.95)]"
-                    : "border-white/8 bg-white/[0.075] hover:bg-white/[0.12]",
-                ].join(" ")}
+            return (
+              <Link
+                key={conv.id}
+                className="block"
+                href={`/messages/${conv.id}`}
               >
-                <ConversationAvatar
-                  avatarUrl={conv.otherParticipant.avatarUrl}
-                  displayname={conv.otherParticipant.displayname}
-                />
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="truncate font-sora text-base font-semibold leading-tight text-white">
-                        {conv.otherParticipant.displayname}
-                      </p>
-                      <p className="mt-0.5 truncate text-sm text-white/52">
-                        {profileLabel}
-                      </p>
+                <article
+                  className={[
+                    "group flex min-h-24 flex-row items-center gap-3 rounded-[1.25rem] border px-3 py-3 transition",
+                    isActive
+                      ? "border-white/18 bg-white/[0.16] shadow-[0_18px_44px_-32px_rgba(0,0,0,0.95)]"
+                      : "border-white/8 bg-white/[0.075] hover:bg-white/[0.12]",
+                  ].join(" ")}
+                >
+                  <ConversationAvatar
+                    avatarUrl={conv.otherParticipant.avatarUrl}
+                    displayname={conv.otherParticipant.displayname}
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate font-sora text-base font-semibold leading-tight text-white">
+                          {conv.otherParticipant.displayname}
+                        </p>
+                        <p className="mt-0.5 truncate text-sm text-white/52">
+                          {profileLabel}
+                        </p>
+                      </div>
+                      <time className="shrink-0 text-xs font-medium text-white/50">
+                        {formatConversationDate(conv.lastMessageAt, locale)}
+                      </time>
                     </div>
-                    <time className="shrink-0 text-xs font-medium text-white/50">
-                      {formatConversationDate(conv.lastMessageAt, locale)}
-                    </time>
-                  </div>
 
-                  <div className="mt-1.5 flex items-center gap-2">
-                    <p className="min-w-0 flex-1 truncate text-sm leading-5 text-white/68">
-                      {conv.lastMessageText || "Aucun message pour le moment."}
-                    </p>
-                    {conv.unreadCount > 0 ? (
-                      <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-primary px-1.5 text-[0.68rem] font-bold text-white">
-                        {conv.unreadCount}
-                      </span>
-                    ) : (
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/[0.10] text-xs text-white/42">
-                        -
-                      </span>
-                    )}
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <p className="min-w-0 flex-1 truncate text-sm leading-5 text-white/68">
+                        {conv.lastMessageText ||
+                          t("conversation.noLastMessage")}
+                      </p>
+                      {conv.unreadCount > 0 ? (
+                        <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-primary px-1.5 text-[0.68rem] font-bold text-white">
+                          {conv.unreadCount}
+                        </span>
+                      ) : (
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/[0.10] text-xs text-white/42">
+                          -
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </article>
-            </Link>
-          );
-        })}
+                </article>
+              </Link>
+            );
+          })
+        )}
       </div>
     </section>
   );

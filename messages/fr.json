@@ -751,6 +751,17 @@
         "title": "Message",
         "description": "Accède à tes futures conversations privées depuis le shell authentifié partagé.",
         "placeholder": "La messagerie privée n'est pas encore câblée. Cette route est volontairement disponible pour valider la navigation de bout en bout.",
+        "emptyList": {
+          "title": "Aucune conversation pour l'instant",
+          "description": "Démarrez une conversation depuis un profil pour la voir apparaître ici."
+        },
+        "emptySelection": {
+          "title": "Sélectionnez une conversation",
+          "description": "Choisissez un échange dans la liste pour afficher les messages."
+        },
+        "conversation": {
+          "noLastMessage": "Aucun message pour le moment."
+        },
         "actions": {
           "authRequired": "Connecte-toi pour démarrer une conversation.",
           "viewerProfileNotFound": "Impossible de retrouver votre profil. Réessayez plus tard.",

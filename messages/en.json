@@ -751,6 +751,17 @@
         "title": "Message",
         "description": "Access your future private conversations from the shared authenticated shell.",
         "placeholder": "Private messaging is not wired yet. This route is intentionally live so the shell can be validated end to end.",
+        "emptyList": {
+          "title": "No conversations yet",
+          "description": "Start a conversation from a profile to see it here."
+        },
+        "emptySelection": {
+          "title": "Select a conversation",
+          "description": "Choose a thread from the list to display messages."
+        },
+        "conversation": {
+          "noLastMessage": "No messages yet."
+        },
         "actions": {
           "authRequired": "Please sign in to start a conversation.",
           "viewerProfileNotFound": "We could not find your profile. Please try again later.",
