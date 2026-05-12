@@ -223,11 +223,13 @@ export default async function NotificationsPage({
 
   const mode = isFollow ? "follow" : "post";
   const hasDetailView = Boolean(currentPostId) || Boolean(isFollow);
+  const hasUnreadNotifications =
+    unreadFollowCount > 0 || postNotificationGroups.some((group) => group.isUnread);
 
   return (
     <AppPageShell title={t("title")} description={t("description")}>
       <section className="flex w-full flex-row items-center justify-between gap-4">
-        <MarkAllAsRead />
+        {hasUnreadNotifications && <MarkAllAsRead />}
         <FollowNotifCard
           unreadFollowCount={unreadFollowCount}
           isActive={Boolean(isFollow)}
