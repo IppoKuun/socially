@@ -101,10 +101,7 @@ function ResetPasswordForm() {
         {hasValidToken ? (
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="new-password"
-                className="text-sm text-text-muted"
-              >
+              <label htmlFor="new-password" className="text-sm text-text-muted">
                 {t("passwordLabel")}
               </label>
               <input

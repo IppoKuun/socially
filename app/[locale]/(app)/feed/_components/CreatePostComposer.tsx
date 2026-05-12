@@ -491,7 +491,7 @@ export default function CreatePostComposer({
       <Dialog open={open} onOpenChange={handleDialogOpenChange}>
         <DialogContent
           className={cn(
-            "w-full max-h-[90svh] max-w-[calc(100%-1rem)] overflow-hidden sm:max-w-3xl p-0 gap-0",
+            "w-full max-h-[90svh] max-w-[calc(100%-1rem)] overflow-hidden sm:max-w-3xl px-4 gap-0",
             isUnsafe && "border-destructive/70 ring-2 ring-destructive/35",
           )}
           // Impossible de sortir du formulaire si isPending//
