@@ -577,6 +577,7 @@
   },
   "postDetail": {
     "pageDescription": "Retrouve le post complet et les commentaires associés.",
+    "back": "Retour",
     "commentsTitle": "Commentaires",
     "commentsHint": "Trie les réponses directes selon le signal le plus utile.",
     "sortRecent": "Plus récents",

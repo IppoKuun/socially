@@ -577,6 +577,7 @@
   },
   "postDetail": {
     "pageDescription": "Review the full post and the related comments.",
+    "back": "Back",
     "commentsTitle": "Comments",
     "commentsHint": "Sort direct replies by the signal that matters most.",
     "sortRecent": "Newest",

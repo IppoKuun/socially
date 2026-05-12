@@ -577,6 +577,7 @@
   },
   "postDetail": {
     "pageDescription": "Consulta la publicación completa y los comentarios relacionados.",
+    "back": "Volver",
     "commentsTitle": "Comentarios",
     "commentsHint": "Ordena las respuestas directas según la señal más útil.",
     "sortRecent": "Más recientes",
